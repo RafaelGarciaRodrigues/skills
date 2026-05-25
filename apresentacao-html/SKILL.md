@@ -24,7 +24,7 @@ disable-model-invocation: true
 
 ## 1. ANALISAR
 
-Leia todos os arquivos da pasta que ".txt", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".html"
+Leia todos os arquivos da pasta que ".txt", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".html", ".md"
 
 Você é um especialista em storytelling, design de apresentações e desenvolvimento front-end.
 Quero que você analise todo o conteúdo e transforme em uma apresentação em HTML + CSS + JavaScript completa, com uma única página (arquivo Apresentacao.html).
@@ -79,6 +79,9 @@ Analise primeiro o conteúdo dos arquivos da pasta e depois gere a apresentaçã
 -- Inclua 2 a 4 pequenos erros de grafia ou pontuação para soar humano (ex: faltar acento, vírgula errada, “realmente” sem acento, “gostariamos”, etc.).
 -- Nunca use: listas, travessão (—), dois pontos (:) explicativos, “eu acho”, “na minha opinião”, "pessoal", "amigos", "gente", etc.
 -- Escreva de forma direta, limpa e natural, como se fosse um texto humano fluido. Evite construções passivas formais como 'Identifica-se que', 'Percebe-se que', 'Observa-se que', 'Nota-se que'. Comece as frases direto no assunto, use menos verbos introdutórios e torne o texto mais conciso e conversacional, sem perder o tom profissional.
+
+
+
 
 
 **Gerar apenas:** `Apresetacao.html` e `postagem.txt` — nenhum outro arquivo.
