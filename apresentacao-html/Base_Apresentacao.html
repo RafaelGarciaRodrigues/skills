@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Código não é Mais o Gargalo</title>
+    <style>
+        /* ================================================================
+           VARIÁVEIS CSS PRINCIPAIS — edite aqui para personalizar cores
+           ================================================================ */
+        :root {
+            /* Cores - Light Mode (padrão) */
+            --bg-primary:    #F8F6F3;     /* Off-white suave */
+            --bg-secondary:  #FFFFFF;
+            --text-primary:  #005d5e;
+            --text-secondary:#6cbe4b;
+            --accent:        #343a40;     /* Tom escuro principal */
+            --accent-hover:  #0db154;
+            --border:        #0db154;
+
+            /* Tipografia - Tamanhos */
+            --title-capa:    4.5rem;      /* Título principal do primeiro slide */
+            --subtitle-capa: 1.8rem;      /* Subtítulo do primeiro slide */
+            --text-capa:     1.25rem;     /* Texto de contexto do primeiro slide */
+            --title-slide:   3.2rem;      /* Título dos slides internos */
+            --subtitle-slide:1.65rem;     /* Subtítulo dos slides internos */
+            --text-slide:    1.15rem;     /* Texto normal dos slides */
+
+            /* Espaçamentos */
+            --padding-slide: 7vh 10vw;
+            --gap:           2.5rem;
+
+            /* Transições */
+            --transition:    0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            /* Cores - Dark Mode */
+            --bg-primary:    #121212;     /* Off-black */
+            --bg-secondary:  #1A1A1A;
+            --text-primary:  #F0F0F0;
+            --text-secondary:#CCCCCC;
+            --accent:        #4D9EFF;
+            --accent-hover:  #7AB8FF;
+            --border:        #333333;
+        }
+
+        /* ================================================================
+           RESET E BASE
+           ================================================================ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* ================================================================
+           CONTAINER E SLIDES
+           ================================================================ */
+        .slides-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: var(--padding-slide);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.45s ease;
+            background: var(--bg-primary);
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ================================================================
+           SLIDE 1 — CAPA
+           ================================================================ */
+        .slide-capa {
+            background: linear-gradient(140deg, var(--bg-primary) 55%, var(--bg-secondary) 100%);
+        }
+
+        .slide-capa .eyebrow {
+            font-size: var(--text-capa);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+        }
+
+        .slide-capa h1 {
+            font-size: var(--title-capa);
+            color: var(--text-primary);
+            line-height: 1.08;
+            font-weight: 900;
+            margin-bottom: 1.6rem;
+            max-width: 78%;
+        }
+
+        .slide-capa h1 em {
+            color: var(--text-secondary);
+            font-style: normal;
+        }
+
+        .slide-capa .subtitle {
+            font-size: var(--subtitle-capa);
+            color: var(--accent);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            max-width: 62%;
+            line-height: 1.45;
+        }
+
+        .slide-capa .context {
+            font-size: var(--text-capa);
+            color: var(--text-primary);
+            opacity: 0.65;
+            max-width: 55%;
+            line-height: 1.75;
+        }
+
+        /* ================================================================
+           SLIDE 2 — SUMÁRIO
+           ================================================================ */
+        .sumario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .sumario-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1.4rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            font-size: 1rem;
+        }
+
+        .sumario-item:hover {
+            background: var(--accent-hover);
+            color: #fff;
+            border-color: var(--accent-hover);
+            transform: translateX(5px);
+        }
+
+        .sumario-item .num {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            min-width: 2.2rem;
+        }
+
+        .sumario-item:hover .num { color: rgba(255,255,255,0.8); }
+
+        /* ================================================================
+           SLIDES DE CONTEÚDO — ELEMENTOS GERAIS
+           ================================================================ */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            background: var(--text-secondary);
+            color: #fff;
+            border-radius: 20px;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 1.1rem;
+        }
+
+        .slide-content h2 {
+            font-size: var(--title-slide);
+            color: var(--text-primary);
+            font-weight: 900;
+            line-height: 1.12;
+            margin-bottom: 1.4rem;
+        }
+
+        .highlight {
+            font-size: var(--subtitle-slide);
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 1.4rem;
+            line-height: 1.4;
+        }
+
+        /* Duas colunas */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        /* Caixa com borda lateral */
+        .col-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--border);
+            padding: 1.4rem 1.8rem;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .col-box h3 {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .col-box ul { list-style: none; }
+
+        .col-box ul li {
+            font-size: var(--text-slide);
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+            opacity: 0.85;
+        }
+
+        .col-box ul li:last-child { border-bottom: none; }
+        .col-box ul li::before { content: '→ '; color: var(--text-secondary); font-weight: 700; }
+
+        /* Bloco de citação */
+        .quote-block {
+            background: var(--bg-secondary);
+            border-left: 6px solid var(--text-secondary);
+            padding: 1.8rem 2.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.4rem 0;
+        }
+
+        .quote-block p {
+            font-size: var(--subtitle-slide);
+            font-style: italic;
+            line-height: 1.55;
+            color: var(--text-primary);
+        }
+
+        /* Lista estilizada */
+        .styled-list { list-style: none; }
+
+        .styled-list li {
+            font-size: var(--text-slide);
+            padding: 0.55rem 0 0.55rem 1.8rem;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+            opacity: 0.88;
+            line-height: 1.6;
+        }
+
+        .styled-list li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            top: 0.85rem;
+        }
+
+        /* Cards em grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.1rem;
+            margin-top: 1.4rem;
+        }
+
+        .cards-grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.9rem;
+            margin-top: 1.4rem;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.3rem 1.4rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .card-num {
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            opacity: 0.45;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); }
+
+        /* Tabela */
+        .table-wrap { margin-top: 1.4rem; overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; font-size: var(--text-slide); }
+
+        th {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            padding: 0.75rem 1.2rem;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 0.65rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) td { background: var(--bg-secondary); }
+
+        td.ia-sim { color: var(--text-secondary); font-weight: 700; }
+        td.senior  { color: var(--accent-hover); font-weight: 600; }
+
+        /* ================================================================
+           RODAPÉ DE REFERÊNCIAS (por slide)
+           ================================================================ */
+        .slide-refs {
+            position: absolute;
+            bottom: 2.8rem;
+            left: 10vw;
+            right: 9vw;
+            font-size: 0.73rem;
+            font-style: italic;
+            color: var(--text-primary);
+            opacity: 0.38;
+            border-top: 1px solid var(--border);
+            padding-top: 0.55rem;
+            line-height: 1.5;
+        }
+
+        /* ================================================================
+           LOGO (canto inferior direito)
+           ================================================================ */
+        .logo {
+            position: fixed;
+            bottom: 1.8rem;
+            right: 2.2rem;
+            height: 30px;
+            opacity: 0.65;
+            transition: opacity 0.2s;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* ================================================================
+           CONTADOR DE SLIDES
+           ================================================================ */
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            opacity: 0.38;
+            z-index: 100;
+            letter-spacing: 0.08em;
+        }
+
+        /* ================================================================
+           BOTÕES DE NAVEGAÇÃO
+           ================================================================ */
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 2.8rem;
+            height: 2.8rem;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.42;
+        }
+
+        .nav-btn:hover {
+            opacity: 1;
+            background: var(--accent-hover);
+            color: #fff;
+            border-color: var(--accent-hover);
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        #prev-btn { left: 0.8rem; }
+        #next-btn { right: 0.8rem; }
+
+        /* ================================================================
+           TOGGLE DARK / LIGHT
+           ================================================================ */
+        .theme-toggle {
+            position: fixed;
+            top: 1.4rem;
+            right: 1.4rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.38rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            z-index: 200;
+            transition: all 0.2s;
+            opacity: 0.62;
+        }
+
+        .theme-toggle:hover { opacity: 1; }
+
+        /* Slider visual do toggle */
+        .slider-track {
+            width: 28px;
+            height: 15px;
+            background: var(--border);
+            border-radius: 8px;
+            position: relative;
+            transition: background var(--transition);
+        }
+
+        .slider-track::after {
+            content: '';
+            position: absolute;
+            width: 11px;
+            height: 11px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform var(--transition);
+        }
+
+        [data-theme="dark"] .slider-track { background: var(--accent); }
+        [data-theme="dark"] .slider-track::after { transform: translateX(13px); }
+
+        /* ================================================================
+           RESPONSIVIDADE BÁSICA
+           ================================================================ */
+        @media (max-width: 900px) {
+            :root {
+                --title-capa:    2.6rem;
+                --subtitle-capa: 1.25rem;
+                --title-slide:   2rem;
+                --subtitle-slide:1.15rem;
+                --text-slide:    1rem;
+                --padding-slide: 5vh 6vw;
+            }
+            .two-col, .cards-grid, .sumario-grid { grid-template-columns: 1fr; }
+            .cards-grid-5 { grid-template-columns: repeat(2, 1fr); }
+            .slide-capa h1, .slide-capa .subtitle, .slide-capa .context { max-width: 100%; }
+        }
+    </style>
+	
+	<!-- Bootstrap Icons via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+<body>
+
+<!-- ── Toggle Tema ── -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Alternar modo claro/escuro">
+    <span class="slider-track"></span>
+    <span id="theme-label">Dark</span>
+</button>
+
+<!-- ── Logo Raizen ── -->
+<img class="logo"
+     src="https://www.raizen.com/img/frontend/header/logo_green.svg"
+     alt="Raizen" />
+
+<!-- ── Contador ── -->
+<div class="slide-counter">
+    <span id="cur">1</span>&thinsp;/&thinsp;<span id="tot">14</span>
+</div>
+
+<!-- ── Navegação ── -->
+<button class="nav-btn" id="prev-btn" onclick="prev()" title="Slide anterior">&#8592;</button>
+<button class="nav-btn" id="next-btn" onclick="next()" title="Próximo slide">&#8594;</button>
+
+
+<!-- ================================================================
+     SLIDES
+     ================================================================ -->
+<div class="slides-container">
+
+
+    <!-- ── SLIDE 1: CAPA ── -->
+    <div class="slide slide-capa active" id="slide-1">
+        <div class="eyebrow">Engenharia de Software · 2025</div> <!--COMANDO: AQUI VAI O TEMA CENTRAL A SER ABORDADO -->
+        <h1>O Código<br/>não é Mais<br/>o <em>Gargalo</em></h1> <!--COMANDO: AQUI VAI O PROBLEMA CENTRAL A SER TRATADO -->
+        <div class="subtitle"> <!--COMANDO: AQUI VAI UMA EXPLICAÇÃO SOBRE O PROBLEMA -->
+            Como a IA está redefinindo quem cria valor na engenharia de software
+        </div>
+        <p class="context"> <!--COMANDO: AQUI VAI UM TEXTO MAIOR COM O CONTEXTO SOBRE O PROBLEMA -->
+            Uma análise estrutural sobre a transformação cognitiva que está achatando pirâmides
+            organizacionais, criando crises de formação e redefinindo o que significa ser um engenheiro sênior.
+        </p>
+    </div>
+
+
+    <!-- ── SLIDE 2: SUMÁRIO ── -->
+    <div class="slide slide-content" id="slide-2">
+        <div class="pill">Sumário</div>
+        <h2>O que vamos explorar</h2>
+        <div class="sumario-grid">
+            <a class="sumario-item" onclick="go(3)">  <span class="num">01</span> A Mudança Fundamental</a> <!--COMANDO: AQUI VAI OS CAÍTULOS ABORDADOS COM LINK PARA O PRIMEIRO SLIDE CO CAÍTULO -->
+            <a class="sumario-item" onclick="go(4)">  <span class="num">02</span> Antes vs. Depois da IA</a>
+        </div>
+    </div>
+
+
+    <!-- ── SLIDE 3: A MUDANÇA FUNDAMENTAL ── --> <!--COMANDO: MODELO DE SLIDE DE CONTEÚDO QUE SERÁ REPLICADO-->
+    <div class="slide slide-content" id="slide-3">
+        <div class="pill">01 · A Mudança</div> <!--COMANDO: TÍTULO DO CAPÍTULO -->
+        <h2>O que realmente mudou?</h2> <!--COMANDO: SUBTÍTULO DO CAPÍTULO -->
+        <p class="highlight">IA automatizou compressão sintática e recuperação de padrões — não julgamento.</p> <!--COMANDO: EXPLICAÇÃO BREVE DO CAPÍTULO -->
+        <div class="table-wrap">
+
+			<!--COMANDO: CONTEÚDO DO CAPÍTULO -->
+			<!--COMANDO: UTILIZANDO CSS USE FIGURAS GEOMÉTRICAS QUE FACILITEM O ENTENDIMENTO DA MENSAGEM QUE QUER SER TRANSMITIDA-->
+			<!--COMANDO: USE ÍCONES <i class="bi bi-gear"></i> PARA FACILITAR O ENTENDIMENTO DA MENSAGEM A SER TRANSMITIDA -->
+			<!--COMANDO: USE REPRESENTAÇÕES GRÁFICAS EM BLOCOS E GRIDS PARA FACILITAR A RELAÇÃO DE ELEMENTOS QUE DEVE SER EXPLICADO -->
+		
+        </div>
+        <div class="slide-refs">
+            <!--COMANDO: AQUI VAI A REFERÊNCIA BIBLIOGRÁFICA DO CAPÍTULO -->
+			<!--COMANDO: O CONTEÚDO DO CAPÍTULO NÃO DEVE SOBRESCREVER ESSE ESPAÇO -->
+			
+        </div>
+    </div>
+
+
+
+
+</div><!-- /slides-container -->
+
+
+<!-- ================================================================
+     JAVASCRIPT — Navegação e Toggle de Tema
+     ================================================================ -->
+<script>
+    /* Estado */
+    let cur = 1;
+    const TOTAL = 14;
+    document.getElementById('tot').textContent = TOTAL;
+
+    /* Navega para slide n */
+    function go(n) {
+        if (n < 1) n = 1;
+        if (n > TOTAL) n = TOTAL;
+        document.getElementById('slide-' + cur).classList.remove('active');
+        cur = n;
+        document.getElementById('slide-' + cur).classList.add('active');
+        document.getElementById('cur').textContent = cur;
+    }
+
+    function next() { go(cur + 1); }
+    function prev() { go(cur - 1); }
+
+    /* Teclado: → ↑ avançar · ← ↓ recuar · S sumário · T título */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp')   next();
+        if (e.key === 'ArrowLeft'  || e.key === 'ArrowDown') prev();
+        if (e.key === 's' || e.key === 'S') go(2);
+        if (e.key === 't' || e.key === 'T') go(1);
+    });
+
+    /* Toggle Dark / Light */
+    function toggleTheme() {
+        const html  = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.getElementById('theme-label').textContent = isDark ? 'Dark' : 'Light';
+    }
+</script>
+
+</body>
+</html>

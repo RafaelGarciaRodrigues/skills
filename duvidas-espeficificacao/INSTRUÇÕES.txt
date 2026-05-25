@@ -1,0 +1,112 @@
+COMO USAR:
+- O Spec Kit é uma forma estruturada de desenvolver software com IA usando especificações como “fonte da verdade”.
+- especificação → plano → tarefas → implementação
+
+1. Validar Node/npm
+node -v
+npm -v
+
+2. Instalar Claude Code
+npm install -g @anthropic-ai/claude-code
+
+
+3. Instalar uv
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+4. Instalar Spec Kit
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+
+5. Criar projeto
+mkdir meu-projeto
+cd meu-projeto
+git init
+
+6. Inicializar Spec Kit
+specify init . --integration claude
+
+7. Abrir Claude Code
+claude
+
+Criar spec
+/speckit.specify
+
+Gerar plano
+/speckit.plan
+
+Gerar tasks
+/speckit.tasks
+
+Implementar
+/speckit.implement
+
+No Claude Code:
+- Execute apenas uma task por vez.
+- Rode testes após cada implementação.
+
+Depois do /plan:
+-Analise criticamente a arquitetura.
+-Identifique:
+-- gargalos
+-- overengineering
+-- acoplamentos
+-- riscos futuros
+
+
+
+
+
+
+Criar Documento de Especificação:
+
+Problema:
+Hoje arquivos de áudio ficam desorganizados e difíceis de consultar.
+
+Objetivo:
+Criar plataforma de organização e inteligência sobre áudios.
+
+Usuários:
+Pesquisadores, consultores e equipes.
+
+Fluxo:
+- upload
+- processamento
+- indexação
+- resumo
+- pesquisa semântica
+
+Requisitos funcionais:
+- upload múltiplo
+- transcrição Whisper
+- embeddings
+- markdown
+- mapas mentais
+- busca vetorial
+
+Não funcionais:
+- modularidade
+- observabilidade
+- baixo custo
+- retry automático
+- tolerância a falhas
+
+Restrições:
+- evitar lock-in
+- evitar dependência excessiva de LLM
+- preferir processamento determinístico
+
+Tecnologias:
+- Flask
+- PostgreSQL
+- Celery
+- Redis
+- Docker
+
+Critérios de sucesso:
+- processar grandes volumes
+- pesquisa rápida
+- baixo custo operacional
+
+
+
+Comando:
+"Leia [NOME DO DOCUMENTO] e use esse conteúdo como base para executar /speckit.specify"
