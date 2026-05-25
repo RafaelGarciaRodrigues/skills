@@ -1,0 +1,2333 @@
+<!--O PYTHON INJETA O JSON NESTE ARQUIVO-->
+<!--O JS INSERE AS INFORMAÇÕES NAS DIVs QUE POSSUEM IDs IGUAIS AOS NOMES DOS CAMPOS DO JSON-->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      /* Paleta de cores personalizada */
+      --color-primary: #61903E;
+      --color-secondary: #4E6D5D;
+      --color-accent: #94268C;
+      --color-dark: #343a40;
+      --color-light: #f8f9fa;
+      
+      /* Cores do Bootstrap */
+      --bs-primary: #007bff;
+      --bs-secondary: #6c757d;
+      --bs-success: #28a745;
+      --bs-info: #17a2b8;
+      --bs-warning: #ffc107;
+      --bs-danger: #dc3545;
+      
+      /* Tons adicionais para profundidade */
+      --color-primary-light: #7BA856;
+      --color-primary-dark: #4A7230;
+      --color-secondary-light: #658071;
+      --color-secondary-dark: #3A5247;
+      --color-accent-light: #A73D9F;
+      --color-accent-dark: #6F1E68;
+      
+      /* Gradientes */
+      --gradient-primary: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+      --gradient-secondary: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light));
+      --gradient-accent: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+      
+      /* Tons neutros */
+      --color-white: #ffffff;
+      --color-gray-50: #f9fafb;
+      --color-gray-100: #f3f4f6;
+      --color-gray-200: #e5e7eb;
+      --color-gray-300: #d1d5db;
+      --color-gray-400: #9ca3af;
+      --color-gray-500: #6b7280;
+      --color-gray-600: #4b5563;
+      --color-gray-700: #374151;
+      --color-gray-800: #1f2937;
+      --color-gray-900: #111827;
+      
+      /* Sombras */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      /* Bordas */
+      --border-radius-sm: 0.375rem;
+      --border-radius-md: 0.5rem;
+      --border-radius-lg: 0.75rem;
+      --border-radius-xl: 1rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-gray-100) 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      color: var(--color-gray-800);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .quadroGeral {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    @media (min-width: 768px) {
+      .quadroGeral {
+        padding: 3rem 2rem 6rem;
+      }
+    }
+
+    .card {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--border-radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card:nth-child(even)::before {
+      background: var(--gradient-secondary);
+    }
+
+    .card:nth-child(3n)::before {
+      background: var(--gradient-accent);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-dark);
+      margin: 0 0 3rem 0;
+      text-align: center;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    h2, .tituloCard {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin: 0 0 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .tituloCard::before {
+      content: '';
+      width: 6px;
+      height: 24px;
+      background: var(--gradient-primary);
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .corpoCard {
+      color: var(--color-gray-700);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-top: 1rem;
+    }
+
+    #problema_central {
+      background: var(--gradient-primary);
+      color: var(--color-white);
+      padding: 1.5rem 2rem;
+      border-radius: var(--border-radius-lg);
+      margin: -1rem 0 3rem 0;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+    }
+
+    p {
+      font-size: 0.95rem;
+      margin: 1rem 0;
+      color: var(--color-gray-700);
+      line-height: 1.7;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.5rem 0;
+      border-radius: var(--border-radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    th {
+      background: var(--gradient-primary);
+      color: var(--color-white);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      padding: 0.875rem 1rem;
+      color: var(--color-gray-700);
+    }
+
+    td:last-child {
+      text-align: right;
+      font-weight: 500;
+    }
+
+    tr:nth-child(even) td {
+      background: var(--color-gray-50);
+    }
+
+    tr:hover td {
+      background: var(--color-primary);
+      background: linear-gradient(90deg, rgba(97, 144, 62, 0.1) 0%, rgba(97, 144, 62, 0.05) 100%);
+    }
+
+    ol, ul {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    li {
+      margin: 0.75rem 0;
+      color: var(--color-gray-700);
+      line-height: 1.6;
+      position: relative;
+    }
+
+    ol li::marker {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    #markmap {
+      width: 100%;
+      height: 900px;
+      position: relative;
+      margin: 2rem 0;
+      border: 2px solid var(--color-gray-200);
+      border-radius: var(--border-radius-lg);
+      overflow: hidden;
+      background: var(--color-white);
+      box-shadow: var(--shadow-md);
+    }
+
+    #markmap svg {
+      width: 100%;
+      height: 900px;
+    }
+
+    .mm-toolbar {
+      display: none;
+    }
+
+    .explicacao {
+      background: var(--color-gray-50);
+      border-left: 4px solid var(--color-primary);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--color-gray-600);
+      position: relative;
+    }
+
+    .explicacao::before {
+      content: '';
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 24px;
+      height: 24px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+
+    /* Estilos para fade das explicações */
+    .explicacao {
+      overflow: hidden;
+      transition: opacity 250ms ease, max-height 250ms ease;
+      will-change: opacity, max-height;
+    }
+
+    .explicacao.is-hidden {
+      opacity: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .explicacao.is-visible {
+      opacity: 1;
+      max-height: 2000px;
+    }
+
+    .zoom-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+      line-height: 1;
+      z-index: 2;
+      background: var(--color-gray-100);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--border-radius-sm);
+      color: var(--color-gray-600);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      border: 1px solid var(--color-gray-200);
+    }
+
+    .zoom-trigger:hover {
+      background: var(--color-primary);
+      color: var(--color-white);
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .zoom-trigger i {
+      font-size: 1rem;
+    }
+
+    .tituloCard.with-zoom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .zoom-trigger.block {
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    /* Estilos para barras de sentimentos */
+    #sentimentos table,
+    #sentimentos th,
+    #sentimentos td {
+      border: none !important;
+    }
+
+    #sentimentos table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      box-shadow: none;
+    }
+
+    .bar-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 2rem;
+      border-radius: var(--border-radius-sm);
+      overflow: hidden;
+      background: var(--color-gray-100);
+    }
+
+    .bar-grid::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-gray-300);
+      z-index: 1;
+    }
+
+    .neg, .pos {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .neg {
+      justify-content: flex-end;
+    }
+
+    .pos {
+      justify-content: flex-start;
+    }
+
+    .bar {
+      height: 100%;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+    }
+
+    .bar.pos {
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    }
+
+    .bar.neg {
+      background: linear-gradient(90deg, var(--bs-danger), #ff6b7a);
+    }
+
+    .bar:hover {
+      opacity: 1;
+      transform: scaleY(1.1);
+    }
+
+    #sentimentos td.value-cell {
+      text-align: right;
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--color-gray-700);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .quadroGeral {
+        margin: 1rem;
+        padding: 1rem 0 3rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      h2, .tituloCard {
+        font-size: 1.25rem;
+      }
+
+      .tituloCard.with-zoom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      #markmap {
+        height: 600px;
+      }
+
+      table {
+        font-size: 0.875rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    /* Melhorias de acessibilidade */
+    .zoom-trigger:focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .card:focus-within {
+      box-shadow: var(--shadow-lg), 0 0 0 3px rgba(97, 144, 62, 0.1);
+    }
+
+    /* Animações suaves */
+    * {
+      transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+	
+	
+	
+	
+	/* Estilos para accordions personalizados */
+	.accordion-button {
+	  background: var(--color-gray-50);
+	  color: var(--color-gray-800);
+	  font-weight: 500;
+	  border: none;
+	  box-shadow: none;
+	}
+
+	.accordion-button:not(.collapsed) {
+	  background: var(--color-primary);
+	  color: var(--color-white);
+	  box-shadow: none;
+	}
+
+	.accordion-button:focus {
+	  border: none;
+	  box-shadow: 0 0 0 0.25rem rgba(97, 144, 62, 0.25);
+	}
+
+	.accordion-button::after {
+	  filter: var(--color-primary);
+	}
+
+	.accordion-button:not(.collapsed)::after {
+	  filter: brightness(0) invert(1);
+	}
+
+	.accordion-item {
+	  border: 1px solid var(--color-gray-200);
+	  border-radius: var(--border-radius-md);
+	  margin-bottom: 0.5rem;
+	}
+
+	.accordion-item:not(:first-child) {
+	  border-top: 1px solid var(--color-gray-200);
+	}
+
+	.accordion-body {
+	  background: var(--color-white);
+	  color: var(--color-gray-700);
+	  line-height: 1.7;
+	  padding: 1.25rem;
+	}
+	
+	
+	
+	
+.trecho_divergente {
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  font-style: italic;
+  color: var(--color-light);
+}
+
+.explica_divergente {
+  background: var(--color-gray-50);
+  border-left: 3px solid var(--color-accent);
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+  font-weight: 500;
+  color: var(--color-gray-800);
+  margin-bottom: 40px;
+}
+	
+	
+	
+/* Estilos para fluxo de processo */
+.fluxo-etapa-simbolo {
+  font-size: 1.5rem;
+  text-align: center;
+  color: var(--color-primary);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0.1rem;
+}
+
+.fluxo-etapa-nome {
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.fluxo-etapa-descricao {
+  font-size: 0.9em;
+  color: var(--color-gray-600);
+  margin-top: 0.25rem;
+}
+
+/* Oculta cards QFD por padrão */
+.card.qfd {
+  display: none;
+}
+
+/* Mostra cards QFD quando reportQFD existe */
+body.has-qfd .card.qfd {
+  display: block;
+}
+	
+
+
+/*FLUXOGRAMA*/
+
+#cf .label text, #cf span, #cf p {
+	color: var(--color-secondary) !important;
+}
+#cf .node rect, #cf .node circle, #cf .node ellipse, #cf .node polygon, #cf .node path {
+    fill: var(--color-light) !important;
+    stroke: var(--color-secondary) !important;
+    stroke-width: 1px;
+}
+
+#cf .flowchart-link {
+    stroke: var(--color-secondary) !important;
+}
+#cf .edgeLabel {
+    background-color: var(--color-light) !important;
+	color: var(--color-secondary) !important;
+    text-align: center;
+}
+
+
+
+	#nomeParticipantes {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    #nomeParticipantes ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #nomeParticipantes li {
+      background: var(--color-gray-100);
+      margin-bottom: 16px;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      border-left: 5px solid var(--color-primary);
+      transition: all 0.3s ease;
+    }
+
+    #nomeParticipantes li:hover {
+      transform: translateX(4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Container de cada participante */
+    .participante-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Nome do participante */
+    .participante-nome {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin: 0 0 6px 0;
+      line-height: 1.3;
+    }
+
+    /* Responsabilidade */
+    .participante-responsabilidade {
+      font-size: 0.9rem;
+      color: var(--color-gray-700);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Estilo opcional para melhorar legibilidade */
+    .participante-container::before {
+      content: "👤";
+      font-size: 1.4rem;
+      margin-right: 10px;
+      opacity: 0.7;
+    }
+	
+  </style>
+
+<script id="reportData" type="application/json">{##INSIRA_CONTEUDO_JSON##}</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
+
+</head>
+<body>
+  <div class="quadroGeral">
+    <div><h1 id="titulo">Título Macro Assunto</h1></div>
+    <div id="problema_central"></div>
+
+    <div class="card">
+      <div class="tituloCard">Contexto Geral</div>
+      <div id="resumoGeral" class="corpoCard"></div>
+    </div>
+
+    <div class="card">
+      <div class="tituloCard">Envolvidos</div>
+	  <div class="corpoCard">
+		<div id="nomeParticipantes"></div>
+	  </div>
+    </div>
+
+    <div class="card">
+      <div class="tituloCard">Mapa Mental</div>
+	  <div class="corpoCard">
+          <div class="explicacao">
+            <p>Um mapa mental é uma representação visual de ideias, conceitos ou informações, organizada de forma hierárquica e ramificada, partindo de um tema central. Criado para refletir a forma como o cérebro associa e conecta pensamentos, ele utiliza palavras-chave, cores, símbolos e imagens para estimular a memorização e a criatividade.</p>
+            <p>À esquerda, posiciona-se o tópico principal; a partir dele, ramos se expandem para subtemas, que podem se dividir em níveis adicionais de detalhe. Essa estrutura não linear facilita a visualização das relações entre elementos, permitindo identificar conexões e padrões rapidamente. </p>
+            <p>Ao integrar lógica e criatividade, o mapa mental favorece tanto a compreensão global do assunto quanto a análise de pontos específicos, tornando-se uma ferramenta eficaz para pensar, aprender e comunicar informações de forma estruturada e envolvente.</p>
+          </div>
+      </div>
+	  <div id="markmap"></div>
+    </div>
+
+    <div class="card">
+        <div class="tituloCard">Necessidades</div>
+	  <div class="corpoCard">
+        <div class="explicacao">
+            <p>A seção Necessidades tem como objetivo registrar, de forma estruturada, aquilo que efetivamente gera valor para um projeto, produto ou serviço. O termo pode assumir diferentes nuances conforme o contexto: em reuniões, aparece como problemas centrais a serem resolvidos; em processos de concepção, corresponde a requisitos e expectativas do cliente; em abordagens de engenharia como o Quality Function Deployment (QFD), representa a tradução da "voz do cliente" em elementos que guiam o desenvolvimento técnico (Akao, 1990).</p>
+		    <p>Apesar das variações, a essência é comum: necessidades expressam o que deve ser atendido para que uma solução seja percebida como relevante e útil. Identificá-las e registrá-las permite alinhar perspectivas divergentes, orientar esforços e reduzir ambiguidades. Brown (2009) destaca, no design thinking, que dar visibilidade às necessidades latentes é fundamental para inovação centrada no usuário. Cooper (2019) lembra que iniciativas falham quando não se apoiam em necessidades reais e validadas. E o PMI (2021) enfatiza que projetos devem começar pela clara definição das necessidades de negócio e das expectativas das partes interessadas.</p>
+		    <p>Assim, esta seção serve como ponto de convergência entre reflexão e ação, sintetizando os aspectos que merecem prioridade. Mais do que uma lista, ela traduz o valor esperado e orienta os próximos passos.</p>
+        </div>
+              <div id="necessidades" data-json-skip></div>
+		<div class="explicacao">
+            <p>É fundamental verificar se estamos lidando com um problema real ou apenas com uma solução disfarçada, pois muitas vezes equipes e indivíduos são treinados a pensar diretamente em respostas sem refletir sobre a questão de origem.</p>
+		    <p>Isso leva ao risco de otimizar algo que não deveria existir, desperdiçando recursos e energia em frentes sem valor. Ao checar se há impacto mensurável, consequência clara e relevância estratégica, garantimos que esforços se concentrem em resolver causas genuínas. Essa prática aumenta a eficácia, evita retrabalho e assegura que cada ação realizada maximize valor de forma consciente e sustentável.</p>
+	    </div>
+      </div>
+      
+    </div>
+    <div class="card">
+      <div class="tituloCard">Requisitos</div>
+	  <div class="corpoCard">
+        <div class="explicacao">
+		    <p>A seção Requisitos tem como propósito traduzir as necessidades previamente identificadas em ações concretas, especificações ou condições a serem atendidas. Dependendo do contexto, esse termo pode assumir diferentes interpretações: em projetos, são os requisitos técnicos que detalham funcionalidades, padrões de qualidade, desempenho e restrições a serem observadas; em metodologias como o Quality Function Deployment (QFD), aparecem como as colunas da matriz, isto é, os meios técnicos e organizacionais que, se implementados, respondem diretamente às necessidades do cliente (Akao, 1990); em uma perspectiva estratégica, representam os pontos de alavancagem a serem priorizados para maximizar a geração de valor e a competitividade.</p>
+		    <p>Em todas essas abordagens, os requisitos funcionam como um elo entre o que se deseja alcançar e o modo como isso será efetivamente realizado. O Project Management Institute (PMI, 2021) destaca que a definição clara de requisitos é essencial para delimitar escopo, alinhar expectativas e garantir que o produto ou serviço final satisfaça os objetivos de negócio. Já Cooper (2019) ressalta que requisitos bem estruturados orientam a inovação de maneira pragmática, reduzindo riscos de retrabalho.</p>
+		    <p>Assim, esta seção não apenas lista condições técnicas, mas sintetiza as prioridades estratégicas de execução, servindo como guia para transformar valor esperado em entregas concretas.</p>
+	    </div>
+	  </div>
+      <div id="requisitos_tecnicos" class="corpoCard" data-json-skip></div>
+    </div>
+	
+    <div class="card">
+      <div class="tituloCard">Insights</div>
+	  <div class="corpoCard">
+        <div class="explicacao">
+		    <p>A seção Insights reúne ideias emergentes que, embora não tenham sido explicitamente discutidas durante a reunião ou concebidas de forma estruturada, surgem a partir da leitura e interpretação dos tópicos abordados. São percepções mais abstratas e exploratórias, muitas vezes baseadas em conexões laterais, analogias ou intuições, que oferecem novas perspectivas sobre o problema central.</p>
+		    <p>Diferentemente das necessidades, que expressam valor reconhecido e devem ser atendidas, ou dos requisitos, que traduzem essas necessidades em ações concretas, os insights ocupam um espaço mais especulativo. Eles funcionam como um convite a enxergar oportunidades ainda não amadurecidas, mas que podem se revelar relevantes se exploradas. Segundo Nonaka e Takeuchi (1995), a criação de conhecimento organizacional depende justamente da conversão entre o tácito e o explícito — e os insights representam esse primeiro movimento, em que impressões subjetivas começam a ser registradas.</p>
+		    <p>Embora careçam de embasamento sólido, insights podem se tornar sementes de inovação, ao provocar reflexões fora do padrão e estimular a equipe a considerar caminhos alternativos. Brown (2009) ressalta que ideias aparentemente periféricas são muitas vezes o ponto de partida para inovações disruptivas. Assim, esta seção busca valorizar a intuição coletiva, abrindo espaço para conexões inesperadas que podem gerar futuras vantagens competitivas.</p>
+	    </div>
+	  </div>
+      <div id="insights" class="corpoCard"></div>
+    </div>
+	
+    <div class="card">
+      <div class="tituloCard">Sentimentos</div>
+      <div id="sentimentos" class="corpoCard" data-json-skip></div>
+    </div>
+	
+    <div class="card">
+      <div class="tituloCard">Os Números</div>
+      <div id="reuniao_em_numeros" class="corpoCard" data-mode="replace"></div>
+    </div>
+
+    <div class="card">
+      <div class="tituloCard">Questões em Aberto</div>
+      <div id="perguntas_sem_respostas" class="corpoCard" data-mode="replace"></div>
+    </div>
+	
+	
+    <div class="card">
+      <div class="tituloCard">Pontos Divergentes</div>
+      <div id="contradicoes" class="corpoCard" data-mode="replace"></div>
+    </div>
+	
+	<div class="card">
+		<div class="fluxo-processo" id="fluxo-processo" data-json-skip>
+		  <div class="tituloCard">Fluxo do Processo</div>
+		  <div id="diagram-fluxo-processo"></div>
+		</div>
+	</div>
+	
+	
+  </div>
+
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// ✏️  EDITE O PSEUDOCÓDIGO AQUI
+//
+//  Notação suportada:
+//    Qualquer texto;          → nó/passo
+//    if(condição?) { ... }    → decisão
+//    else { ... }             → ramo alternativo
+//    while(condição?) { ... } → loop
+//    // comentário            → ignorado
+// ─────────────────────────────────────────────────────────────
+const codigoFluxoMapeado = `
+###PSEUDOCODIGO_FLUXO_PROCESSO###
+`;
+// ─────────────────────────────────────────────────────────────
+
+
+// ══════════════════════════════════════════
+//  TOKENIZADOR
+// ══════════════════════════════════════════
+function tokenize(code) {
+  const tokens = [];
+  for (let line of code.split('\n')) {
+    line = line.trim();
+    if (!line) continue;
+
+    // remove comentários de linha
+    const ci = line.indexOf('//');
+    if (ci === 0) continue;
+    if (ci > 0) line = line.substring(0, ci).trim();
+    if (!line) continue;
+
+    if (line === '{') { tokens.push({ type: 'lbrace' }); continue; }
+    if (line === '}' || line === '};') { tokens.push({ type: 'rbrace' }); continue; }
+
+    if (/^else/.test(line)) {
+      tokens.push({ type: 'else' });
+      if (line.includes('{')) tokens.push({ type: 'lbrace' });
+      continue;
+    }
+
+    const ifm = line.match(/^if\s*\((.+)\)\s*(\{?)$/);
+    if (ifm) {
+      tokens.push({ type: 'if', condition: ifm[1] });
+      if (ifm[2] === '{') tokens.push({ type: 'lbrace' });
+      continue;
+    }
+
+    const wm = line.match(/^while\s*\((.+)\)\s*(\{?)$/);
+    if (wm) {
+      tokens.push({ type: 'while', condition: wm[1] });
+      if (wm[2] === '{') tokens.push({ type: 'lbrace' });
+      continue;
+    }
+
+    if (line.endsWith(';')) {
+      tokens.push({ type: 'stmt', text: line.slice(0, -1).trim() });
+    }
+  }
+  return tokens;
+}
+
+
+// ══════════════════════════════════════════
+//  PARSER → AST
+// ══════════════════════════════════════════
+// Retorna [lista de nós AST, nova posição]
+function parseBlock(tokens, pos) {
+  const stmts = [];
+  while (pos < tokens.length && tokens[pos]?.type !== 'rbrace') {
+    const tok = tokens[pos];
+
+    if (tok.type === 'stmt') {
+      stmts.push({ type: 'stmt', text: tok.text });
+      pos++;
+
+    } else if (tok.type === 'if') {
+      pos++;
+      let then = [], els = [];
+
+      if (tokens[pos]?.type === 'lbrace') {
+        pos++;
+        [then, pos] = parseBlock(tokens, pos);
+        if (tokens[pos]?.type === 'rbrace') pos++;
+      } else if (tokens[pos]?.type === 'stmt') {
+        then = [{ type: 'stmt', text: tokens[pos].text }];
+        pos++;
+      }
+
+      if (tokens[pos]?.type === 'else') {
+        pos++;
+        if (tokens[pos]?.type === 'lbrace') {
+          pos++;
+          [els, pos] = parseBlock(tokens, pos);
+          if (tokens[pos]?.type === 'rbrace') pos++;
+        } else if (tokens[pos]?.type === 'stmt') {
+          els = [{ type: 'stmt', text: tokens[pos].text }];
+          pos++;
+        }
+      }
+      stmts.push({ type: 'if', condition: tok.condition, then, else: els });
+
+    } else if (tok.type === 'while') {
+      pos++;
+      let body = [];
+
+      if (tokens[pos]?.type === 'lbrace') {
+        pos++;
+        [body, pos] = parseBlock(tokens, pos);
+        if (tokens[pos]?.type === 'rbrace') pos++;
+      } else if (tokens[pos]?.type === 'stmt') {
+        body = [{ type: 'stmt', text: tokens[pos].text }];
+        pos++;
+      }
+      stmts.push({ type: 'while', condition: tok.condition, body });
+
+    } else {
+      pos++;
+    }
+  }
+  return [stmts, pos];
+}
+
+
+// ══════════════════════════════════════════
+//  GERADOR MERMAID
+// ══════════════════════════════════════════
+let _nodeCount = 0;
+const _lines = [];
+
+function _newNode(label, diamond = false) {
+  const id = 'N' + _nodeCount++;
+  const safe = label.replace(/"/g, "'");
+  _lines.push(diamond ? `  ${id}{"${safe}"}` : `  ${id}["${safe}"]`);
+  return id;
+}
+
+function _connect(from, to, label = '') {
+  _lines.push(label ? `  ${from} -->|${label}| ${to}` : `  ${from} --> ${to}`);
+}
+
+// Retorna { entry: id|null, exits: [{id, label}] }
+function _gen(stmts) {
+  let firstEntry = null;
+  let pending = [];
+
+  const flush = (targetId) => {
+    for (const p of pending) _connect(p.id, targetId, p.label);
+    pending = [];
+  };
+
+  for (const stmt of stmts) {
+    if (stmt.type === 'stmt') {
+      const id = _newNode(stmt.text);
+      if (firstEntry === null) firstEntry = id;
+      flush(id);
+      pending = [{ id, label: '' }];
+
+    } else if (stmt.type === 'if') {
+      const id = _newNode(stmt.condition, true);
+      if (firstEntry === null) firstEntry = id;
+      flush(id);
+
+      const thenR = _gen(stmt.then);
+      const elsR  = _gen(stmt.else);
+
+      if (thenR.entry) _connect(id, thenR.entry, 'Sim');
+      if (elsR.entry)  _connect(id, elsR.entry,  'Não');
+
+      pending = [];
+      // saídas do ramo then
+      if (thenR.entry) pending.push(...thenR.exits);
+      else             pending.push({ id, label: 'Sim' });
+      // saídas do ramo else (ou bypass "Não" se não tiver else)
+      if (elsR.entry)  pending.push(...elsR.exits);
+      else             pending.push({ id, label: 'Não' });
+
+    } else if (stmt.type === 'while') {
+      const id = _newNode(stmt.condition, true);
+      if (firstEntry === null) firstEntry = id;
+      flush(id);
+
+      const bodyR = _gen(stmt.body);
+      if (bodyR.entry) {
+        _connect(id, bodyR.entry, 'Sim');
+        for (const ex of bodyR.exits) _connect(ex.id, id, ex.label);
+      }
+
+      pending = [{ id, label: 'Não' }];
+    }
+  }
+
+  return { entry: firstEntry, exits: pending };
+}
+
+function gerarMermaid(code) {
+  _nodeCount = 0;
+  _lines.length = 0;
+  _lines.push('flowchart TD');
+
+  const tokens = tokenize(code);
+  const [ast]  = parseBlock(tokens, 0);
+  _gen(ast);
+
+  return _lines.join('\n');
+}
+
+
+// ══════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'light',
+  themeVariables: {
+    darkMode: false,
+    primaryColor: '#61903E',
+    primaryTextColor: '#4E6D5D',
+    primaryBorderColor: '#4E6D5D',
+    lineColor: '#343a40',
+    edgeLabelBackground: '#fff',
+  },
+  flowchart: { curve: 'basis', padding: 28 }
+});
+
+(async () => {
+  const syntax = gerarMermaid(codigoFluxoMapeado);
+  const { svg } = await mermaid.render('cf', syntax);
+  document.getElementById('diagram-fluxo-processo').innerHTML = svg;
+})();
+</script>
+
+
+<script>
+
+
+
+
+
+
+
+    // Script para popular os campos básicos
+    document.addEventListener('DOMContentLoaded', () => {
+      const dataTag = document.getElementById('reportData');
+      if (!dataTag) return;
+
+      let data = {};
+      try {
+        data = JSON.parse(dataTag.textContent || '{}');
+      } catch (e) {
+        console.error('JSON inválido em #reportData:', e);
+        return;
+      }
+
+      const byId = (id) => document.getElementById(id);
+      const toLines = (arr) => (Array.isArray(arr) ? arr.map(safeText).join('<br>') : '');
+      function safeText(v) {
+        const span = document.createElement('span');
+        span.textContent = v == null ? '' : String(v);
+        return span.innerHTML;
+      }
+      function setHTML(id, html) {
+        const el = byId(id);
+        if (el) el.innerHTML = html;
+      }
+      function setLines(id, arr) { setHTML(id, toLines(arr)); }
+      function setText(id, text) {
+        const el = byId(id);
+        if (el) el.textContent = text == null ? '' : String(text);
+      }
+      function brify(text) {
+        if (text == null) return '';
+        return safeText(text).replace(/\n/g, '<br>');
+      }
+
+      function createAccordion(idPrefix, items) {
+        if (!Array.isArray(items) || items.length === 0) return '';
+        
+        let accordionHTML = `<div class="accordion" id="accordion-${idPrefix}">`;
+        
+        items.forEach((item, index) => {
+          const titleField = idPrefix === 'necessidades' ? 'necessidade' : 'requisito';
+          const descField = idPrefix === 'necessidades' ? 'desc_necessidade' : 'desc_requisito';
+          
+          const title = item[titleField] || '';
+          const description = item[descField] || '';
+          
+          const uniqueId = `${idPrefix}-${index}`;
+          
+          accordionHTML += `
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-${uniqueId}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#collapse-${uniqueId}" aria-expanded="false" 
+                        aria-controls="collapse-${uniqueId}">
+                  ${safeText(title)}
+                </button>
+              </h2>
+              <div id="collapse-${uniqueId}" class="accordion-collapse collapse" 
+                   aria-labelledby="heading-${uniqueId}" data-bs-parent="#accordion-${idPrefix}">
+                <div class="accordion-body">
+                  ${safeText(description)}
+                </div>
+              </div>
+            </div>`;
+        });
+        
+        accordionHTML += '</div>';
+        return accordionHTML;
+      }
+
+      if ('resumo' in data) {
+        const r = data.resumo ?? '';
+        const hasTag = /<[^>]+>/.test(r);
+        setHTML('resumoGeral', hasTag ? r : brify(r));
+      }
+      if ('problema_central' in data) setText('problema_central', data.problema_central);
+      
+      // Processamento dos accordions
+      if ('necessidades' in data) {
+        const el = byId('necessidades');
+        if (el) {
+          el.innerHTML = createAccordion('necessidades', data.necessidades);
+        }
+      }
+	if ('requisitos_tecnicos' in data) {
+	  const el = byId('requisitos_tecnicos');
+	  if (el) {
+		// Carrega as prioridades do qfd_matrix.json embutido
+		fetch('qfd_matrix.json')
+		  .then(response => response.json())
+		  .then(qfdData => {
+			el.innerHTML = createAccordionOrdenado('requisitos', data.requisitos_tecnicos, qfdData.prioridades);
+		  })
+		  .catch(() => {
+			// Fallback caso não encontre o arquivo
+			el.innerHTML = createAccordion('requisitos', data.requisitos_tecnicos);
+		  });
+	  }
+	}
+      
+      if ('insights' in data) setLines('insights', data.insights);
+
+      // Processar sentimentos como tabela
+      if ('sentimentos' in data) {
+        const el = byId('sentimentos');
+        if (el) {
+          const table = document.createElement('table');
+          const thead = document.createElement('thead');
+          const hr = document.createElement('tr');
+          const th1 = document.createElement('th'); th1.textContent = 'Sentimento';
+          const th2 = document.createElement('th'); th2.textContent = 'Valor';
+          hr.appendChild(th1); hr.appendChild(th2); thead.appendChild(hr);
+          table.appendChild(thead);
+
+          const tbody = document.createElement('tbody');
+          const s = data.sentimentos;
+          let rows = [];
+          if (Array.isArray(s)) {
+            rows = s.map(item => {
+              if (Array.isArray(item) && item.length >= 2) return { nome: String(item[0]), valor: Number(item[1]) };
+              if (item && typeof item === 'object') {
+                const k = 'nome' in item ? item.nome : Object.keys(item)[0];
+                const v = 'valor' in item ? item.valor : item[k];
+                return { nome: String(k), valor: Number(v) };
+              }
+              return null;
+            }).filter(Boolean);
+          } else if (s && typeof s === 'object') {
+            rows = Object.entries(s).map(([k, v]) => ({ nome: String(k), valor: Number(v) }));
+          }
+
+          rows.forEach(({ nome, valor }) => {
+            const tr = document.createElement('tr');
+            const tdNome = document.createElement('td'); tdNome.textContent = nome;
+            const tdVal = document.createElement('td'); tdVal.textContent = Number.isFinite(valor) ? String(valor) : '';
+            tr.appendChild(tdNome); tr.appendChild(tdVal); tbody.appendChild(tr);
+          });
+
+          table.appendChild(tbody);
+          el.innerHTML = '';
+          el.appendChild(table);
+        }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+// Script para converter divs em listas ordenadas
+document.addEventListener('DOMContentLoaded', () => {
+  const ids = ['insights','nomeParticipantes'];
+
+  ids.forEach(id => {
+    const container = document.getElementById(id);
+    if (!container) return;
+
+    let lines;
+    if (id === 'nomeParticipantes') {
+      // Para participantes, divide por ; ou , em vez de <br>
+      lines = container.innerHTML
+        .split(/[;,]/)
+        .map(l => l.trim())
+        .filter(l => l);
+    } else {
+      // Para outros campos, mantém o comportamento original com <br>
+      lines = container.innerHTML
+        .split(/<br\s*\/?>/i)
+        .map(l => l.trim())
+        .filter(l => l);
+    }
+
+    if (!lines.length) return;
+
+    const ol = document.createElement('ol');
+    lines.forEach(line => {
+      const li = document.createElement('li');
+      li.innerHTML = line;
+      ol.appendChild(li);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(ol);
+  });
+});
+  </script>
+
+
+
+
+
+
+
+
+
+  <script>
+    // Script para criar barras de sentimentos
+    window.addEventListener('load', () => {
+      const wrap = document.getElementById('sentimentos');
+      if (!wrap) return;
+      const table = wrap.querySelector('table');
+      if (!table || !table.tBodies.length) return;
+
+      if (!document.getElementById('sentimentoBarCSS')) {
+        const style = document.createElement('style');
+        style.id = 'sentimentoBarCSS';
+        style.textContent = `
+          #sentimentos table, #sentimentos th, #sentimentos td { border: none !important; }
+          #sentimentos table { border-collapse: separate; border-spacing: 0; width: 100%; }
+          .bar-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 1rem; }
+          .bar-grid::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #e5e7eb; }
+          .neg, .pos { display: flex; align-items: center; height: 100%; }
+          .neg { justify-content: flex-end; }
+          .pos { justify-content: flex-start; }
+          .bar { height: 70%; opacity: .95; }
+          .bar.pos { background: #3b82f6; }
+          .bar.neg { background: #ef4444; }
+          #sentimentos td.value-cell { text-align: right; white-space: nowrap; }
+        `;
+        document.head.appendChild(style);
+      }
+
+      const thead = table.tHead || table.createTHead();
+      const hr = thead.rows[0] || thead.insertRow();
+      if (hr.cells.length === 0) {
+        const th1 = document.createElement('th'); th1.textContent = 'Sentimento'; hr.appendChild(th1);
+        const th2 = document.createElement('th'); th2.textContent = 'Valor'; hr.appendChild(th2);
+      }
+      if (hr.cells.length === 2) {
+        const th3 = document.createElement('th'); th3.textContent = ''; hr.appendChild(th3);
+      }
+
+      const rows = Array.from(table.tBodies[0].rows);
+      const parseNum = (s) => {
+        const v = parseFloat(String(s).replace(',', '.'));
+        return Number.isFinite(v) ? v : 0;
+      };
+      const values = rows.map(r => parseNum(r.cells[1]?.textContent || '0'));
+      const maxAbs = Math.max(0.0001, ...values.map(v => Math.abs(v)));
+
+      rows.forEach((r, i) => {
+        const v = values[i];
+
+        const cellBar = r.cells[1];
+        const grid = document.createElement('div');
+        grid.className = 'bar-grid';
+
+        const neg = document.createElement('div'); neg.className = 'neg';
+        const pos = document.createElement('div'); pos.className = 'pos';
+
+        const w = Math.round(Math.abs(v) / maxAbs * 100);
+        if (v < 0) {
+          const bar = document.createElement('div'); bar.className = 'bar neg';
+          bar.style.width = w + '%';
+          neg.appendChild(bar);
+        } else if (v > 0) {
+          const bar = document.createElement('div'); bar.className = 'bar pos';
+          bar.style.width = w + '%';
+          pos.appendChild(bar);
+        }
+        grid.appendChild(neg);
+        grid.appendChild(pos);
+        cellBar.innerHTML = '';
+        cellBar.appendChild(grid);
+
+        const cellVal = document.createElement('td');
+        cellVal.className = 'value-cell';
+        cellVal.textContent = Number.isFinite(v) ? v.toString() : '';
+        r.appendChild(cellVal);
+      });
+    });
+  </script>
+
+  <script>
+    // Script para criar o mapa mental usando markmap-autoloader
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Inicializando markmap com autoloader...');
+      
+      // Pega os dados do JSON
+      const dataTag = document.getElementById('reportData');
+      if (!dataTag) {
+        console.error('Elemento #reportData não encontrado');
+        return;
+      }
+
+      let data = {};
+      try {
+        data = JSON.parse(dataTag.textContent || '{}');
+      } catch (e) {
+        console.error('JSON inválido em #reportData:', e);
+        return;
+      }
+
+let markdownContent = (data.markdown || '').trim();
+
+// Remove cercas de código tipo ``` ou ```markmap
+markdownContent = markdownContent
+  .replace(/^```[a-zA-Z]*\s*/m, '') // abre ``` com ou sem linguagem
+  .replace(/```$/m, '');            // fecha ```
+
+
+
+if (!markdownContent) {
+  console.warn('Campo "markdown" vazio/ausente no JSON.');
+  document.getElementById('markmap').innerHTML = '<p>Nenhum conteúdo de mapa mental disponível.</p>';
+  return;
+}
+
+      console.log('Markdown encontrado:', markdownContent);
+
+      // Cria um elemento pre com a classe markmap para o autoloader processar
+      const markmapContainer = document.getElementById('markmap');
+      if (!markmapContainer) {
+        console.error('Container #markmap não encontrado');
+        return;
+      }
+
+      // Limpa o container e adiciona o conteúdo markdown
+      markmapContainer.innerHTML = `<pre class="markmap">${markdownContent}</pre>`;
+      
+      console.log('Conteúdo markdown adicionado ao container');
+
+      // O autoloader deve processar automaticamente
+      // Vamos verificar se funcionou após um tempo
+      setTimeout(() => {
+        const svg = markmapContainer.querySelector('svg');
+        if (svg) {
+          console.log('Mapa mental criado com sucesso!');
+        } else {
+          console.warn('Mapa mental não foi criado automaticamente');
+        }
+      }, 2000);
+    });
+	
+	
+// Fallback manual se o autoloader falhar
+setTimeout(() => {
+  const svg = markmapContainer.querySelector('svg');
+  if (!svg && window.markmap) {
+    // Tenta inicializar manualmente
+    const { markmap } = window.markmap;
+    if (markmap && markmap.Markmap) {
+      const mm = markmap.Markmap.create('#markmap');
+      const transformer = new markmap.Transformer();
+      const { root } = transformer.transform(markdownContent);
+      mm.setData(root);
+      mm.fit();
+    }
+  }
+}, 3000);
+	
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ===== Configuração rápida =====
+  const INSERT_MODE = 'inside'; // 'inside' (recomendado para garantir visibilidade) ou 'after' (abaixo do título)
+  const DURATION = 250;         // ms da animação
+
+  // ===== CSS do fade (injeta uma única vez) =====
+  if (!document.getElementById('explicacaoFadeCSS')) {
+    const style = document.createElement('style');
+    style.id = 'explicacaoFadeCSS';
+    style.textContent = `
+      .explicacao {
+        overflow: hidden;
+        transition: opacity ${DURATION}ms ease, max-height ${DURATION}ms ease;
+        will-change: opacity, max-height;
+      }
+      .explicacao.is-hidden { opacity: 0; max-height: 0; }
+      .explicacao.is-visible { opacity: 1; max-height: 2000px; }
+
+      .zoom-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        cursor: pointer;
+        user-select: none;
+        line-height: 1;
+        z-index: 2;             /* garante clique mesmo com overlays leves */
+      }
+      .zoom-trigger i { font-size: 1.1rem; }
+      .tituloCard.with-zoom {
+        display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+      }
+      /* Se você preferir o ícone "abaixo" (INSERT_MODE='after'), ele vira um bloco */
+      .zoom-trigger.block { display: block; margin-top: .25rem; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // ===== Função de preparo/controle por card =====
+  function setupCard(card) {
+    const titulo = card.querySelector('.tituloCard');
+    if (!titulo || titulo.dataset.zoomBound === '1') return;
+
+    const explicacoes = card.querySelectorAll('.explicacao');
+    if (!explicacoes.length) return;
+
+    // Estado inicial: oculto, a menos que o HTML já marque como visível
+    explicacoes.forEach(el => {
+      if (!el.classList.contains('is-visible')) {
+        el.classList.add('is-hidden');
+      }
+    });
+
+    // Cria gatilho
+    const trigger = document.createElement('div');
+    trigger.className = 'zoom-trigger' + (INSERT_MODE === 'after' ? ' block' : '');
+    trigger.title = 'Mostrar/ocultar explicação';
+    trigger.innerHTML = `<i class="bi bi-zoom-in" aria-hidden="true"></i>`;
+
+    if (INSERT_MODE === 'inside') {
+      // Ícone no próprio título (mais seguro contra "sumir")
+      titulo.classList.add('with-zoom');
+      titulo.appendChild(trigger);
+    } else {
+      // Ícone logo abaixo do título
+      titulo.insertAdjacentElement('afterend', trigger);
+    }
+
+    // Clique: alterna somente as .explicacao deste card
+    trigger.addEventListener('click', () => {
+      const icon = trigger.querySelector('i');
+      const anyVisible = Array.from(explicacoes).some(el => el.classList.contains('is-visible'));
+
+      if (anyVisible) {
+        explicacoes.forEach(el => {
+          el.classList.remove('is-visible');
+          el.classList.add('is-hidden');
+        });
+        icon?.classList.remove('bi-zoom-out');
+        icon?.classList.add('bi-zoom-in');
+      } else {
+        explicacoes.forEach(el => {
+          el.classList.remove('is-hidden');
+          el.classList.add('is-visible');
+        });
+        icon?.classList.remove('bi-zoom-in');
+        icon?.classList.add('bi-zoom-out');
+      }
+    });
+
+    // marca para não duplicar
+    titulo.dataset.zoomBound = '1';
+  }
+
+  // ===== Aplica em todos os cards presentes =====
+  document.querySelectorAll('.card').forEach(setupCard);
+});
+</script>
+
+
+
+
+
+<script>
+
+
+// Antes da função createAccordion, adicione:
+function createAccordionOrdenado(idPrefix, items, prioridades) {
+  if (!Array.isArray(items) || items.length === 0) return '';
+  
+  // Cria array de índices ordenados pela prioridade
+  const indicesOrdenados = prioridades
+    .map((prioridade, index) => ({ prioridade, index }))
+    .sort((a, b) => a.prioridade - b.prioridade)
+    .map(item => item.index);
+  
+  let accordionHTML = `<div class="accordion" id="accordion-${idPrefix}">`;
+  
+  indicesOrdenados.forEach(index => {
+    const item = items[index];
+    const titleField = idPrefix === 'necessidades' ? 'necessidade' : 'requisito';
+    const descField = idPrefix === 'necessidades' ? 'desc_necessidade' : 'desc_requisito';
+    
+    const title = item[titleField] || '';
+    const description = item[descField] || '';
+    const prioridade = prioridades[index];
+    
+    const uniqueId = `${idPrefix}-${index}`;
+    
+    accordionHTML += `
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-${uniqueId}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                  data-bs-target="#collapse-${uniqueId}" aria-expanded="false" 
+                  aria-controls="collapse-${uniqueId}">
+            <span style="color: #94268C; font-weight: 600; margin-right: 8px;">${prioridade}.</span>
+            ${safeText(title)}
+          </button>
+        </h2>
+        <div id="collapse-${uniqueId}" class="accordion-collapse collapse" 
+             aria-labelledby="heading-${uniqueId}" data-bs-parent="#accordion-${idPrefix}">
+          <div class="accordion-body">
+            ${safeText(description)}
+          </div>
+        </div>
+      </div>`;
+  });
+  
+  accordionHTML += '</div>';
+  return accordionHTML;
+}
+
+
+function createAccordion(idPrefix, items) {
+  if (!Array.isArray(items) || items.length === 0) return '';
+  
+  let accordionHTML = `<div class="accordion" id="accordion-${idPrefix}">`;
+  
+  items.forEach((item, index) => {
+    const titleField = idPrefix === 'necessidades' ? 'necessidade' : 'requisito';
+    const descField = idPrefix === 'necessidades' ? 'desc_necessidade' : 'desc_requisito';
+    
+    const title = item[titleField] || '';
+    const description = item[descField] || '';
+    
+    const uniqueId = `${idPrefix}-${index}`;
+    
+    accordionHTML += `
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-${uniqueId}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                  data-bs-target="#collapse-${uniqueId}" aria-expanded="false" 
+                  aria-controls="collapse-${uniqueId}">
+            ${safeText(title)}
+          </button>
+        </h2>
+        <div id="collapse-${uniqueId}" class="accordion-collapse collapse" 
+             aria-labelledby="heading-${uniqueId}" data-bs-parent="#accordion-${idPrefix}">
+          <div class="accordion-body">
+            ${safeText(description)}
+          </div>
+        </div>
+      </div>`;
+  });
+  
+  accordionHTML += '</div>';
+  return accordionHTML;
+}
+</script>
+
+
+
+
+
+
+
+<script>
+// --- Script genérico e robusto para popular divs a partir de #reportData ---
+window.addEventListener('load', () => {
+  const dataTag = document.getElementById('reportData');
+  if (!dataTag) {
+    console.error('[gen-populate] #reportData não encontrado');
+    return;
+  }
+
+  let data;
+  try {
+    data = JSON.parse(dataTag.textContent || '{}');
+  } catch (err) {
+    console.error('[gen-populate] erro ao parsear JSON em #reportData:', err);
+    return;
+  }
+
+  const safeText = v => {
+    const span = document.createElement('span');
+    span.textContent = v == null ? '' : String(v);
+    return span.innerHTML;
+  };
+
+  function makeAccordionForArray(key, arr) {
+    const accId = `${key}-accordion`;
+    let html = `<div class="accordion" id="${accId}">`;
+    arr.forEach((item, i) => {
+      const title = (item && (item.necessidade || item.requisito || item.title)) || `Item ${i + 1}`;
+      const desc = (item && (item.desc_necessidade || item.desc_requisito || item.description || '')) || '';
+      const unique = `${accId}-item-${i}`;
+      const collapseId = `${unique}-collapse`;
+      // se desc parece HTML, mantemos, senão escapamos
+      const descHtml = /<[^>]+>/.test(String(desc)) ? String(desc) : safeText(desc);
+      html += `
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-${unique}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+              ${safeText(title)}
+            </button>
+          </h2>
+          <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="heading-${unique}" data-bs-parent="#${accId}">
+            <div class="accordion-body">
+              ${descHtml}
+            </div>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
+  Object.entries(data).forEach(([key, val]) => {
+    const el = document.getElementById(key);
+    if (!el) {
+      // opcional: log quando há campo no JSON sem container correspondente
+      // console.log(`[gen-populate] sem elemento para chave "${key}"`);
+      return;
+    }
+
+    // respeita tanto atributo quanto classe estilo "skip"
+    if (el.hasAttribute('data-json-skip') || el.classList.contains('data-json-skip')) {
+      console.log(`[gen-populate] pula chave "${key}" por data-json-skip/class`);
+      return;
+    }
+
+    try {
+      // Arrays
+	  
+
+// Tratamento especial para contradições
+    if (key === 'contradicoes' && Array.isArray(val)) {
+      const ol = document.createElement('ol');
+      val.forEach(item => {
+        const li = document.createElement('li');
+        
+        // Adiciona os trechos divergentes
+        if (item.trechos && Array.isArray(item.trechos)) {
+          item.trechos.forEach(trecho => {
+            const div = document.createElement('div');
+            div.className = 'trecho_divergente';
+            div.textContent = '...' + trecho.replace(/^"|"$/g, '') + '...'; // adiciona ... antes e depois
+            li.appendChild(div);
+          });
+        }
+        
+        // Adiciona a explicação
+        if (item.explicacao) {
+          const div = document.createElement('div');
+          div.className = 'explica_divergente';
+          div.textContent = item.explicacao;
+          li.appendChild(div);
+        }
+        
+        ol.appendChild(li);
+      });
+      el.innerHTML = '';
+      el.appendChild(ol);
+      console.log(`[gen-populate] preencheu "${key}" como contradições (${val.length} items)`);
+      return;
+    }	  
+
+
+
+if (Array.isArray(val)) {
+  const ol = document.createElement('ol');
+  val.forEach(item => {
+    if (typeof item === 'string') {
+      // divide em subitens por ponto e vírgula
+      item.split(';').forEach(part => {
+        const li = document.createElement('li');
+        li.textContent = part.trim();
+        if (li.textContent) ol.appendChild(li);
+      });
+    } else {
+      const li = document.createElement('li');
+      li.textContent = JSON.stringify(item);
+      ol.appendChild(li);
+    }
+  });
+  el.innerHTML = '';
+  el.appendChild(ol);
+  console.log(`[gen-populate] preencheu "${key}" como lista (${ol.childNodes.length} items)`);
+  return;
+}
+
+// Strings (tratamento especial para nomeParticipantes)
+if (typeof val === 'string') {
+  if (key === 'nomeParticipantes') {
+    // Divide por ; ou , e cria lista ordenada
+    const participantes = val.split(/[;,]/).map(p => p.trim()).filter(p => p);
+    const ol = document.createElement('ol');
+    participantes.forEach(participante => {
+      const li = document.createElement('li');
+      li.textContent = participante;
+      ol.appendChild(li);
+    });
+    el.innerHTML = '';
+    el.appendChild(ol);
+    console.log(`[gen-populate] preencheu "${key}" como lista de participantes (${participantes.length} items)`);
+    return;
+  }
+  
+  if (/<[a-z][\s\S]*>/i.test(val)) {
+    el.innerHTML = val;
+  } else {
+    el.textContent = val;
+  }
+  console.log(`[gen-populate] preencheu "${key}" como string`);
+  return;
+}
+
+      // Strings (aceita HTML)
+      if (typeof val === 'string') {
+        if (/<[a-z][\s\S]*>/i.test(val)) {
+          el.innerHTML = val;
+        } else {
+          el.textContent = val;
+        }
+        console.log(`[gen-populate] preencheu "${key}" como string`);
+        return;
+      }
+
+      // Objetos -> DL (definição) ou pre-formatado
+      if (val && typeof val === 'object') {
+        // se for mapa simples, renderiza DL
+        const dl = document.createElement('dl');
+        Object.entries(val).forEach(([k, v]) => {
+          const dt = document.createElement('dt'); dt.textContent = k;
+          const dd = document.createElement('dd'); dd.textContent = (typeof v === 'string' ? v : JSON.stringify(v));
+          dl.appendChild(dt); dl.appendChild(dd);
+        });
+        el.innerHTML = '';
+        el.appendChild(dl);
+        console.log(`[gen-populate] preencheu "${key}" como objeto`);
+        return;
+      }
+
+      // fallback
+      el.textContent = String(val);
+      console.log(`[gen-populate] preencheu "${key}" (fallback)`);
+    } catch (err) {
+      console.error(`[gen-populate] erro ao popular "${key}":`, err);
+    }
+  });
+
+  console.log('[gen-populate] finalizado');
+});
+
+
+
+
+
+
+</script>
+
+
+<script>
+// Mostra elementos .qfd se reportQFD existir
+document.addEventListener('DOMContentLoaded', () => {
+  const qfdTag = document.getElementById('reportQFD');
+  if (qfdTag) {
+    document.body.classList.add('has-qfd');
+    console.log('[QFD] reportQFD detectado, exibindo cards .qfd');
+  } else {
+    console.log('[QFD] reportQFD não encontrado, cards .qfd permanecerão ocultos');
+  }
+});
+</script>
+
+<script>
+// Popula lista de requisitos priorizados combinando reportQFD e reportData
+document.addEventListener('DOMContentLoaded', () => {
+  const qfdTag = document.getElementById('reportQFD');
+  const dataTag = document.getElementById('reportData');
+  const listaContainer = document.getElementById('listaRequisitosPriorizados');
+  
+  if (!qfdTag || !listaContainer || !dataTag) {
+    console.log('[QFD PRIORIDADES] Tags necessárias não encontradas');
+    return;
+  }
+
+  try {
+    const qfdData = JSON.parse(qfdTag.textContent || '{}');
+    const reportData = JSON.parse(dataTag.textContent || '{}');
+
+    if (!qfdData.requisitos || !Array.isArray(qfdData.requisitos)) {
+      console.warn('[QFD PRIORIDADES] Campo "requisitos" não encontrado');
+      return;
+    }
+
+    if (!qfdData.prioridades || !Array.isArray(qfdData.prioridades)) {
+      console.warn('[QFD PRIORIDADES] Campo "prioridades" não encontrado');
+      return;
+    }
+
+    if (!reportData.requisitos_tecnicos || !Array.isArray(reportData.requisitos_tecnicos)) {
+      console.warn('[QFD PRIORIDADES] Campo "requisitos_tecnicos" não encontrado');
+      return;
+    }
+
+    // Cria mapa: nome do requisito → descrição
+    const requisitoMap = {};
+    reportData.requisitos_tecnicos.forEach(item => {
+      if (item.requisito) {
+        requisitoMap[item.requisito] = item.desc_requisito || 'Descrição não disponível.';
+      }
+    });
+
+    // Combina: nome + prioridade + descrição
+    const requisitosComPrioridade = qfdData.requisitos.map((req, index) => ({
+      nome: req,
+      prioridade: qfdData.prioridades[index] || 999,
+      descricao: requisitoMap[req] || 'Descrição não encontrada.'
+    }));
+
+    // Ordena por prioridade (1 = mais prioritário)
+    requisitosComPrioridade.sort((a, b) => a.prioridade - b.prioridade);
+
+    // Cria accordion
+    const accordion = document.createElement('div');
+    accordion.className = 'accordion';
+    accordion.id = 'accordionPrioridades';
+
+    requisitosComPrioridade.forEach((item, idx) => {
+      const uniqueId = `prioridade-${idx}`;
+      
+      const accordionItem = document.createElement('div');
+      accordionItem.className = 'accordion-item';
+accordionItem.innerHTML = `
+  <h2 class="accordion-header" id="heading-${uniqueId}">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#collapse-${uniqueId}" aria-expanded="false" 
+            aria-controls="collapse-${uniqueId}">
+      <span style="color: #94268C; font-weight: 600; margin-right: 8px;">${item.prioridade}.</span>
+      ${item.nome}
+    </button>
+  </h2>
+  <div id="collapse-${uniqueId}" class="accordion-collapse collapse" 
+       aria-labelledby="heading-${uniqueId}" data-bs-parent="#accordionPrioridades">
+    <div class="accordion-body">
+      <div class="explica-estrategia-priorizacao">
+        ${item.descricao}
+      </div>
+    </div>
+  </div>
+`;
+      
+      accordion.appendChild(accordionItem);
+    });
+
+    listaContainer.innerHTML = '';
+    listaContainer.appendChild(accordion);
+
+    console.log('[QFD PRIORIDADES] Accordion criado:', requisitosComPrioridade.length, 'itens');
+
+  } catch (err) {
+    console.error('[QFD PRIORIDADES] Erro:', err);
+  }
+});
+</script>
+
+
+
+
+<script>
+// SCRIPT UNIVERSAL - Popula avaliacoes do QFD (suporta avaliacao como OBJETO ou ARRAY)
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const avaliacaoTag = document.getElementById('avaliacaoQFD');
+    const qfdTag = document.getElementById('reportQFD');
+    
+    if (!avaliacaoTag || !qfdTag) {
+      console.log('[QFD AVALIACAO] Tags nao encontradas');
+      return;
+    }
+
+    try {
+      const avaliacaoData = JSON.parse(avaliacaoTag.textContent || '{}');
+      const qfdData = JSON.parse(qfdTag.textContent || '{}');
+      
+      if (!avaliacaoData.impactado || !Array.isArray(avaliacaoData.impactado)) {
+        console.warn('[QFD AVALIACAO] Campo "impactado" nao encontrado');
+        return;
+      }
+
+      if (!qfdData.nxr || !qfdData.requisitos || !qfdData.necessidades) {
+        console.warn('[QFD AVALIACAO] Dados NxR incompletos');
+        return;
+      }
+
+      const nxr = qfdData.nxr;
+      const requisitos = qfdData.requisitos;
+      const necessidades = qfdData.necessidades;
+
+      let totalInserido = 0;
+
+      avaliacaoData.impactado.forEach(colunaData => {
+        const nomeRequisito = colunaData.coluna.trim();
+        console.log('[QFD] Processando requisito:', nomeRequisito);
+        
+        const accordionItems = document.querySelectorAll('#accordionPrioridades .accordion-item');
+        console.log('[QFD] Total de accordion items:', accordionItems.length);
+        
+        accordionItems.forEach((item, itemIndex) => {
+          const button = item.querySelector('.accordion-button');
+          if (!button) return;
+          
+          // Remove span temporariamente
+          const span = button.querySelector('span');
+          const spanHTML = span ? span.outerHTML : '';
+          if (span) span.remove();
+          
+          const buttonText = button.textContent
+            .replace(/\n/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          
+          // Restaura o span
+          if (spanHTML && button.firstChild) {
+            button.insertAdjacentHTML('afterbegin', spanHTML);
+          }
+          
+          if (buttonText === nomeRequisito) {
+            console.log('[QFD] MATCH encontrado para:', nomeRequisito);
+            
+            const collapseDiv = item.querySelector('.accordion-collapse');
+            const accordionBody = collapseDiv ? collapseDiv.querySelector('.accordion-body') : null;
+            
+            if (!accordionBody) {
+              console.error('[QFD] accordion-body não encontrado');
+              return;
+            }
+            
+            if (colunaData.linhas && colunaData.linhas.length > 0) {
+              // Remove conteúdo existente
+              const existente = accordionBody.querySelector('.informacao-avaliacao');
+              if (existente) existente.remove();
+              
+              const infoDiv = document.createElement('div');
+              infoDiv.className = 'informacao-avaliacao';
+              infoDiv.style.cssText = 'margin-top: 2rem; padding: 1.5rem; border-top: 3px solid #94268C; background: #FCFCFC;';
+              
+              const idxRequisito = requisitos.findIndex(r => r.trim() === nomeRequisito);
+              
+              colunaData.linhas.forEach((linha) => {
+                const linhaDiv = document.createElement('div');
+                linhaDiv.style.cssText = 'margin-bottom: 2rem; padding: 1.25rem; background: white; border-radius: 0.5rem; border: 2px solid #61903E;';
+                
+                const titulo = document.createElement('h4');
+                titulo.textContent = linha.linha;
+                titulo.classList.add('necessidade_nxr');
+                titulo.style.cssText = 'color: #61903E; font-size: 1.05rem; margin-bottom: 1rem; font-weight: 700;';
+                linhaDiv.appendChild(titulo);
+                
+                // Calcula valorNxR
+                const necessidadeNome = linha.linha.trim();
+                const idxNecessidade = necessidades.findIndex(n => n.trim() === necessidadeNome);
+                const valorNxR = (idxRequisito !== -1 && idxNecessidade !== -1) 
+                  ? nxr[idxNecessidade][idxRequisito] 
+                  : null;
+                
+                console.log('[QFD] ValorNxR:', valorNxR);
+                
+                // AQUI: Trata avaliacao como OBJETO ou ARRAY
+                let avaliacoes = [];
+                if (linha.avaliacao) {
+                  if (Array.isArray(linha.avaliacao)) {
+                    // Se for array, usa direto
+                    avaliacoes = linha.avaliacao;
+                    console.log('[QFD] Avaliacao é ARRAY com', avaliacoes.length, 'items');
+                  } else if (typeof linha.avaliacao === 'object') {
+                    // Se for objeto, transforma em array de 1 item
+                    avaliacoes = [linha.avaliacao];
+                    console.log('[QFD] Avaliacao é OBJETO, convertido para array');
+                  }
+                }
+                
+                avaliacoes.forEach((aval) => {
+                  const avalDiv = document.createElement('div');
+                  avalDiv.style.cssText = 'margin-bottom: 1rem; padding: 1rem; background: #f9fafb; border-left: 4px solid #94268C; border-radius: 0.25rem;';
+                  
+                  const valorP = document.createElement('p');
+                  valorP.style.cssText = 'margin: 0 0 0.75rem 0; font-weight: 600;';
+                  valorP.innerHTML = '<span class="estrelas" style="color: #94268C; font-size: 1.1rem;">' + 
+                    (valorNxR !== null ? valorNxR : aval.valor) + 
+                    '</span>';
+                  
+                  const explicP = document.createElement('p');
+                  explicP.textContent = aval.explicacao || '';
+                  explicP.style.cssText = 'margin: 0 0 0.75rem 0; font-size: 0.9rem; line-height: 1.7; color: #374151;';
+                  
+                  const biblioP = document.createElement('p');
+                  biblioP.textContent = 'Ref: ' + (aval.bibliografia || '');
+                  biblioP.style.cssText = 'margin: 0; font-size: 0.85rem; color: #6b7280; font-style: italic;';
+                  
+                  avalDiv.appendChild(valorP);
+                  avalDiv.appendChild(explicP);
+                  avalDiv.appendChild(biblioP);
+                  linhaDiv.appendChild(avalDiv);
+                });
+                
+                infoDiv.appendChild(linhaDiv);
+              });
+              
+              accordionBody.appendChild(infoDiv);
+              totalInserido++;
+              console.log('[QFD] Conteúdo inserido com sucesso');
+            }
+          }
+        });
+      });
+
+      console.log('[QFD FINAL] Total inserido:', totalInserido);
+
+    } catch (err) {
+      console.error('[QFD] Erro:', err);
+    }
+  }, 1500);
+});
+</script>
+
+
+
+
+
+
+<script>
+// Adiciona ícone de estruturante aos requisitos marcados com "E"
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const qfdTag = document.getElementById('reportQFD');
+    
+    if (!qfdTag) {
+      console.log('[QFD ESTRUTURANTE] reportQFD não encontrado');
+      return;
+    }
+
+    try {
+      const qfdData = JSON.parse(qfdTag.textContent || '{}');
+      
+      if (!qfdData.requisitos || !qfdData.somas || !qfdData.somas.estruturante) {
+        console.warn('[QFD ESTRUTURANTE] Dados incompletos');
+        return;
+      }
+
+      const requisitos = qfdData.requisitos;
+      const estruturantes = qfdData.somas.estruturante;
+
+      const accordionItems = document.querySelectorAll('#accordionPrioridades .accordion-item');
+      
+      accordionItems.forEach((item, idx) => {
+        const button = item.querySelector('.accordion-button');
+        if (!button) return;
+
+        // Pega o span com o número de prioridade
+        const span = button.querySelector('span');
+        if (span) span.remove();
+        
+        const buttonText = button.textContent
+          .replace(/\n/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        
+        // Restaura o span
+        if (span && button.firstChild) {
+          button.insertBefore(span, button.firstChild);
+        }
+
+        // Busca o índice original do requisito
+        const idxRequisito = requisitos.findIndex(req => req.trim() === buttonText);
+        
+        if (idxRequisito !== -1 && estruturantes[idxRequisito] === 'E') {
+          // Verifica se já não tem o ícone
+          if (!button.querySelector('.bi-recycle')) {
+            // Cria container wrapper para o texto e ícone
+            const textContent = button.innerHTML;
+            button.innerHTML = '';
+            
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'display: flex; align-items: center; justify-content: space-between; width: 100%;';
+            
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = textContent;
+            
+            const icone = document.createElement('i');
+            icone.className = 'bi bi-recycle';
+            icone.title = 'Requisito Estruturante';
+            icone.style.cssText = 'color: #61903E; font-size: 1.3rem; flex-shrink: 0; margin-left: 1rem;margin-right: 10px;';
+            
+            wrapper.appendChild(textSpan);
+            wrapper.appendChild(icone);
+            button.appendChild(wrapper);
+            
+            console.log('[QFD ESTRUTURANTE] Ícone adicionado para:', buttonText);
+          }
+        }
+      });
+
+    } catch (err) {
+      console.error('[QFD ESTRUTURANTE] Erro:', err);
+    }
+  }, 1300);
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+<script>
+// SCRIPT CORRIGIDO - Popula avaliacoes do QFD COM valorNxR
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const avaliacaoTag = document.getElementById('avaliacaoQFD');
+    const qfdTag = document.getElementById('reportQFD');
+    
+    if (!avaliacaoTag || !qfdTag) {
+      console.log('[QFD AVALIACAO] Tags não encontradas');
+      return;
+    }
+
+    try {
+      const avaliacaoData = JSON.parse(avaliacaoTag.textContent || '{}');
+      const qfdData = JSON.parse(qfdTag.textContent || '{}');
+      
+      if (!avaliacaoData.impactado || !Array.isArray(avaliacaoData.impactado)) {
+        console.warn('[QFD AVALIACAO] Campo "impactado" não encontrado');
+        return;
+      }
+
+      if (!qfdData.nxr || !qfdData.requisitos || !qfdData.necessidades) {
+        console.warn('[QFD AVALIACAO] Dados NxR incompletos');
+        return;
+      }
+
+      const nxr = qfdData.nxr;
+      const requisitos = qfdData.requisitos;
+      const necessidades = qfdData.necessidades;
+
+      let totalInserido = 0;
+
+      avaliacaoData.impactado.forEach(colunaData => {
+        const nomeRequisito = colunaData.coluna.trim();
+        
+        const accordionItems = document.querySelectorAll('#accordionPrioridades .accordion-item');
+        
+        accordionItems.forEach(item => {
+          const button = item.querySelector('.accordion-button');
+          if (!button) return;
+          
+          const span = button.querySelector('span');
+          if (span) span.remove();
+          
+          const buttonText = button.textContent
+            .replace(/\n/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          
+          if (span && button.firstChild) {
+            button.insertBefore(span, button.firstChild);
+          }
+          
+          if (buttonText === nomeRequisito) {
+            const accordionBody = item.querySelector('.accordion-body');
+            
+            if (accordionBody && colunaData.linhas) {
+              const infoDiv = document.createElement('div');
+              infoDiv.className = 'informacao-avaliacao';
+              infoDiv.style.cssText = 'margin-top: 2rem; padding: 1.5rem; border-top: 3px solid #94268C; background: #FCFCFC;';
+              
+              // Encontra índice do requisito
+              const idxRequisito = requisitos.findIndex(r => r.trim() === nomeRequisito);
+              
+              colunaData.linhas.forEach(linha => {
+                const linhaDiv = document.createElement('div');
+                linhaDiv.style.cssText = 'margin-bottom: 2rem; padding: 1.25rem; background: white; border-radius: 0.5rem; border: 2px solid #61903E;';
+                
+                const titulo = document.createElement('h4');
+                titulo.textContent = linha.linha;
+                titulo.classList.add('necessidade_nxr');
+                titulo.style.cssText = 'color: #61903E; font-size: 1.05rem; margin-bottom: 1rem; font-weight: 700;';
+                linhaDiv.appendChild(titulo);
+                
+                // Calcula valorNxR para esta necessidade x requisito
+                const necessidadeNome = linha.linha.trim();
+                const idxNecessidade = necessidades.findIndex(n => n.trim() === necessidadeNome);
+                const valorNxR = (idxRequisito !== -1 && idxNecessidade !== -1) 
+                  ? nxr[idxNecessidade][idxRequisito] 
+                  : null;
+                
+                if (linha.avaliacao && Array.isArray(linha.avaliacao)) {
+                  linha.avaliacao.forEach((aval, idx) => {
+                    const avalDiv = document.createElement('div');
+                    avalDiv.style.cssText = 'margin-bottom: 1rem; padding: 1rem; background: #f9fafb; border-left: 4px solid #94268C; border-radius: 0.25rem;';
+                    
+                    const valorP = document.createElement('p');
+                    valorP.style.cssText = 'margin: 0 0 0.75rem 0; font-weight: 600;';
+                    // AQUI: insere valorNxR dentro do span estrelas
+                    valorP.innerHTML = '<span class="estrelas" style="color: #94268C; font-size: 1.1rem;">' + 
+                      (valorNxR !== null ? valorNxR : aval.valor) + 
+                      '</span>';
+                    
+                    const explicP = document.createElement('p');
+                    explicP.textContent = aval.explicacao;
+                    explicP.style.cssText = 'margin: 0 0 0.75rem 0; font-size: 0.9rem; line-height: 1.7; color: #374151;';
+                    
+                    const biblioP = document.createElement('p');
+                    biblioP.textContent = 'Ref: ' + aval.bibliografia;
+                    biblioP.style.cssText = 'margin: 0; font-size: 0.85rem; color: #6b7280; font-style: italic;';
+                    
+                    avalDiv.appendChild(valorP);
+                    avalDiv.appendChild(explicP);
+                    avalDiv.appendChild(biblioP);
+                    linhaDiv.appendChild(avalDiv);
+                  });
+                }
+                
+                infoDiv.appendChild(linhaDiv);
+              });
+              
+              accordionBody.appendChild(infoDiv);
+              totalInserido++;
+            }
+          }
+        });
+      });
+
+      console.log('[QFD FINAL] Avaliacoes inseridas com NxR:', totalInserido);
+
+    } catch (err) {
+      console.error('[QFD] Erro:', err);
+    }
+  }, 1200);
+});
+</script>
+
+<script>
+    function formatarParticipantes() {
+      const container = document.getElementById('nomeParticipantes');
+      const items = container.querySelectorAll('li');
+
+      items.forEach(item => {
+        const texto = item.textContent.trim();
+        
+        // Extrai os valores usando regex (mais seguro que JSON.parse para esse formato)
+        const participanteMatch = texto.match(/"participante":"([^"]+)"/);
+        const responsabilidadeMatch = texto.match(/"responsabilidade":"([^"]+)"/);
+
+        if (participanteMatch && responsabilidadeMatch) {
+          const nome = participanteMatch[1];
+          const responsabilidade = responsabilidadeMatch[1];
+
+          // Cria o novo HTML formatado
+          item.innerHTML = `
+            <div class="participante-container">
+              <div class="participante-nome">${nome}</div>
+              <p class="participante-responsabilidade">${responsabilidade}</p>
+            </div>
+          `;
+        }
+      });
+    }
+
+    // Executa quando a página carregar
+    window.addEventListener('load', formatarParticipantes);
+  </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</body>
+</html>
