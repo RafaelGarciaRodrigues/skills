@@ -2,11 +2,101 @@
 name: assessment-conversa
 description: cria json de transcrição e monta html via base.html
 disable-model-invocation: true
+
+
+## Ambiente Python
+
+- Windows: usar `python` (nunca `python3`)
+- Nunca criar virtualenv, venv, conda env ou ambientes temporários
+- Sempre usar o Python global do sistema
+- Bibliotecas ausentes:
+  `pip install <lib>`
+- Sempre usar UTF-8:
+  - `encoding="utf-8"`
+  - `PYTHONUTF8=1`
+- Preferir scripts `.py` reutilizáveis
+- Evitar `python -c` multiline
+- Evitar heredoc inline
+- Não embutir lógica Python no shell
+
+## Shell / PowerShell
+
+- Sempre usar PowerShell no Windows
+- Nunca executar comandos PowerShell dentro do Bash
+- Evitar:
+  - `bash -lc`
+  - pipelines complexos
+  - subexpressions `$(...)`
+  - `foreach` inline
+  - comandos multiline longos
+  - comandos acima de ~800 caracteres
+- Preferir:
+  - scripts `.py`
+  - scripts `.ps1`
+  - variáveis explícitas
+  - comandos curtos
+  - lógica fora do shell
+
+## Automação
+
+- Preferir Python para automações
+- Não reimplementar lógica inline no terminal
+- Reutilizar scripts existentes sempre que possível
+- Qualquer lógica complexa deve ir para arquivo reutilizável
+
+## Arquivos Office
+
+- Nunca usar:
+  - python -c multiline
+  - COM objects
+  - `Word.Application`
+  - automação Office via PowerShell
+- Para `.docx`, `.xlsx`, `.pdf`:
+  - usar bibliotecas Python instaladas no sistema
+  - Não usar Python inline para manipulação de filesystem.
+
+- Sempre criar:
+  - script reutilizável em scripts/
+
+## Extração DOCX
+
+Usar sempre:
+
+`python scripts/extract_docx.py [arquivo.docx] [saida.txt]`
+
+
+Nunca implementar extração DOCX inline.
+
+## Execução de Scripts
+
+- Antes de criar lógica nova, procurar scripts existentes na pasta `scripts/`
+- Se existir script compatível, reutilizar o script existente
+- Não reimplementar lógica inline no shell
+- Não usar `python -c` para lógica já existente em script
+
+## Caminhos e Referências
+
+- Scripts devem usar caminhos locais e relativos
+- Nunca usar caminhos absolutos hardcoded
+- Sempre resolver caminhos relativos ao:
+  - diretório atual
+  - ou ao próprio script (`__file__`)
+
+Preferir:
+
+```python
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).parent
+ROOT_DIR = SCRIPT_DIR.parent
+
 ---
 
 ## 1. GERAR resumo.json
 
-Leia todos os arquivos da pasta que iniciem com `TRANSC` e gere `resumo.json` com a estrutura abaixo.
+- Leia todos os arquivos da pasta com as extensões: "*.txt", "*.doc", "*.docx", "*.xls", "*.xlsx", "*.pdf", "*.ppt", "*.pptx", "*.md", "*.json", "*.html",   
+- crie um arqivo chamado `resumo.json` baseado nos arquivos lidos na pasta com a estrutura descrita abaixo.
+
 
 **Regras gerais:**
 - Traduza tudo para português se a transcrição estiver em inglês
@@ -75,5 +165,41 @@ Leia todos os arquivos da pasta que iniciem com `TRANSC` e gere `resumo.json` co
 3. Substitua `###PSEUDOCODIGO_FLUXO_PROCESSO###` pelo campo `fluxo-processo` do JSON
    - Quebre linhas reais no arquivo (sem `\n` literal)
 4. Salve `Assessment.html`
+
+Use o script:
+
+scripts/gerar_assessment.py
+
+Responsabilidades:
+- Ler base.html
+- Ler resumo.json
+- Inserir JSON no placeholder:
+  {##INSIRA_CONTEUDO_JSON##}
+- Inserir fluxo-processo no placeholder:
+  ###PSEUDOCODIGO_FLUXO_PROCESSO###
+- Gerar Assessment.html
+
+Execução:
+
+python scripts/gerar_assessment.py
+
+## Restrições
+
+Nunca usar:
+- Word.Application
+- COM Objects
+- PowerShell gigante inline
+- Replace complexo em linha
+- JSON multilinha embutido em comando
+
+## Preferências
+
+Preferir:
+- Scripts Python
+- pathlib
+- json.loads
+- arquivos temporários
+- comandos curtos
+
 
 **Gerar apenas:** `resumo.json` e `Assessment.html` — nenhum outro arquivo.
