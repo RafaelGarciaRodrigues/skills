@@ -1,6 +1,6 @@
 ---
-name: apresentacao-html
-description: monta uma apresentação em html com base em textos na mesma pasta
+name: duvidas-especificacao
+description: cria relatorio de duvidas
 disable-model-invocation: true
 
 ## Ambiente Python
@@ -25,8 +25,8 @@ disable-model-invocation: true
 ## 1. ANALISAR
 
 Analise criticamente a specification.
-Atue como arquiteto cético.
-Tente quebrar a specification.
+Atue como arquiteto cético, mas não descreva algo como: "Essa análise foi feita como um arquiteto cético olhando para a especificação".
+Tente quebrar a specification, sem citar que está tentando fazer isso.
 
 Identifique:
 - ambiguidades
@@ -362,9 +362,9 @@ Não implemente ainda.
         Análise Estruturada da Solução
       </h1>
 
-      <p>
+      <p style='TEXT-ALIGN: JUSTIFY;'>
 	  
-		<!-- JÁ COLOQUE AQUI O RESUMO DO RESULTADO DA ANÁLISE DA ESPECIFICAÇÃO DETALHADAMENTE-->
+		<!-- JÁ COLOQUE AQUI O RESUMO DO RESULTADO DA ANÁLISE DA ESPECIFICAÇÃO DETALHADAMENTE, QUEBRE OS PARÁGRAFOS COM DUAS <BR>-->
 
       </p>
 
