@@ -278,6 +278,50 @@
       color: var(--color-text-soft);
     }
 
+    .markdown-accordion {
+      display: grid;
+      gap: 14px;
+    }
+
+    .markdown-accordion-item {
+      border: 1px solid var(--color-border);
+      background: #fcfcfb;
+    }
+
+    .markdown-accordion-item summary {
+      cursor: pointer;
+      padding: 16px 18px;
+      font-family: var(--font-title);
+      color: var(--color-title);
+      list-style-position: inside;
+    }
+
+    .markdown-accordion-body {
+      padding: 0 18px 18px;
+      color: var(--color-text-soft);
+    }
+
+    .markdown-accordion-body p,
+    .markdown-accordion-body ul {
+      margin-bottom: 12px;
+    }
+
+    .markdown-accordion-body :last-child {
+      margin-bottom: 0;
+    }
+
+    .markdown-accordion-badge {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 3px 10px;
+      font-size: 0.78rem;
+      font-family: var(--font-body);
+      letter-spacing: 0.5px;
+      color: var(--color-text-soft);
+      border: 1px solid var(--color-border);
+      background: var(--color-highlight);
+    }
+
     @media (max-width: 768px) {
 
       .page {
@@ -328,7 +372,21 @@
 		<div style='height: 1000px;width: 100%;' id="6.mapa-mental"></div>
 	
 	</section>
+	
+	<section class="hero">
+		<h2>Necessidades</h2>
+		
+		<div id="4.necessidades"></div>
+	
+	</section>
 
+
+	<section class="hero">
+		<h2>Requisitos</h2>
+		
+		<div id="5.requisitos"></div>
+	
+	</section>
 	
 	</main>
 	
@@ -360,6 +418,117 @@
         return;
       }
 
+      const CAMPO_MAPA_MENTAL = "6.mapa-mental";
+
+      const ehMarkdownAccordion = (conteudo) => {
+        return /^\s*#{1,6}\s*\S/m.test(conteudo) && /^\s*-\s+\S/m.test(conteudo);
+      };
+
+      const quebrarMarkdownEmSecoes = (conteudo) => {
+        const secoes = [];
+        let secaoAtual = null;
+
+        conteudo.split(/\r?\n/).forEach((linha) => {
+          const texto = linha.trim();
+
+          if (!texto) {
+            return;
+          }
+
+          const subtitulo = texto.match(/^#{2,6}\s*(.+)$/);
+          const titulo    = texto.match(/^#\s*(.+)$/);
+
+          if (titulo && !subtitulo) {
+            secaoAtual = {
+              titulo: titulo[1].trim(),
+              identificador: null,
+              itens: [],
+              paragrafos: []
+            };
+            secoes.push(secaoAtual);
+            return;
+          }
+
+          if (subtitulo) {
+            if (secaoAtual) {
+              secaoAtual.identificador = subtitulo[1].trim();
+            }
+            return;
+          }
+
+          if (!secaoAtual) {
+            return;
+          }
+
+          const item = texto.match(/^-\s+(.+)$/);
+
+          if (item) {
+            secaoAtual.itens.push(item[1].trim());
+            return;
+          }
+
+          secaoAtual.paragrafos.push(texto);
+        });
+
+        return secoes;
+      };
+
+      const renderizarMarkdownComoAccordion = (elemento, conteudo) => {
+        const secoes = quebrarMarkdownEmSecoes(conteudo);
+
+        if (!secoes.length) {
+          elemento.textContent = conteudo;
+          return;
+        }
+
+        elemento.innerHTML = "";
+
+        const accordion = document.createElement("div");
+        accordion.className = "markdown-accordion";
+
+        secoes.forEach((secao) => {
+          const item = document.createElement("details");
+          item.className = "markdown-accordion-item";
+
+          const summary = document.createElement("summary");
+          summary.textContent = secao.titulo;
+
+          const body = document.createElement("div");
+          body.className = "markdown-accordion-body";
+
+          if (secao.identificador) {
+            const badge = document.createElement("span");
+            badge.className = "markdown-accordion-badge";
+            badge.textContent = secao.identificador;
+            body.appendChild(badge);
+          }
+
+          if (secao.itens.length) {
+            const lista = document.createElement("ul");
+
+            secao.itens.forEach((textoItem) => {
+              const li = document.createElement("li");
+              li.textContent = textoItem;
+              lista.appendChild(li);
+            });
+
+            body.appendChild(lista);
+          }
+
+          secao.paragrafos.forEach((textoParagrafo) => {
+            const p = document.createElement("p");
+            p.textContent = textoParagrafo;
+            body.appendChild(p);
+          });
+
+          item.appendChild(summary);
+          item.appendChild(body);
+          accordion.appendChild(item);
+        });
+
+        elemento.appendChild(accordion);
+      };
+
       Object.entries(dados).forEach(([campo, conteudo]) => {
         const elemento = document.getElementById(campo);
 
@@ -373,6 +542,11 @@
         }
 
         if (typeof conteudo === "string") {
+          if (campo !== CAMPO_MAPA_MENTAL && ehMarkdownAccordion(conteudo)) {
+            renderizarMarkdownComoAccordion(elemento, conteudo);
+            return;
+          }
+
           elemento.textContent = conteudo;
           return;
         }
