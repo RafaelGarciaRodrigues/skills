@@ -15,7 +15,7 @@ REGRAS DE EXECUÇÃO
     pip install python-docx PyPDF2 textract
 
 - Sempre executar com UTF-8:
-    PYTHONUTF8=1 python unificar.py
+    PYTHONUTF8=1 python unificar-arquivos.py
 
 OU deixar o próprio script forçar:
     os.environ["PYTHONUTF8"] = "1"
@@ -40,6 +40,7 @@ COMPORTAMENTO
 --------------
 
 - Varre a pasta atual recursivamente
+  ou a pasta informada no primeiro argumento
 - Lê:
     .doc
     .docx
@@ -49,10 +50,12 @@ COMPORTAMENTO
 
 - Ignora:
     pasta UNIFICADO
+    pasta artefatos
     próprio arquivo UNIFICADO.md
 
 - Cria:
     ./UNIFICADO/
+    ./artefatos/
 
 - Salva:
     ./UNIFICADO/UNIFICADO.md
@@ -68,6 +71,7 @@ conteúdo...
 """
 
 import os
+import sys
 
 os.environ["PYTHONUTF8"] = "1"
 
@@ -76,7 +80,15 @@ from pathlib import Path
 ARQUIVOS_SUPORTADOS = {".doc", ".docx", ".pdf", ".txt", ".md"}
 
 PASTA_SAIDA = "UNIFICADO"
+PASTA_ARTEFATOS = "artefatos"
 ARQUIVO_SAIDA = "UNIFICADO.md"
+
+
+def resolver_work_dir():
+    if len(sys.argv) > 1:
+        return Path(sys.argv[1]).expanduser().resolve()
+
+    return Path.cwd().resolve()
 
 
 def ler_txt_md(caminho):
@@ -171,10 +183,13 @@ def extrair_texto(caminho):
 
 
 def main():
-    pasta_atual = Path.cwd()
+    pasta_atual = resolver_work_dir()
 
     pasta_saida = pasta_atual / PASTA_SAIDA
     pasta_saida.mkdir(exist_ok=True)
+
+    pasta_artefatos = pasta_atual / PASTA_ARTEFATOS
+    pasta_artefatos.mkdir(exist_ok=True)
 
     arquivo_saida = pasta_saida / ARQUIVO_SAIDA
 
@@ -187,8 +202,8 @@ def main():
         if caminho.suffix.lower() not in ARQUIVOS_SUPORTADOS:
             continue
 
-        # Ignora pasta de saída
-        if PASTA_SAIDA in caminho.parts:
+        # Ignora pastas geradas pelo próprio fluxo
+        if PASTA_SAIDA in caminho.parts or PASTA_ARTEFATOS in caminho.parts:
             continue
 
         # Ignora próprio arquivo de saída
@@ -224,6 +239,7 @@ Origem: {caminho}
     print("\n===================================")
     print("FINALIZADO")
     print(f"Arquivo salvo em:\n{arquivo_saida}")
+    print(f"Pasta de artefatos criada em:\n{pasta_artefatos}")
     print("===================================\n")
 
 

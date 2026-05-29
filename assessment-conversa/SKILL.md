@@ -67,9 +67,53 @@ Usar sempre:
 
 Nunca implementar extração DOCX inline.
 
+
+
+
+## Arquitetura de Diretórios (LEIA PRIMEIRO)
+
+Esta skill opera com DOIS diretórios distintos. Não confunda:
+
+- `SKILL_DIR` = pasta onde este `SKILL.md` reside.
+  Contém os artefatos da skill (não modificar, não copiar):
+  - `SKILL.md`
+  - `base.html`           (template HTML)
+  - `scripts/extract_docx.py`
+  - `scripts/gerar_assessment.py`
+
+- `WORK_DIR` = pasta de trabalho do usuário (cwd atual, ou a pasta que
+  o usuário indicar explicitamente). Contém:
+  - INPUTS: arquivos de transcrição (.txt, .docx, .pdf, .md, .json, .html, .xlsx, .pptx, .doc, .ppt, .xls)
+  - OUTPUTS gerados: `resumo.json` e `Assessment.html`
+
+### Regras invariantes
+
+1. NUNCA leia inputs de `SKILL_DIR`. Inputs vêm de `WORK_DIR`.
+2. NUNCA grave outputs em `SKILL_DIR`. Outputs vão para `WORK_DIR`.
+3. NUNCA copie scripts ou `base.html` para `WORK_DIR`. Eles ficam em `SKILL_DIR`.
+4. Sempre invoque os scripts passando caminhos ABSOLUTOS, prefixando:
+   - scripts: `<SKILL_DIR>\scripts\<script>.py`
+   - template: `<SKILL_DIR>\base.html`
+   - inputs/outputs: `<WORK_DIR>\<arquivo>`
+5. `SKILL_DIR` é o caminho absoluto da pasta onde você (IA) leu este
+   `SKILL.md`. Resolva-o no momento da execução; não hardcode.
+6. `WORK_DIR` é o cwd do shell atual (ou a pasta passada pelo usuário).
+   Em PowerShell: `$PWD.Path`. Não assuma um caminho fixo.
+
+### Exemplos de invocação correta (PowerShell, Windows)
+
+Extrair DOCX:
+    python "<SKILL_DIR>\scripts\extract_docx.py" "<WORK_DIR>\entrada.docx" "<WORK_DIR>\entrada.txt"
+
+
+Sempre envolva os caminhos em aspas duplas (há computadores com espaços
+e acentos no caminho do usuário, ex.: `OneDrive - Empresa`).
+
+
+
 ## Execução de Scripts
 
-- Antes de criar lógica nova, procurar scripts existentes na pasta `scripts/`
+- Antes de criar lógica nova, procurar scripts existentes na pasta `scripts\`
 - Se existir script compatível, reutilizar o script existente
 - Não reimplementar lógica inline no shell
 - Não usar `python -c` para lógica já existente em script
@@ -91,6 +135,11 @@ SCRIPT_DIR = Path(__file__).parent
 ROOT_DIR = SCRIPT_DIR.parent
 
 ---
+
+
+
+
+
 
 ## 1. GERAR resumo.json
 

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Relatório de Especificação</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+
+  <!-- Fonte -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Você pode trocar aqui -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+
+      /* =========================
+         CORES
+      ========================== */
+
+      --color-bg: #f8f7f4;
+      --color-paper: #ffffff;
+
+      --color-text: #2b2b2b;
+      --color-text-soft: #4d4d4d;
+
+      --color-border: #d8d5cf;
+
+      --color-title: #1e1e1e;
+
+      --color-highlight: #ece9e2;
+
+      --color-shadow: rgba(0,0,0,0.04);
+
+      /* =========================
+         FONTES
+      ========================== */
+
+      --font-title: "Special Elite", serif;
+      --font-body: "IBM Plex Mono", monospace;
+
+      /* =========================
+         TAMANHOS
+      ========================== */
+
+      --font-size-base: 15px;
+
+      --font-size-title: 1.8rem;
+      --font-size-subtitle: 1.1rem;
+
+      --font-size-section: 1.2rem;
+      --font-size-card-title: 1rem;
+
+      --line-height: 1.85;
+
+      /* =========================
+         ESPAÇAMENTOS
+      ========================== */
+
+      --container-width: 1100px;
+
+      --page-padding-y: 72px;
+      --page-padding-x: 24px;
+
+      --section-margin: 72px;
+
+      --card-padding: 28px;
+
+      --card-gap: 22px;
+
+      --border-radius: 0px;
+
+      /* =========================
+         SOMBRAS
+      ========================== */
+
+      --shadow-paper:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 8px 24px rgba(0,0,0,0.03);
+
+      /* =========================
+         TRANSIÇÕES
+      ========================== */
+
+      --transition-default: 180ms ease;
+
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height);
+
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+
+      padding:
+        var(--page-padding-y)
+        var(--page-padding-x);
+    }
+
+    .page {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      background: var(--color-paper);
+      box-shadow: var(--shadow-paper);
+      border: 1px solid var(--color-border);
+      padding: 72px;
+      position: relative;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent,
+          transparent 31px,
+          rgba(0,0,0,0.015) 32px
+        );
+    }
+
+    .hero {
+      margin-bottom: 90px;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 36px;
+    }
+
+    .hero small {
+	  font-family: var(--font-title);
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      color: var(--color-text-soft);
+    }
+
+    .hero h1, h2, h3 {
+      font-family: var(--font-title);
+      font-size: var(--font-size-title);
+      color: var(--color-title);
+      margin-bottom: 18px;
+      line-height: 1.3;
+    }
+
+    .hero p {
+      text-align: justify;
+      color: var(--color-text-soft);
+      margin: 0;
+    }
+
+    .section {
+      margin-bottom: var(--section-margin);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+
+      border-bottom: 1px dashed var(--color-border);
+    }
+
+    .section-header i {
+      font-size: 1.1rem;
+      color: var(--color-text-soft);
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: var(--font-size-section);
+      font-family: var(--font-title);
+      color: var(--color-title);
+    }
+
+    .summary-box {
+      border: 1px solid var(--color-border);
+      background: #fcfcfb;
+      padding: 28px;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--card-gap);
+    }
+
+    .analysis-card {
+      border: 1px solid var(--color-border);
+      background: white;
+      padding: var(--card-padding);
+
+      transition: var(--transition-default);
+
+      position: relative;
+    }
+
+    .analysis-card:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 6px 18px rgba(0,0,0,0.04);
+    }
+
+    .analysis-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 3px;
+
+      background: var(--color-title);
+      opacity: 0.08;
+    }
+
+    .analysis-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      margin-bottom: 18px;
+    }
+
+    .analysis-card-header i {
+      font-size: 1rem;
+      color: var(--color-text-soft);
+    }
+
+    .analysis-card-header h3 {
+      margin: 0;
+      font-size: var(--font-size-card-title);
+      font-family: var(--font-title);
+      color: var(--color-title);
+    }
+
+    .analysis-card p {
+      margin: 0;
+      color: var(--color-text-soft);
+    }
+
+    .footer-note {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px dashed var(--color-border);
+
+      font-size: 0.9rem;
+      color: var(--color-text-soft);
+    }
+
+    @media (max-width: 768px) {
+
+      .page {
+        padding: 36px 24px;
+      }
+
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+
+      .item-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+  
+<script id="reportData" type="application/json">
+{
+##INSIRA_CONTEUDO_artefatos.json##
+}
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
+  
+  
+</head>
+<body>
+
+
+	<main class="page">
+	
+	<section class="hero">
+
+		<small id='3.titulo'></small>
+
+		<h1 id='2.problema-central'></h1>
+
+		<p id='1.resumo-conversa'></p>
+
+    </section>
+	
+	<section class="hero">
+		<h2>Mapa Mental</h2>
+		
+		<div style='height: 1000px;width: 100%;' id="6.mapa-mental"></div>
+	
+	</section>
+
+	
+	</main>
+	
+	
+	
+	
+	
+	
+	
+
+  <script>
+    (function preencherCamposDoRelatorio() {
+      const dataScript = document.getElementById("reportData");
+
+      if (!dataScript) {
+        return;
+      }
+
+      if (dataScript.textContent.includes("##INSIRA_CONTEUDO_artefatos.json##")) {
+        return;
+      }
+
+      let dados;
+
+      try {
+        dados = JSON.parse(dataScript.textContent);
+      } catch (erro) {
+        console.error("Erro ao ler JSON do relatório:", erro);
+        return;
+      }
+
+      Object.entries(dados).forEach(([campo, conteudo]) => {
+        const elemento = document.getElementById(campo);
+
+        if (!elemento) {
+          return;
+        }
+
+        if (conteudo === null || conteudo === undefined) {
+          elemento.textContent = "";
+          return;
+        }
+
+        if (typeof conteudo === "string") {
+          elemento.textContent = conteudo;
+          return;
+        }
+
+        elemento.textContent = JSON.stringify(conteudo);
+      });
+    })();
+  </script>
+  
+  
+  
+  <script>
+    // Script para criar o mapa mental usando markmap-autoloader
+    document.addEventListener("DOMContentLoaded", () => {
+      const CAMPO_MAPA_MENTAL = "6.mapa-mental";
+      const dataTag = document.getElementById("reportData");
+      const markmapContainer = document.getElementById(CAMPO_MAPA_MENTAL);
+
+      if (!dataTag || !markmapContainer) {
+        return;
+      }
+
+      if (dataTag.textContent.includes("##INSIRA_CONTEUDO_artefatos.json##")) {
+        return;
+      }
+
+      let data = {};
+
+      try {
+        data = JSON.parse(dataTag.textContent || "{}");
+      } catch (erro) {
+        console.error("JSON inválido em #reportData:", erro);
+        return;
+      }
+
+      let markdownContent = String(data[CAMPO_MAPA_MENTAL] || data.markdown || "").trim();
+
+      markdownContent = markdownContent
+        .replace(/^```[a-zA-Z]*\s*/m, "")
+        .replace(/```$/m, "")
+        .trim();
+
+      const converterOutlineIndentadoParaMarkdown = (conteudo) => {
+        const linhas = conteudo
+          .split(/\r?\n/)
+          .filter((linha) => linha.trim());
+
+        if (!linhas.length) {
+          return "";
+        }
+
+        const jaEhMarkdown = linhas.some((linha) => /^\s*(#{1,6}\s+|[-*+]\s+)/.test(linha));
+
+        if (jaEhMarkdown) {
+          return conteudo;
+        }
+
+        const indentacoes = [...new Set(
+          linhas.map((linha) => linha.match(/^\s*/)[0].replace(/\t/g, "  ").length)
+        )].sort((a, b) => a - b);
+
+        return linhas.map((linha) => {
+          const indentacao = linha.match(/^\s*/)[0].replace(/\t/g, "  ").length;
+          const nivel = Math.min(indentacoes.indexOf(indentacao) + 1, 6);
+          return `${"#".repeat(nivel)} ${linha.trim()}`;
+        }).join("\n");
+      };
+
+      markdownContent = converterOutlineIndentadoParaMarkdown(markdownContent);
+
+      if (!markdownContent) {
+        markmapContainer.innerHTML = "<p>Nenhum conteúdo de mapa mental disponível.</p>";
+        return;
+      }
+
+      markmapContainer.innerHTML = "";
+
+      const preInicial = document.createElement("pre");
+      preInicial.className = "markmap";
+      preInicial.textContent = markdownContent;
+      markmapContainer.appendChild(preInicial);
+
+      setTimeout(() => {
+        const svg = markmapContainer.querySelector("svg");
+
+        if (svg) {
+          return;
+        }
+
+        const Markmap = window.markmap?.Markmap || window.markmap?.markmap?.Markmap;
+        const Transformer = window.markmap?.Transformer || window.markmap?.markmap?.Transformer;
+
+        if (!Markmap || !Transformer) {
+          console.warn("Mapa mental não foi criado automaticamente.");
+          return;
+        }
+
+        const pre = markmapContainer.querySelector("pre.markmap");
+        const transformer = new Transformer();
+        const { root } = transformer.transform(markdownContent);
+        const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+        if (pre) {
+          pre.replaceWith(svgElement);
+        } else {
+          markmapContainer.innerHTML = "";
+          markmapContainer.appendChild(svgElement);
+        }
+
+        const mapa = Markmap.create(svgElement);
+        mapa.setData(root);
+        mapa.fit();
+      }, 2000);
+    });
+  </script>
+  
+  
+  
+  
+
+</body>
+</html>
