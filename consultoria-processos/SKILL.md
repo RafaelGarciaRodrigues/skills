@@ -70,6 +70,7 @@ Contém:
 5. `SKILL_DIR` é o caminho absoluto da pasta onde você (IA) leu este `SKILL.md`. Resolva-o no momento da execução; não hardcode.
 6. `WORK_DIR` é o cwd do shell atual ou a pasta passada pelo usuário. Em PowerShell: `$PWD.Path`. Não assuma um caminho fixo.
 7. Sempre envolva os caminhos em aspas duplas, pois há computadores com espaços e acentos no caminho do usuário, ex.: `OneDrive - Empresa`.
+8. **NUNCA use `Get-ChildItem` para listar ou verificar arquivos em `WORK_DIR`.** Em Windows, `Get-ChildItem` retorna vazio silenciosamente quando o caminho contém caracteres acentuados (ex.: `í`, `ã`, `ç`). Use sempre `cmd /c dir /b "<WORK_DIR>"` para listar arquivos, ou confie diretamente nos scripts Python da skill.
 
 ## Exemplos de Invocação Correta
 

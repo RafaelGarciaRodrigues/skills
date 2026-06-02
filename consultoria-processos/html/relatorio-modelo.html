@@ -174,7 +174,12 @@
       text-align: justify;
       color: var(--color-text-soft);
       margin: 0;
+	  padding-bottom: 15px;
     }
+	
+	.hero td{
+		padding: 0px 10px 0px 10px; !important
+	}
 
     .section {
       margin-bottom: var(--section-margin);
@@ -322,6 +327,23 @@
       background: var(--color-highlight);
     }
 
+    .markmap {
+      width: 100%;
+      height: 1000px;
+    }
+
+	
+	#IndiceMaturidadeNota{
+		height: 200px;
+		width: 200px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 100px;
+		font-size: 35px;
+		font-weight: bold;
+	}
+
     @media (max-width: 768px) {
 
       .page {
@@ -388,6 +410,81 @@
 	
 	</section>
 	
+	<section class="hero">
+		<h2>Maturidade</h2>
+		<p>
+			Tradicionalmente, iniciativas de automação começam pelo mapeamento e documentação detalhada dos processos existentes. A premissa implícita dessa abordagem é que o processo atual representa fielmente a forma como o trabalho é executado na prática. Entretanto, em muitos contextos organizacionais, existe um distanciamento significativo entre o processo formalmente definido e o processo efetivamente realizado pelas equipes.
+		</p>
+		<p>
+			Como consequência, a simples automação do fluxo atual pode resultar na digitalização de ineficiências, retrabalhos, aprovações desnecessárias, exceções recorrentes e dependências excessivas de conhecimento individual. Nesse cenário, a tecnologia passa a reproduzir problemas operacionais existentes em vez de resolvê-los.
+		</p>
+		<p>
+			Por esse motivo, esta análise adota uma abordagem diferente da tradicional. Antes de discutir requisitos, telas, integrações ou funcionalidades, busca-se avaliar a maturidade do processo para automação.
+		</p>
+		<p>
+			A avaliação é baseada em dois grupos de fatores.
+		</p>
+		<p>
+			O primeiro grupo é composto pelas sete perdas clássicas do pensamento Lean: superprodução, espera, transporte, processamento excessivo, estoque, movimentação e defeitos. Essas perdas permitem identificar atividades que consomem tempo, recursos ou esforço sem agregar valor ao resultado final do processo.
+		</p>
+		<p>
+			O segundo grupo avalia características que influenciam diretamente a viabilidade da automação: variabilidade na execução, dependência de pessoas específicas, conhecimento tácito e volume de exceções. Esses fatores indicam o grau de padronização e previsibilidade do processo, elementos fundamentais para a construção de sistemas informatizados robustos.
+		</p>
+		<p>
+			A lógica por trás dessa abordagem é simples: sistemas automatizados dependem de regras claras, estabilidade operacional e critérios de decisão explícitos. Quando um processo exige interpretação humana constante, depende do conhecimento de especialistas ou apresenta grande quantidade de exceções, existe um risco elevado de que a automação apenas transfira a complexidade operacional para dentro do sistema.
+		</p>
+		<p>
+			Dessa forma, o objetivo desta análise não é apenas identificar oportunidades de automação, mas também determinar se o processo atual possui maturidade suficiente para ser automatizado de forma sustentável. Em muitos casos, o maior ganho não está na implementação imediata de tecnologia, mas na eliminação de desperdícios, simplificação de atividades e redução de ambiguidades antes do desenvolvimento da solução.
+		</p>
+		<p>
+			Em resumo, a sequência adotada por esta avaliação pode ser representada da seguinte forma:
+		</p>
+		<p>
+			Diagnosticar a maturidade do processo → Identificar desperdícios e fragilidades → Compreender o processo real executado pelas equipes → Definir o escopo adequado de automação.
+		</p>
+		<p>
+			Essa abordagem reduz o risco de automatizar ineficiências existentes e aumenta a probabilidade de que a solução resultante gere ganhos efetivos de produtividade, qualidade e escalabilidade.
+		</p>
+
+		<div id="10.maturidade"></div>
+		
+		<div class='row' style='margin: 30px 0px 30px 0px;'>
+		
+			<div class='col-3' id='IndiceMaturidadeNota'></div>
+			<div  class='col-9' id='IndiceMaturidadeDefinicao'></div>
+		
+		</div>
+	
+	</section>
+	
+	<section class="hero">
+		<h2>Análise da Maturidade</h2>
+		
+		<div id="11.maturidade-qualitativa"></div>
+	
+	</section>
+	
+	<section class="hero">
+		<h2>Números</h2>
+		
+		<div id="7.numeros"></div>
+	
+	</section>
+	
+	<section class="hero">
+		<h2>Temas em Aberto</h2>
+		
+		<div id="8.temas-abertos"></div>
+	
+	</section>
+	
+	<section class="hero">
+		<h2>Contradições</h2>
+		
+		<div id="9.contradicoes"></div>
+	
+	</section>
+	
 	</main>
 	
 	
@@ -419,6 +516,23 @@
       }
 
       const CAMPO_MAPA_MENTAL = "6.mapa-mental";
+
+      const sanitizarMarkdown = (conteudo) => {
+        return conteudo
+          .split(/\r?\n/)
+          .map((linha) => {
+            return linha
+              .replace(/\[([^\]]*)\]/g, "$1")
+              .replace(/\{[^}]*\}/g, "")
+              .replace(/\s{2,}/g, " ")
+              .trimEnd();
+          })
+          .join("\n");
+      };
+
+      const ehHtml = (conteudo) => {
+        return /<\s*[a-z][\s\S]*>/i.test(conteudo.trim());
+      };
 
       const ehMarkdownAccordion = (conteudo) => {
         return /^\s*#{1,6}\s*\S/m.test(conteudo) && /^\s*-\s+\S/m.test(conteudo);
@@ -542,8 +656,17 @@
         }
 
         if (typeof conteudo === "string") {
-          if (campo !== CAMPO_MAPA_MENTAL && ehMarkdownAccordion(conteudo)) {
-            renderizarMarkdownComoAccordion(elemento, conteudo);
+          if (campo !== CAMPO_MAPA_MENTAL) {
+            if (ehHtml(conteudo)) {
+              elemento.innerHTML = conteudo;
+              return;
+            }
+            const conteudoLimpo = sanitizarMarkdown(conteudo);
+            if (ehMarkdownAccordion(conteudoLimpo)) {
+              renderizarMarkdownComoAccordion(elemento, conteudoLimpo);
+              return;
+            }
+            elemento.textContent = conteudoLimpo;
             return;
           }
 
@@ -666,6 +789,178 @@
   
   
   
+  <script>
+    (function calcularIndiceMaturidade() {
+      const tabela = document.getElementById("maturidade");
+      if (!tabela) return;
+
+      const linhas = Array.from(tabela.querySelectorAll("tr"));
+      if (!linhas.length) return;
+
+      // Localiza o índice da coluna "Nota" pelo cabeçalho
+      const headerCells = Array.from(linhas[0].cells);
+      const idxNota = headerCells.findIndex(
+        (th) => (th.textContent || "").trim().toLowerCase() === "nota"
+      );
+      if (idxNota === -1) return;
+
+      // Soma os valores da coluna Nota
+      let pontuacaoTotal = 0;
+      linhas.slice(1).forEach((tr) => {
+        const cell = tr.cells[idxNota];
+        if (!cell) return;
+        const valor = parseFloat((cell.textContent || "").trim().replace(",", "."));
+        if (!isNaN(valor)) pontuacaoTotal += valor;
+      });
+
+      const IndiceMaturidade = ((55 - pontuacaoTotal) / 55) * 100;
+
+      let IndiceMaturidadeFarol;
+      if (IndiceMaturidade >= 80)      IndiceMaturidadeFarol = "#4CAF50";
+      else if (IndiceMaturidade >= 60) IndiceMaturidadeFarol = "#FFC107";
+      else if (IndiceMaturidade >= 40) IndiceMaturidadeFarol = "#FF9800";
+      else                             IndiceMaturidadeFarol = "#F44336";
+
+      const elemento = document.getElementById("IndiceMaturidadeNota");
+      if (!elemento) return;
+
+      let IndiceMaturidadeDefinicao;
+      if (IndiceMaturidade >= 80)      IndiceMaturidadeDefinicao = "Processo pronto para automação.";
+      else if (IndiceMaturidade >= 60) IndiceMaturidadeDefinicao = "Automação possível com ajustes.";
+      else if (IndiceMaturidade >= 40) IndiceMaturidadeDefinicao = "Necessita simplificação significativa.";
+      else                             IndiceMaturidadeDefinicao = "Não recomendado automatizar neste momento.";
+
+      const elementoDefinicao = document.getElementById("IndiceMaturidadeDefinicao");
+      if (elementoDefinicao) {
+        elementoDefinicao.textContent = IndiceMaturidadeDefinicao;
+      }
+
+      const hex = IndiceMaturidadeFarol.replace("#", "");
+      const r   = parseInt(hex.substring(0, 2), 16);
+      const g   = parseInt(hex.substring(2, 4), 16);
+      const b   = parseInt(hex.substring(4, 6), 16);
+      const luminancia = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+      elemento.textContent      = IndiceMaturidade.toFixed(1) + "%";
+      elemento.style.background = IndiceMaturidadeFarol;
+      elemento.style.color      = luminancia > 0.5 ? "#000000" : "#ffffff";
+    })();
+
+    (function processarTabelasComColunaLonga() {
+      const LIMITE_CHARS   = 45;
+      const ICONE_LUPA     = '<i class="bi bi-search"></i>';
+      const CLASSE_DETALHE = "tabela-detalhe-linha";
+
+      document.querySelectorAll("table").forEach((tabela) => {
+        const linhas = Array.from(tabela.querySelectorAll("tr"));
+        if (!linhas.length) return;
+
+        const totalCols = Math.max(
+          ...linhas.map((tr) =>
+            Array.from(tr.cells).reduce((s, td) => s + (td.colSpan || 1), 0)
+          )
+        );
+
+        // Detecta quais índices de coluna têm alguma célula com > LIMITE_CHARS
+        const colunasLongas = new Set();
+        linhas.forEach((tr) => {
+          let colIdx = 0;
+          Array.from(tr.cells).forEach((td) => {
+            if ((td.textContent || "").trim().length > LIMITE_CHARS) {
+              colunasLongas.add(colIdx);
+            }
+            colIdx += td.colSpan || 1;
+          });
+        });
+
+        if (!colunasLongas.size) return;
+
+        // Coleta cabeçalhos das colunas ocultas
+        const cabecalhosDasColunas = {};
+        const linhaHeader = linhas[0];
+        let colIdx = 0;
+        Array.from(linhaHeader.cells).forEach((th) => {
+          if (colunasLongas.has(colIdx)) {
+            cabecalhosDasColunas[colIdx] = (th.textContent || "").trim();
+          }
+          colIdx += th.colSpan || 1;
+        });
+
+        // Oculta células das colunas longas e adiciona cabeçalho da lupa
+        linhas.forEach((tr, trIdx) => {
+          let ci = 0;
+          Array.from(tr.cells).forEach((td) => {
+            if (colunasLongas.has(ci)) {
+              td.style.display = "none";
+              td.dataset.lupaConteudo = (td.textContent || "").trim();
+              td.dataset.lupaColIdx   = ci;
+            }
+            ci += td.colSpan || 1;
+          });
+
+          // Adiciona célula de lupa no final de cada linha
+          const tdLupa = document.createElement(trIdx === 0 ? "th" : "td");
+          tdLupa.style.textAlign = "center";
+          tdLupa.style.whiteSpace = "nowrap";
+          tdLupa.style.cursor = "default";
+          tdLupa.style.borderLeft = "1px dashed var(--color-border, #d8d5cf)";
+
+          if (trIdx === 0) {
+            tdLupa.textContent = "";
+          } else {
+            tdLupa.innerHTML = `<span style="cursor:pointer;font-size:1.1rem;" title="Ver detalhes">${ICONE_LUPA}</span>`;
+            tdLupa.querySelector("span").addEventListener("click", () => {
+              // Remove linha de detalhe anterior desta linha, se existir
+              const existente = tr.nextElementSibling;
+              if (existente && existente.classList.contains(CLASSE_DETALHE)) {
+                existente.remove();
+                return;
+              }
+
+              const colunasVisiveis = totalCols - colunasLongas.size + 1; // +1 pela coluna da lupa
+
+              const trDetalhe = document.createElement("tr");
+              trDetalhe.className = CLASSE_DETALHE;
+              trDetalhe.style.background = "var(--color-highlight, #ece9e2)";
+
+              const tdDetalhe = document.createElement("td");
+              tdDetalhe.colSpan = colunasVisiveis;
+              tdDetalhe.style.padding = "12px 16px";
+              tdDetalhe.style.borderTop = "1px dashed var(--color-border, #d8d5cf)";
+
+              const colunasOcultasDaLinha = Array.from(tr.cells).filter(
+                (td) => td.style.display === "none"
+              );
+
+              colunasOcultasDaLinha.forEach((tdOculto) => {
+                const idxCol    = parseInt(tdOculto.dataset.lupaColIdx, 10);
+                const cabecalho = cabecalhosDasColunas[idxCol] || "";
+                const conteudo  = tdOculto.dataset.lupaConteudo || "";
+
+                if (cabecalho) {
+                  const strong = document.createElement("strong");
+                  strong.textContent = cabecalho;
+                  strong.style.display = "block";
+                  strong.style.marginBottom = "4px";
+                  tdDetalhe.appendChild(strong);
+                }
+
+                const texto = document.createElement("p");
+                texto.textContent = conteudo;
+                texto.style.margin = "0 0 12px";
+                tdDetalhe.appendChild(texto);
+              });
+
+              trDetalhe.appendChild(tdDetalhe);
+              tr.after(trDetalhe);
+            });
+          }
+
+          tr.appendChild(tdLupa);
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
