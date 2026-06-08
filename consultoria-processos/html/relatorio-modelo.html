@@ -389,6 +389,15 @@
     </section>
 	
 	<section class="hero">
+		<h2>Participantes</h2>
+		
+		<div id="12.participantes"></div>
+	
+	</section>
+	
+	
+	
+	<section class="hero">
 		<h2>Mapa Mental</h2>
 		
 		<div style='height: 1000px;width: 100%;' id="6.mapa-mental"></div>
@@ -535,7 +544,10 @@
       };
 
       const ehMarkdownAccordion = (conteudo) => {
-        return /^\s*#{1,6}\s*\S/m.test(conteudo) && /^\s*-\s+\S/m.test(conteudo);
+        const temTitulo = /^\s*#{1,6}\s*\S/m.test(conteudo);
+        const temItem   = /^\s*-\s+\S/m.test(conteudo);
+        const temParagrafo = /^[^#\-\s].{10,}/m.test(conteudo);
+        return temTitulo && (temItem || temParagrafo);
       };
 
       const quebrarMarkdownEmSecoes = (conteudo) => {
