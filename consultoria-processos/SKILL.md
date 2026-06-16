@@ -46,6 +46,16 @@ Pasta onde este `SKILL.md` reside. Contém os artefatos da skill, que não devem
 - `scripts/criar-pasta-json.py`
 - `scripts/consolidar-artefatos-json.py`
 - `scripts/montar-relatorio-analitico.py`
+- `scripts/iniciar-speckit.bat`
+- `scripts/inserir-especificacao.py`
+- `scripts/criar-pasta-analise-spec.py`
+- `scripts/listar-analise-spec.py`
+- `scripts/salvar-analise-spec.py`
+- `scripts/inserir-analise-spec.py`
+- `scripts/salvar-plano.py`
+- `scripts/inserir-plano.py`
+- `analise-spec/`
+- `plano/plano.md`
 - `html/relatorio-modelo.html`
 - `habilidades/`
 
@@ -106,9 +116,6 @@ Execução:
 python "<SKILL_DIR>\scripts\unificar-arquivos.py" "<WORK_DIR>"
 ```
 
-Observação:
-
-Toda a lógica de leitura, consolidação e geração do arquivo final já está implementada no script. Ele gera `UNIFICADO\UNIFICADO.md` e cria a pasta `artefatos` dentro do `WORK_DIR`.
 
 ### 2. Gerar Artefatos
 
@@ -169,3 +176,156 @@ Gerar `html\Analise.html`:
 ```powershell
 python "<SKILL_DIR>\scripts\montar-relatorio-analitico.py" "<WORK_DIR>"
 ```
+
+### 5. Iniciar Spec Kit
+
+Script:
+
+```text
+scripts/iniciar-speckit.bat
+```
+
+Pré-requisito: `specify-cli` instalado via `uv`. Instale uma vez:
+
+```powershell
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
+```
+
+Execução:
+
+```powershell
+"<SKILL_DIR>\scripts\iniciar-speckit.bat" "<WORK_DIR>"
+```
+
+O script inicializa o Spec Kit na pasta `WORK_DIR` com integração para o Cursor. Após rodar, os comandos `/speckit.*` ficam disponíveis no chat para conduzir o desenvolvimento a partir da especificação gerada nos passos anteriores.
+
+### 6. Especificar com Spec Kit
+
+O agente executa este passo diretamente, sem interação do usuário.
+
+1. Localizar o arquivo de comando do Spec Kit dentro de `WORK_DIR`:
+   - `.claude\commands\specify.md` (integração Cursor/Claude)
+   - ou `.cursor\rules\specify.md`
+2. Ler o arquivo encontrado para entender o formato exigido pelo `/speckit.specify`
+3. Ler `WORK_DIR\json\artefatos.json`
+4. Extrair os campos `problema-central`, `necessidades` e `requisitos`
+5. Seguir as instruções do arquivo de comando e gerar `specs\001-[titulo]\spec.md` dentro do `WORK_DIR`
+
+Regras:
+- Use o conteúdo real dos campos, sem truncar.
+- Não inclua campos de análise interna como `maturidade`, `contradicoes` ou `mapa-mental`.
+- Se `necessidades` ou `requisitos` estiverem em Markdown com `#` e `-`, mantenha a formatação.
+- Se o arquivo de comando não for encontrado, o Passo 5 (`iniciar-speckit.bat`) ainda não foi executado. Execute-o antes de continuar.
+
+### 7. Inserir Especificação no Relatório
+
+```powershell
+python "<SKILL_DIR>\scripts\inserir-especificacao.py" "<WORK_DIR>"
+```
+
+O script encontra todos os `spec.md` dentro de `WORK_DIR\specs`, ordena pelo nome da pasta e insere o conteúdo em `<div id="Especificação"></div>` no `Analise.html`. Cada spec recebe um `<h3>` com o nome da pasta como título.
+
+### 8. Analisar a Especificação
+
+Criar a pasta `analise-spec` em `WORK_DIR`:
+
+```powershell
+python "<SKILL_DIR>\scripts\criar-pasta-analise-spec.py" "<WORK_DIR>"
+```
+
+Ler e imprimir os comandos de análise:
+
+```powershell
+python "<SKILL_DIR>\scripts\listar-analise-spec.py" "<WORK_DIR>"
+```
+
+O script lê o arquivo em `SKILL_DIR\analise-spec` e imprime os comandos para o agente executar.
+
+O agente executa os comandos e salva a saída em `WORK_DIR\analise-spec\analise-spec.md`:
+
+```powershell
+python "<SKILL_DIR>\scripts\salvar-analise-spec.py" "<WORK_DIR>" "<arquivo-com-saida>"
+```
+
+- Toda a gravação é feita pelo script Python, sem intervenção do agente.
+
+### 9. Inserir Análise no Relatório
+
+```powershell
+python "<SKILL_DIR>\scripts\inserir-analise-spec.py" "<WORK_DIR>"
+```
+
+### 10. Dimensionamento
+
+Ler o arquivo de comando:
+
+```text
+<SKILL_DIR>\dimensionamento\dimensionamento.md
+```
+
+```powershell
+python "<SKILL_DIR>\scripts\salvar-dimensionamento.py" "<WORK_DIR>" "<arquivo-com-saida>"
+```
+
+O resultado é salvo em `WORK_DIR\dimensionamento\dimensionamento.json`.
+
+### 11. Inserir Dimensionamento no Relatório
+
+```powershell
+python "<SKILL_DIR>\scripts\inserir-dimensionamento.py" "<WORK_DIR>"
+```
+
+O script lê `WORK_DIR\dimensionamento\dimensionamento.json`, insere o conteúdo no placeholder `##INSIRA_CONTEUDO_dimensionamento.json##` dentro de `Analise.html` e salva o arquivo. O JavaScript do relatório consome esse JSON e renderiza automaticamente as 3 tabelas de cenário, a seção de atividades por função e a análise.
+
+### 12. Convergência de Escopo
+
+Ler o arquivo de comando:
+
+```text
+<SKILL_DIR>\convergencia\convergecia.md
+```
+
+O agente lê todos os artefatos referenciados no arquivo, executa a análise e grava a saída em um arquivo temporário. Em seguida executa:
+
+```powershell
+python "<SKILL_DIR>\scripts\salvar-convergencia.py" "<WORK_DIR>" "<arquivo-com-saida>"
+```
+
+O resultado é salvo em `WORK_DIR\convergir\convergir.json`. Para inserir no relatório:
+
+```powershell
+python "<SKILL_DIR>\scripts\inserir-convergencia.py" "<WORK_DIR>"
+```
+
+
+### 13. Plano de Execução
+
+Ler o arquivo de comando:
+
+```text
+<SKILL_DIR>\plano\plano.md
+```
+
+O agente lê todos os artefatos referenciados no arquivo, executa a análise e grava a saída JSON em um arquivo temporário. Em seguida executa:
+
+```powershell
+python "<SKILL_DIR>\scripts\salvar-plano.py" "<WORK_DIR>" "<arquivo-com-saida>"
+```
+
+O resultado é salvo em `WORK_DIR\plano\plano.json` (a pasta é criada automaticamente). O script valida o JSON contra o schema esperado e remove o arquivo temporário ao final.
+
+Para inserir no relatório:
+
+```powershell
+python "<SKILL_DIR>\scripts\inserir-plano.py" "<WORK_DIR>"
+```
+
+O script insere o conteúdo de `plano.json` no placeholder `##INSIRA_CONTEUDO_plano.json##` dentro de `Analise.html`. O JavaScript do relatório renderiza automaticamente as 5 macro-etapas (ENTENDER → DIAGNOSTICAR → SIMPLIFICAR → ESTRUTURAR → AUTOMATIZAR) com tabela de atividades, indicadores de conclusão, responsáveis e badges de prioridade.
+
+
+
+
+
+
+
+

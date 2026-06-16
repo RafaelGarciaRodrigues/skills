@@ -72,6 +72,7 @@ conteúdo...
 
 import os
 import sys
+import datetime
 
 os.environ["PYTHONUTF8"] = "1"
 
@@ -182,6 +183,50 @@ def extrair_texto(caminho):
     return ""
 
 
+PROMPT_INSTRUCIONAL = """\
+> [!INSTRUÇÃO PARA O AGENTE]
+>
+> Os trechos abaixo são transcrições de conversas que ocorreram **separadamente e em momentos
+> cronológicos distintos**. Elas fazem parte de um mesmo processo de levantamento que começa
+> amplo e superficial e, ao longo das sessões, vai aprofundando e convergindo os temas —
+> tornando o entendimento progressivamente mais claro e preciso.
+>
+> Por isso:
+>
+> - Um assunto que aparece **indefinido ou incoerente em um trecho** pode ter sua definição
+>   mais clara em uma sessão posterior. **Não considere trechos isolados** como verdade
+>   absoluta; leia o conjunto.
+> - Ao fazer **resumos ou análises aprofundadas**, leve em conta a evolução cronológica do
+>   entendimento: o que foi dito mais tarde tende a ser mais preciso do que o que foi dito
+>   antes.
+> - Contradições aparentes entre trechos geralmente indicam **refinamento de entendimento**,
+>   não erro — dê preferência à versão mais recente ou mais detalhada.
+> - O processo começa com uma **conversa exploratória e ampla** (descuberta de problemas,
+>   necessidades e contexto) e evolui para sessões de **aprofundamento e especificação**
+>   (definição de requisitos, decisões e restrições). Considere essa lógica ao interpretar
+>   o grau de certeza de cada informação.
+
+---
+
+"""
+
+
+def data_criacao(caminho: Path) -> str:
+    """
+    Retorna a data de criação do arquivo no formato dd/mm/aaaa HH:MM.
+    No Windows, os.path.getctime() retorna o tempo real de criação.
+    Em outros SOs usa o menor entre ctime e mtime como aproximação.
+    """
+    try:
+        ctime = os.path.getctime(caminho)
+        mtime = os.path.getmtime(caminho)
+        ts = min(ctime, mtime)           # garante que nunca ultrapassa mtime
+        dt = datetime.datetime.fromtimestamp(ts)
+        return dt.strftime("%d/%m/%Y %H:%M")
+    except Exception:
+        return "data desconhecida"
+
+
 def main():
     pasta_atual = resolver_work_dir()
 
@@ -193,37 +238,37 @@ def main():
 
     arquivo_saida = pasta_saida / ARQUIVO_SAIDA
 
-    conteudo_final = []
-
-    for caminho in pasta_atual.rglob("*"):
+    # Coleta apenas arquivos diretamente em WORK_DIR (sem subpastas)
+    arquivos = []
+    for caminho in pasta_atual.iterdir():
         if not caminho.is_file():
             continue
-
         if caminho.suffix.lower() not in ARQUIVOS_SUPORTADOS:
             continue
-
-        # Ignora pastas geradas pelo próprio fluxo
-        if PASTA_SAIDA in caminho.parts or PASTA_ARTEFATOS in caminho.parts:
-            continue
-
-        # Ignora próprio arquivo de saída
         if caminho.name == ARQUIVO_SAIDA:
             continue
+        arquivos.append(caminho)
 
+    # Ordena cronologicamente pela data de criação (mais antigo primeiro)
+    arquivos.sort(key=lambda p: os.path.getctime(p))
+
+    conteudo_final = [PROMPT_INSTRUCIONAL]
+
+    for caminho in arquivos:
         print(f"LENDO: {caminho}")
 
         try:
             texto = extrair_texto(caminho)
-
             if not texto.strip():
                 texto = "[ARQUIVO SEM TEXTO EXTRAÍDO]"
-
         except Exception as e:
             texto = f"[ERRO AO PROCESSAR ARQUIVO: {e}]"
 
-        bloco = f"""
-# {caminho.name}
+        dt = data_criacao(caminho)
 
+        bloco = f"""# {caminho.name}
+
+**Data de criação:** {dt}
 Origem: {caminho}
 
 {texto}
