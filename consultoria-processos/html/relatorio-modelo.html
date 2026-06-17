@@ -327,6 +327,53 @@
       background: var(--color-highlight);
     }
 
+    /* Badges para arrays JSON estruturados */
+    .json-accordion-titulo {
+      flex: 1;
+    }
+    .json-badge {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .json-badge-relevancia {
+      background: #e8f4fd;
+      color: #1565c0;
+      border: 1px solid #90caf9;
+    }
+    .json-badge-contexto {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+    .json-badge-insight {
+      background: #fff3e0;
+      color: #e65100;
+      border: 1px solid #ffcc80;
+    }
+    .json-citacao {
+      font-style: italic;
+      color: var(--color-text-soft);
+      border-left: 3px solid var(--color-border);
+      padding-left: 10px;
+      margin: 6px 0;
+    }
+    .json-citacao strong {
+      font-style: normal;
+      color: var(--color-text);
+    }
+    details.markdown-accordion-item > summary {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     .markmap {
       width: 100%;
       height: 1000px;
@@ -384,7 +431,7 @@
 		flex-shrink: 0;
 	}
 	#IndiceMaturidadeDefinicao {
-		margin-top: 8px;
+		margin-top: 35px;
 		font-weight: 500;
 		color: #495057;
 	}
@@ -540,6 +587,12 @@
 }
 </script>
 
+<script id="analiseSpecSPEC" type="application/json">
+{
+##INSIRA_CONTEUDO_analise-spec.json##
+}
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
   
@@ -555,6 +608,7 @@
 		<small id='3.titulo'></small>
 
 		<h1 id='2.problema-central'></h1>
+		
 
 		<p id='1.resumo-conversa'></p>
 
@@ -577,6 +631,13 @@
 	</section>
 	
 	<section class="hero">
+		<h2>Processo</h2>
+		
+		<div id="14.mapa-processo"></div>
+	
+	</section>
+	
+	<section class="hero">
 		<h2>Necessidades</h2>
 		
 		<div id="4.necessidades"></div>
@@ -594,45 +655,11 @@
 	<section class="hero">
 		<h2>Maturidade</h2>
 		<p>
-			Antes de discutir requisitos, telas ou integrações, é necessário avaliar se o processo tem condições reais de ser automatizado de forma sustentável. Automatizar um processo que ainda não está pronto resulta em sistemas frágeis que reproduzem a complexidade operacional em vez de eliminá-la.
-		</p>
-		<p>
-			O Índice de Prontidão mede o grau em que o processo reúne as condições necessárias para automação. A avaliação considera 11 dimensões: clareza do processo, padronização, disponibilidade de dados, explicitude das regras de decisão, volume e frequência, estabilidade, rastreabilidade, independência de conhecimento tácito, mapeamento de exceções, alinhamento de stakeholders e viabilidade técnica.
-		</p>
-		<p>
-			Cada dimensão recebe nota de 0 a 5, onde 5 indica prontidão máxima. A nota 0 — atribuída quando não há informação suficiente para avaliar — penaliza o índice, pois ausência de clareza é ausência de prontidão. Quanto mais o levantamento avança e as dúvidas se dissipam, mais o índice tende a subir.
-		</p>
-		<p>
-			O objetivo desta análise é duplo: identificar o que já está pronto para avançar e apontar com precisão o que precisa ser resolvido antes do desenvolvimento — evitando que incertezas de negócio sejam transferidas para dentro do sistema.
-		</p>
-		<p>
-			Diagnosticar a prontidão do processo → Identificar lacunas e pré-condições → Definir o escopo adequado de automação → Reduzir risco de retrabalho no desenvolvimento.
-		</p>
-		<p>
-			Essa abordagem reduz o risco de automatizar ineficiências existentes e aumenta a probabilidade de que a solução resultante gere ganhos efetivos de produtividade, qualidade e escalabilidade.
+			A maturidade é avaliada em duas dimensões independentes: <strong>o quanto a equipe conhece o processo</strong> e <strong>quantas perdas (Sistema Toyota) foram identificadas nele</strong>. O cruzamento dessas duas dimensões determina a ação recomendada antes de iniciar qualquer automação.
 		</p>
 
 		<div id="10.maturidade"></div>
-		
-		<div id="maturidade-farol-wrap">
-			<div id="maturidade-barra">
-				<div class="maturidade-seg" style="width:40%;background:#F44336" title="0–40% · Não recomendado automatizar"></div>
-				<div class="maturidade-seg" style="width:20%;background:#FF9800" title="40–60% · Necessita simplificação significativa"></div>
-				<div class="maturidade-seg" style="width:20%;background:#FFC107" title="60–80% · Automação possível com ajustes"></div>
-				<div class="maturidade-seg" style="width:20%;background:#4CAF50" title="80–100% · Pronto para automação"></div>
-			</div>
-			<div id="IndiceMaturidadeNota">
-				<i class="bi bi-caret-up-fill"></i>
-				<span id="IndiceMaturidadeValor"></span>
-			</div>
-			<div id="IndiceMaturidadeDefinicao"></div>
-			<div id="maturidade-legenda">
-				<div class="maturidade-legenda-item"><span class="maturidade-legenda-cor" style="background:#F44336"></span>0–40% · Não recomendado automatizar neste momento</div>
-				<div class="maturidade-legenda-item"><span class="maturidade-legenda-cor" style="background:#FF9800"></span>40–60% · Necessita simplificação significativa</div>
-				<div class="maturidade-legenda-item"><span class="maturidade-legenda-cor" style="background:#FFC107"></span>60–80% · Automação possível com ajustes</div>
-				<div class="maturidade-legenda-item"><span class="maturidade-legenda-cor" style="background:#4CAF50"></span>80–100% · Processo pronto para automação</div>
-			</div>
-	
+
 	</section>
 	
 	<section class="hero">
@@ -704,7 +731,7 @@
 
 	<section class="hero">
 		<h2>Plano de Execução</h2>
-		<p>Sequência Lean aplicada à automação: Entender → Diagnosticar → Simplificar → Estruturar → Automatizar.</p>
+		<p>Sequência Lean aplicada à automação: Entender → Diagnosticar → Simplificar → Estruturar → Automatizar → Interface → Documentar.</p>
 		<div id="plano-especificacao"></div>
 	</section>
 	
@@ -794,11 +821,33 @@
           if (subtitulo) {
             if (secaoAtual) {
               secaoAtual.identificador = subtitulo[1].trim();
+            } else {
+              // Subtítulo sem seção pai: trata como seção principal (formato legado com ## sem #)
+              secaoAtual = {
+                titulo:        subtitulo[1].trim(),
+                identificador: null,
+                itens:         [],
+                paragrafos:    [],
+              };
+              secoes.push(secaoAtual);
             }
             return;
           }
 
           if (!secaoAtual) {
+            return;
+          }
+
+          // Negrito SOZINHO na linha → cria nova seção (formato legado: **N1. Título**\nDescrição)
+          const negritoSozinho = texto.match(/^\*\*([^*]+)\*\*\.?\s*$/);
+          if (negritoSozinho) {
+            secaoAtual = {
+              titulo:        negritoSozinho[1].trim(),
+              identificador: null,
+              itens:         [],
+              paragrafos:    [],
+            };
+            secoes.push(secaoAtual);
             return;
           }
 
@@ -809,8 +858,8 @@
             return;
           }
 
-          // Item com negrito: **Título.** Descrição
-          const itemNegrito = texto.match(/^\*\*([^*]+)\*\*\.?\s*(.*)/);
+          // Item com negrito COM descrição inline: **Título.** Descrição
+          const itemNegrito = texto.match(/^\*\*([^*]+)\*\*\.?\s+(\S.*)/);
           if (itemNegrito) {
             secaoAtual.itens.push({
               negrito:   itemNegrito[1].trim(),
@@ -822,7 +871,7 @@
           secaoAtual.paragrafos.push(texto);
         });
 
-        return secoes;
+        return secoes.filter((s) => s.itens.length > 0 || s.paragrafos.length > 0);
       };
 
       const renderizarInlineNegrito = (texto, container) => {
@@ -907,6 +956,559 @@
         elemento.appendChild(accordion);
       };
 
+      // ── Renderizadores de dados estruturados (JSON arrays/objects) ──────────
+
+      // ── Maturidade: quadrante duas dimensões ────────────────────────────────
+
+      const renderizarMaturidadeDeJSON = (elemento, dados) => {
+        // Compatibilidade com formato legado (array de 11 dimensões)
+        if (Array.isArray(dados)) {
+          const tabela = document.createElement("table");
+          tabela.className = "table table-bordered table-sm";
+          const thead = tabela.createTHead();
+          const hr = thead.insertRow();
+          ["Dimensão","Nota","Problemas","Justificativa"].forEach(t => {
+            const th = document.createElement("th"); th.textContent = t; hr.appendChild(th);
+          });
+          const tbody = tabela.createTBody();
+          dados.forEach(d => {
+            const tr = tbody.insertRow();
+            [d.dimensao, d.nota, d.problemas, d.justificativa].forEach(v => {
+              const td = tr.insertCell(); td.textContent = v ?? "";
+            });
+          });
+          elemento.innerHTML = "";
+          elemento.appendChild(tabela);
+          return;
+        }
+
+        // Novo formato: objeto com conhecimento + perdas
+        const { conhecimento, perdas } = dados;
+        if (!conhecimento || !perdas) return;
+
+        const dimC  = conhecimento.dimensoes || [];
+        const itensP = perdas.itens || [];
+
+        // Calcula scores (0-100)
+        const scoreC = dimC.length
+          ? Math.round(dimC.reduce((s, d) => s + (d.nota || 0), 0) / dimC.length / 5 * 100)
+          : 0;
+        const maxSev  = itensP.length * 3;
+        const scoreP  = maxSev
+          ? Math.round(itensP.reduce((s, i) => s + (i.severidade || 0), 0) / maxSev * 100)
+          : 0;
+
+        // Determina quadrante
+        const altoC = scoreC >= 50;
+        const altoP = scoreP >= 50;
+
+        const QUADRANTES = {
+          "11": { id:"simplificar",    icon:"🔧", titulo:"Simplificar antes de automatizar",
+                  cor:"#f9a825", bg:"#fffde7",
+                  desc:"O processo é bem compreendido e os desperdícios estão mapeados. Resolva os gargalos identificados antes de construir qualquer automação — caso contrário você codifica os problemas atuais." },
+          "10": { id:"automatizar",    icon:"✅", titulo:"Pronto para automatizar",
+                  cor:"#388e3c", bg:"#e8f5e9",
+                  desc:"Alto conhecimento do processo e poucos desperdícios identificados. As condições estão favoráveis para iniciar a automação com confiança." },
+          "01": { id:"aprender",       icon:"⚠️", titulo:"Aprender primeiro",
+                  cor:"#e65100", bg:"#fff3e0",
+                  desc:"Problemas são visíveis, mas o processo não é suficientemente compreendido para automatizar. O risco é tratar sintomas sem entender as causas e codificar complexidade desnecessária." },
+          "00": { id:"risco_oculto",   icon:"⛔", titulo:"Risco oculto — não iniciar",
+                  cor:"#c62828", bg:"#ffebee",
+                  desc:"Baixo conhecimento e poucas perdas identificadas não significa processo saudável — significa que a equipe ainda não sabe o suficiente para enxergar os problemas. Automatizar aqui é o cenário mais perigoso." },
+        };
+        const qKey = (altoC ? "1" : "0") + (altoP ? "1" : "0");
+        const Q = QUADRANTES[qKey];
+
+        elemento.innerHTML = "";
+
+        // ── Gráfico de quadrante ──────────────────────────────────────────────
+        const wrap = document.createElement("div");
+        wrap.className = "mat-quad-wrap";
+
+        // Linha principal: eixo Y + grid
+        const main = document.createElement("div");
+        main.className = "mat-quad-main";
+
+        const eixoY = document.createElement("div");
+        eixoY.className = "mat-eixo-y";
+        eixoY.innerHTML = '<span>Poucas perdas</span><span>Muitas perdas</span>';
+        main.appendChild(eixoY);
+
+        // Grid container
+        const grid = document.createElement("div");
+        grid.className = "mat-quad-grid";
+
+        [
+          { k:"00", pos:"tl" }, { k:"10", pos:"tr" },
+          { k:"01", pos:"bl" }, { k:"11", pos:"br" },
+        ].forEach(({ k, pos }) => {
+          const Qi = QUADRANTES[k];
+          const cel = document.createElement("div");
+          cel.className = "mat-quad-cel mat-quad-" + pos + (k === qKey ? " mat-quad-ativo" : "");
+          cel.style.background = k === qKey ? Qi.bg : "transparent";
+          cel.innerHTML = `<span class="mat-quad-cel-icon">${Qi.icon}</span><span class="mat-quad-cel-titulo">${Qi.titulo}</span>`;
+          grid.appendChild(cel);
+        });
+
+        // Linhas divisórias centrais
+        const lV = document.createElement("div"); lV.className = "mat-linha-v"; grid.appendChild(lV);
+        const lH = document.createElement("div"); lH.className = "mat-linha-h"; grid.appendChild(lH);
+
+        // Ponto de posição
+        const dot = document.createElement("div");
+        dot.className = "mat-dot";
+        dot.style.left   = scoreC + "%";
+        dot.style.top = scoreP + "%";
+        dot.title = `Conhecimento: ${scoreC}%  ·  Perdas: ${scoreP}%`;
+        grid.appendChild(dot);
+
+        main.appendChild(grid);
+        wrap.appendChild(main);
+
+        // Eixo X labels (alinhado com o grid, com padding esquerdo igual ao eixo Y)
+        const eixoX = document.createElement("div");
+        eixoX.className = "mat-eixo-x";
+        eixoX.innerHTML = '<span>Baixo conhecimento</span><span>Alto conhecimento</span>';
+        wrap.appendChild(eixoX);
+
+        elemento.appendChild(wrap);
+
+        // ── Card de ação recomendada ──────────────────────────────────────────
+        const card = document.createElement("div");
+        card.className = "mat-acao-card";
+        card.style.borderColor = Q.cor;
+        card.style.background  = Q.bg;
+        card.innerHTML = `
+          <div class="mat-acao-titulo" style="color:${Q.cor}">${Q.icon} ${Q.titulo}</div>
+          <div class="mat-acao-scores">
+            <span>Conhecimento <strong>${scoreC}%</strong></span>
+            <span>Perdas identificadas <strong>${scoreP}%</strong></span>
+          </div>
+          <div class="mat-acao-desc">${Q.desc}</div>
+        `;
+        elemento.appendChild(card);
+
+        // ── Accordion: Conhecimento ───────────────────────────────────────────
+        const accC = document.createElement("details");
+        accC.className = "mat-accordion";
+        accC.innerHTML = `<summary class="mat-accordion-summary">Conhecimento do processo — ${scoreC}%<span class="mat-accordion-arr">›</span></summary>`;
+        const bodyC = document.createElement("div");
+        bodyC.className = "mat-accordion-body";
+        const barsC = document.createElement("div");
+        barsC.className = "mat-dim-list";
+        dimC.forEach(d => {
+          const row = document.createElement("div");
+          row.className = "mat-dim-row";
+          const pct = Math.round((d.nota || 0) / 5 * 100);
+          const corBar = pct >= 70 ? "#388e3c" : pct >= 40 ? "#f9a825" : "#c62828";
+          row.innerHTML = `
+            <div class="mat-dim-label">${d.nome}</div>
+            <div class="mat-dim-bar-wrap">
+              <div class="mat-dim-bar" style="width:${pct}%;background:${corBar}"></div>
+            </div>
+            <div class="mat-dim-nota">${d.nota}/5</div>
+            <div class="mat-dim-just">${d.justificativa || ""}</div>
+          `;
+          barsC.appendChild(row);
+        });
+        bodyC.appendChild(barsC);
+        accC.appendChild(bodyC);
+        elemento.appendChild(accC);
+
+        // ── Accordion: Perdas Toyota ──────────────────────────────────────────
+        const SEVERIDADE_COR = ["transparent", "#f9a825", "#e65100", "#c62828"];
+        const SEVERIDADE_LABEL = ["", "Leve", "Moderada", "Grave"];
+
+        const accP = document.createElement("details");
+        accP.className = "mat-accordion";
+        accP.innerHTML = `<summary class="mat-accordion-summary">Perdas Toyota identificadas — ${scoreP}%<span class="mat-accordion-arr">›</span></summary>`;
+        const bodyP = document.createElement("div");
+        bodyP.className = "mat-accordion-body";
+        const listaP = document.createElement("div");
+        listaP.className = "mat-perdas-list";
+        itensP.forEach(p => {
+          const row = document.createElement("div");
+          row.className = "mat-perda-row" + (p.severidade ? " mat-perda-presente" : " mat-perda-ausente");
+          const sev = p.severidade || 0;
+          row.innerHTML = `
+            <span class="mat-perda-sev" style="background:${SEVERIDADE_COR[sev]};color:${sev ? '#fff' : 'transparent'}">${SEVERIDADE_LABEL[sev] || "·"}</span>
+            <span class="mat-perda-nome">${p.perda}</span>
+            <span class="mat-perda-desc">${p.descricao || ""}</span>
+          `;
+          listaP.appendChild(row);
+        });
+        bodyP.appendChild(listaP);
+        accP.appendChild(bodyP);
+        elemento.appendChild(accP);
+      };
+
+      const renderizarMaturidadeQualitativaDeJSON = (elemento, dados) => {
+        const SECOES = [
+          { chave: "bloqueadores",       titulo: "Principais bloqueadores de prontidão" },
+          { chave: "riscos",             titulo: "Principais riscos para automação" },
+          { chave: "dependencias",       titulo: "Dependências críticas" },
+          { chave: "gargalos",           titulo: "Gargalos" },
+          { chave: "simplificacoes",     titulo: "Oportunidades de Simplificação antes de automatizar" },
+          { chave: "precondicionoes",    titulo: "Recomendações de Pré-condições" },
+          { chave: "veredito",           titulo: "Este processo está pronto para automação?" },
+          { chave: "dimensoes_deficientes", titulo: "Dimensões de prontidão mais deficientes" },
+          { chave: "risco_atual",        titulo: "Risco de automatizar no estado atual" },
+          { chave: "potencial_ganho",    titulo: "Potencial de ganho após atingir prontidão" },
+        ];
+
+        elemento.innerHTML = "";
+        const accordion = document.createElement("div");
+        accordion.className = "markdown-accordion";
+
+        SECOES.forEach(({ chave, titulo }) => {
+          const valor = dados[chave];
+          if (!valor) return;
+
+          const item = document.createElement("details");
+          item.className = "markdown-accordion-item";
+
+          const summary = document.createElement("summary");
+          summary.textContent = titulo;
+          item.appendChild(summary);
+
+          const body = document.createElement("div");
+          body.className = "markdown-accordion-body";
+
+          if (chave === "veredito" && typeof valor === "object" && !Array.isArray(valor)) {
+            const badge = document.createElement("span");
+            badge.className = "markdown-accordion-badge";
+            badge.textContent = valor.status || "";
+            body.appendChild(badge);
+            const ul = document.createElement("ul");
+            (valor.justificativas || []).forEach((j) => {
+              const li = document.createElement("li");
+              li.textContent = j;
+              ul.appendChild(li);
+            });
+            body.appendChild(ul);
+          } else if (Array.isArray(valor)) {
+            const ul = document.createElement("ul");
+            valor.forEach((v) => {
+              const li = document.createElement("li");
+              li.textContent = v;
+              ul.appendChild(li);
+            });
+            body.appendChild(ul);
+          }
+
+          item.appendChild(body);
+          accordion.appendChild(item);
+        });
+
+        elemento.appendChild(accordion);
+      };
+
+      const renderizarArrayComoAccordion = (campo, elemento, itens) => {
+        elemento.innerHTML = "";
+        const accordion = document.createElement("div");
+        accordion.className = "markdown-accordion";
+
+        itens.forEach((item) => {
+          const details = document.createElement("details");
+          details.className = "markdown-accordion-item";
+
+          const summary = document.createElement("summary");
+
+          let textoTitulo = item.titulo || item.nome || "";
+          if (item.valor && item.titulo) {
+            textoTitulo = item.valor + " — " + item.titulo;
+          } else if (item.valor && !item.titulo) {
+            textoTitulo = item.valor;
+          }
+
+          const tituloSpan = document.createElement("span");
+          tituloSpan.className = "json-accordion-titulo";
+          tituloSpan.textContent = textoTitulo;
+          summary.appendChild(tituloSpan);
+
+          if (item.relevancia !== undefined) {
+            const badge = document.createElement("span");
+            badge.className = "json-badge json-badge-relevancia";
+            badge.textContent = item.relevancia;
+            summary.appendChild(badge);
+          }
+
+          if (item.identificacao) {
+            const badge = document.createElement("span");
+            const cls = item.identificacao === "INSIGHT" ? "json-badge-insight" : "json-badge-contexto";
+            badge.className = "json-badge " + cls;
+            badge.textContent = item.identificacao;
+            summary.appendChild(badge);
+          }
+
+          details.appendChild(summary);
+
+          const body = document.createElement("div");
+          body.className = "markdown-accordion-body";
+
+          const ignorar = new Set(["titulo", "nome", "valor", "relevancia", "identificacao"]);
+
+          Object.entries(item).forEach(([chave, val]) => {
+            if (ignorar.has(chave)) return;
+
+            if ((chave === "citacao_a" || chave === "citacao_b") && val && typeof val === "object") {
+              const p = document.createElement("p");
+              p.className = "json-citacao";
+              const strong = document.createElement("strong");
+              strong.textContent = (val.autor || "?") + ": ";
+              p.appendChild(strong);
+              p.appendChild(document.createTextNode("\u201c" + (val.texto || "") + "\u201d"));
+              body.appendChild(p);
+            } else if (typeof val === "string" && val) {
+              const p = document.createElement("p");
+              p.textContent = val;
+              body.appendChild(p);
+            } else if (Array.isArray(val)) {
+              const ul = document.createElement("ul");
+              val.forEach((v) => {
+                const li = document.createElement("li");
+                li.textContent = v;
+                ul.appendChild(li);
+              });
+              body.appendChild(ul);
+            }
+          });
+
+          details.appendChild(body);
+          accordion.appendChild(details);
+        });
+
+        elemento.appendChild(accordion);
+      };
+
+      // ── Mapa de Processo: cards horizontais roláveis ─────────────────────────
+
+      const renderizarMapaProcesso = (elemento, dados) => {
+        const etapas  = dados.processo || [];
+        const entrega = dados.entrega  || null;
+
+        const MATURIDADE_COR = ["","#ef5350","#ff8a65","#ffd54f","#a5d6a7","#66bb6a"];
+        const PERDA_ICONE = {
+          "Superprodução":            "bi-layers",
+          "Espera":                   "bi-hourglass-split",
+          "Transporte":               "bi-truck",
+          "Processamento Excessivo":  "bi-gear",
+          "Estoque":                  "bi-archive",
+          "Movimento":                "bi-arrows-move",
+          "Defeitos":                 "bi-bug",
+          "Conhecimento Não Utilizado": "bi-lightbulb"
+        };
+
+        // scroll wrapper
+        const wrap = document.createElement("div");
+        wrap.className = "mapa-scroll-wrap";
+
+        const trilha = document.createElement("div");
+        trilha.className = "mapa-trilha";
+
+        const criarCard = (etapa, isEntrega) => {
+          const card = document.createElement("div");
+          card.className = "mapa-card" + (isEntrega ? " mapa-card-entrega" : "");
+          if (!isEntrega && etapa.gargalo) card.classList.add("mapa-card-gargalo");
+
+          // Cabeçalho
+          const head = document.createElement("div");
+          head.className = "mapa-card-head";
+
+          if (!isEntrega) {
+            const num = document.createElement("span");
+            num.className = "mapa-card-num";
+            num.textContent = etapa.ordem;
+            head.appendChild(num);
+
+            if (etapa.gargalo) {
+              const g = document.createElement("span");
+              g.className = "mapa-badge-gargalo";
+              g.title = "Gargalo";
+              g.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i>';
+              head.appendChild(g);
+            }
+
+            if (etapa.perda_toyota) {
+              const p = document.createElement("span");
+              p.className = "mapa-badge-perda";
+              p.title = etapa.perda_toyota;
+              p.innerHTML = `<i class="bi ${PERDA_ICONE[etapa.perda_toyota] || 'bi-dash-circle'}"></i>`;
+              head.appendChild(p);
+            }
+          } else {
+            const ico = document.createElement("span");
+            ico.className = "mapa-card-entrega-ico";
+            ico.innerHTML = '<i class="bi bi-box-seam-fill"></i>';
+            head.appendChild(ico);
+          }
+
+          card.appendChild(head);
+
+          // Título
+          const titulo = document.createElement("div");
+          titulo.className = "mapa-card-titulo";
+          titulo.textContent = etapa.titulo;
+          card.appendChild(titulo);
+
+          // Explicação
+          const exp = document.createElement("div");
+          exp.className = "mapa-card-exp";
+          exp.textContent = etapa.explicacao || "";
+          card.appendChild(exp);
+
+          if (!isEntrega) {
+            // Maturidade (bolinhas 1-5)
+            const matRow = document.createElement("div");
+            matRow.className = "mapa-maturidade-row";
+            for (let i = 1; i <= 5; i++) {
+              const dot = document.createElement("span");
+              dot.className = "mapa-mat-dot";
+              dot.style.background = i <= etapa.maturidade ? MATURIDADE_COR[etapa.maturidade] : "#d8d5cf";
+              dot.title = `Maturidade ${etapa.maturidade}/5`;
+              matRow.appendChild(dot);
+            }
+            const matLabel = document.createElement("span");
+            matLabel.className = "mapa-mat-label";
+            matLabel.textContent = `Mat. ${etapa.maturidade}/5`;
+            matRow.appendChild(matLabel);
+            card.appendChild(matRow);
+
+            // Micro-etapas
+            if (etapa.micro_etapas && etapa.micro_etapas.length) {
+              const sep = document.createElement("div");
+              sep.className = "mapa-sep";
+              card.appendChild(sep);
+
+              etapa.micro_etapas.forEach(me => {
+                const row = document.createElement("div");
+                row.className = "mapa-micro" + (me.gargalo ? " mapa-micro-gargalo" : "");
+                row.title = me.explicacao || "";
+
+                const icos = document.createElement("span");
+                icos.className = "mapa-micro-icos";
+                if (me.manual) icos.innerHTML += '<i class="bi bi-person-fill" title="Manual"></i>';
+                else           icos.innerHTML += '<i class="bi bi-cpu-fill" title="Automatizado"></i>';
+                if (me.gargalo) icos.innerHTML += '<i class="bi bi-exclamation-circle-fill mapa-micro-gargalo-ico"></i>';
+                row.appendChild(icos);
+
+                const lbl = document.createElement("span");
+                lbl.className = "mapa-micro-label";
+                lbl.textContent = me.titulo;
+                row.appendChild(lbl);
+
+                card.appendChild(row);
+              });
+            }
+          }
+
+          return card;
+        };
+
+        // Seta entre cards
+        const criarSeta = () => {
+          const s = document.createElement("div");
+          s.className = "mapa-seta";
+          s.innerHTML = '<i class="bi bi-chevron-right"></i>';
+          return s;
+        };
+
+        etapas.forEach((etapa, i) => {
+          trilha.appendChild(criarCard(etapa, false));
+          if (i < etapas.length - 1 || entrega) trilha.appendChild(criarSeta());
+        });
+
+        if (entrega) {
+          trilha.appendChild(criarCard(entrega, true));
+        }
+
+        wrap.appendChild(trilha);
+        elemento.appendChild(wrap);
+
+        // ── Legenda ───────────────────────────────────────────────────────────
+        const legenda = document.createElement("div");
+        legenda.className = "mapa-legenda";
+
+        const grupos = [
+          {
+            titulo: "Cards",
+            itens: [
+              { cls: "mapa-legenda-card-normal",  label: "Etapa" },
+              { cls: "mapa-legenda-card-gargalo", label: "Gargalo" },
+              { cls: "mapa-legenda-card-entrega", label: "Entrega" },
+            ]
+          },
+          {
+            titulo: "Ícones",
+            itens: [
+              { ico: "bi-person-fill", cor: "#4d4d4d", label: "Manual" },
+              { ico: "bi-cpu-fill",    cor: "#4d4d4d", label: "Automatizado" },
+              { ico: "bi-exclamation-triangle-fill", cor: "#ef5350", label: "Gargalo" },
+            ]
+          },
+          {
+            titulo: "Maturidade",
+            itens: [
+              { nota: 1, label: "1 — Caótico" },
+              { nota: 2, label: "2 — Variável" },
+              { nota: 3, label: "3 — Informal" },
+              { nota: 4, label: "4 — Padronizado" },
+              { nota: 5, label: "5 — Pronto" },
+            ]
+          },
+        ];
+
+        grupos.forEach(grupo => {
+          const col = document.createElement("div");
+          col.className = "mapa-legenda-grupo";
+
+          const tit = document.createElement("div");
+          tit.className = "mapa-legenda-grupo-titulo";
+          tit.textContent = grupo.titulo;
+          col.appendChild(tit);
+
+          grupo.itens.forEach(it => {
+            const item = document.createElement("div");
+            item.className = "mapa-legenda-item";
+
+            if (it.cls) {
+              const box = document.createElement("span");
+              box.className = "mapa-legenda-box " + it.cls;
+              item.appendChild(box);
+            } else if (it.ico) {
+              const i = document.createElement("i");
+              i.className = "bi " + it.ico;
+              i.style.color = it.cor;
+              i.style.fontSize = "14px";
+              item.appendChild(i);
+            } else if (it.nota !== undefined) {
+              const dots = document.createElement("span");
+              dots.className = "mapa-legenda-dots";
+              for (let d = 1; d <= 5; d++) {
+                const dot = document.createElement("span");
+                dot.className = "mapa-mat-dot";
+                dot.style.background = d <= it.nota ? MATURIDADE_COR[it.nota] : "#d8d5cf";
+                dots.appendChild(dot);
+              }
+              item.appendChild(dots);
+            }
+
+            const lbl = document.createElement("span");
+            lbl.className = "mapa-legenda-label";
+            lbl.textContent = it.label;
+            item.appendChild(lbl);
+
+            col.appendChild(item);
+          });
+
+          legenda.appendChild(col);
+        });
+
+        elemento.appendChild(legenda);
+      };
+
+      // ── Loop principal de preenchimento ──────────────────────────────────────
+
       Object.entries(dados).forEach(([campo, conteudo]) => {
         const elemento = document.getElementById(campo);
 
@@ -916,6 +1518,28 @@
 
         if (conteudo === null || conteudo === undefined) {
           elemento.textContent = "";
+          return;
+        }
+
+        if (Array.isArray(conteudo)) {
+          if (campo === "10.maturidade") {
+            renderizarMaturidadeDeJSON(elemento, conteudo); // formato legado
+          } else {
+            renderizarArrayComoAccordion(campo, elemento, conteudo);
+          }
+          return;
+        }
+
+        if (typeof conteudo === "object") {
+          if (campo === "10.maturidade") {
+            renderizarMaturidadeDeJSON(elemento, conteudo); // novo formato
+          } else if (campo === "14.mapa-processo") {
+            renderizarMapaProcesso(elemento, conteudo);
+          } else if (campo === "11.maturidade-qualitativa") {
+            renderizarMaturidadeQualitativaDeJSON(elemento, conteudo);
+          } else {
+            elemento.textContent = JSON.stringify(conteudo);
+          }
           return;
         }
 
@@ -938,11 +1562,11 @@
           return;
         }
 
-        elemento.textContent = JSON.stringify(conteudo);
+        elemento.textContent = String(conteudo);
       });
 
       // Processa divs estáticos com conteúdo Markdown inserido por scripts Python
-      ["Especificação", "Analise-Especificação"].forEach((id) => {
+      ["Especificação"].forEach((id) => {
         const el = document.getElementById(id);
         if (!el || !el.textContent.trim()) return;
 
@@ -1269,55 +1893,6 @@
   
   
   <script>
-    (function calcularIndiceMaturidade() {
-      const tabela = document.getElementById("maturidade");
-      if (!tabela) return;
-
-      const linhas = Array.from(tabela.querySelectorAll("tr"));
-      if (!linhas.length) return;
-
-      // Localiza o índice da coluna "Nota" pelo cabeçalho
-      const headerCells = Array.from(linhas[0].cells);
-      const idxNota = headerCells.findIndex(
-        (th) => (th.textContent || "").trim().toLowerCase() === "nota"
-      );
-      if (idxNota === -1) return;
-
-      // Soma os valores da coluna Nota
-      let pontuacaoTotal = 0;
-      linhas.slice(1).forEach((tr) => {
-        const cell = tr.cells[idxNota];
-        if (!cell) return;
-        const valor = parseFloat((cell.textContent || "").trim().replace(",", "."));
-        if (!isNaN(valor)) pontuacaoTotal += valor;
-      });
-
-      const IndiceMaturidade = (pontuacaoTotal / 55) * 100;
-
-      let IndiceMaturidadeFarol;
-      if (IndiceMaturidade >= 80)      IndiceMaturidadeFarol = "#4CAF50";
-      else if (IndiceMaturidade >= 60) IndiceMaturidadeFarol = "#FFC107";
-      else if (IndiceMaturidade >= 40) IndiceMaturidadeFarol = "#FF9800";
-      else                             IndiceMaturidadeFarol = "#F44336";
-
-      const caretWrap = document.getElementById("IndiceMaturidadeNota");
-      if (!caretWrap) return;
-
-      let IndiceMaturidadeDefinicao;
-      if (IndiceMaturidade >= 80)      IndiceMaturidadeDefinicao = "Processo pronto para automação.";
-      else if (IndiceMaturidade >= 60) IndiceMaturidadeDefinicao = "Automação possível com ajustes.";
-      else if (IndiceMaturidade >= 40) IndiceMaturidadeDefinicao = "Necessita simplificação significativa.";
-      else                             IndiceMaturidadeDefinicao = "Não recomendado automatizar neste momento.";
-
-      const elementoDefinicao = document.getElementById("IndiceMaturidadeDefinicao");
-      if (elementoDefinicao) elementoDefinicao.textContent = IndiceMaturidadeDefinicao;
-
-      const pct = Math.min(100, Math.max(0, IndiceMaturidade));
-      caretWrap.style.left = pct.toFixed(1) + "%";
-
-      const valorEl = document.getElementById("IndiceMaturidadeValor");
-      if (valorEl) valorEl.textContent = IndiceMaturidade.toFixed(1) + "%";
-    })();
 
     (function processarTabelasComColunaLonga() {
       const LIMITE_CHARS   = 45;
@@ -1444,97 +2019,51 @@
 
   <style>
     /* ── Convergência de Escopo ── */
-    .conv-resumo {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 28px;
-      align-items: stretch;
-    }
-
-    .conv-resumo-depara {
-      flex: 1 1 320px;
+    /* ── Convergência — layout Verde / Laranja / Vermelho ── */
+    .conv-categoria-bloco {
+      margin-bottom: 32px;
       border: 1px solid var(--color-border);
-      background: #fcfcfb;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
     }
 
-    .conv-resumo-depara .conv-label {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--color-text-soft);
-      font-family: var(--font-title);
-    }
-
-    .conv-resumo-depara .conv-depara-row {
+    .conv-categoria-header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 16px;
+      padding: 14px 20px;
       flex-wrap: wrap;
-      margin-top: 4px;
     }
 
-    .conv-resumo-depara .conv-valor-de {
-      font-size: 1.25rem;
+    .conv-categoria-header.verde  { background: #f0f7f2; border-bottom: 2px solid #2a6b3a; }
+    .conv-categoria-header.laranja { background: #fef9f0; border-bottom: 2px solid #d97706; }
+    .conv-categoria-header.vermelho { background: #fef2f2; border-bottom: 2px solid #b91c1c; }
+
+    .conv-categoria-nome {
       font-family: var(--font-title);
-      color: var(--color-text-soft);
-      text-decoration: line-through;
-      opacity: 0.7;
-    }
-
-    .conv-resumo-depara .conv-seta {
-      font-size: 1rem;
-      color: var(--color-text-soft);
-    }
-
-    .conv-resumo-depara .conv-valor-para {
-      font-size: 1.5rem;
-      font-family: var(--font-title);
-      color: #2a6b3a;
-    }
-
-    .conv-resumo-stats {
-      flex: 1 1 220px;
-      border: 1px solid var(--color-border);
-      background: #fcfcfb;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .conv-stat-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .conv-stat-item .conv-label {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1.5px;
+    }
+    .verde  .conv-categoria-nome { color: #2a6b3a; }
+    .laranja .conv-categoria-nome { color: #92400e; }
+    .vermelho .conv-categoria-nome { color: #991b1b; }
+
+    .conv-categoria-custo {
+      font-family: var(--font-title);
+      font-size: 1.1rem;
+    }
+    .verde  .conv-categoria-custo { color: #2a6b3a; }
+    .laranja .conv-categoria-custo { color: #92400e; }
+    .vermelho .conv-categoria-custo { color: #6b7280; font-style: italic; }
+
+    .conv-categoria-resumo {
+      font-size: 0.86rem;
       color: var(--color-text-soft);
-      font-family: var(--font-title);
-    }
-
-    .conv-stat-item .conv-stat-valor {
-      font-size: 1.4rem;
-      font-family: var(--font-title);
-      color: #2a6b3a;
-    }
-
-    .conv-stat-item .conv-stat-valor.destaque {
-      font-size: 2rem;
+      flex: 1 1 200px;
     }
 
     .conv-table-wrap {
       overflow-x: auto;
-      margin-bottom: 24px;
     }
 
     .conv-table {
@@ -1553,6 +2082,7 @@
       padding: 10px 12px;
       text-align: left;
       white-space: nowrap;
+      background: var(--color-bg);
     }
 
     .conv-table tbody tr.conv-row {
@@ -1561,13 +2091,8 @@
       transition: background 140ms ease;
     }
 
-    .conv-table tbody tr.conv-row:hover {
-      background: var(--color-highlight);
-    }
-
-    .conv-table tbody tr.conv-row.aberta {
-      background: var(--color-highlight);
-    }
+    .conv-table tbody tr.conv-row:hover { background: var(--color-highlight); }
+    .conv-table tbody tr.conv-row.aberta { background: var(--color-highlight); }
 
     .conv-table td {
       padding: 11px 12px;
@@ -1579,16 +2104,11 @@
       font-family: var(--font-title);
       font-size: 0.8rem;
       color: var(--color-text-soft);
-      width: 28px;
+      width: 32px;
     }
 
-    .conv-table td.conv-td-titulo {
-      font-weight: 600;
-    }
-
-    .conv-table td.conv-td-categoria {
-      white-space: nowrap;
-    }
+    .conv-table td.conv-td-titulo { font-weight: 600; }
+    .conv-table td.conv-td-categoria { white-space: nowrap; }
 
     .conv-badge {
       display: inline-block;
@@ -1600,18 +2120,6 @@
       border: 1px solid var(--color-border);
       background: #f5f4f0;
       color: var(--color-text-soft);
-    }
-
-    .conv-table td.conv-td-horas {
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    .conv-table td.conv-td-custo {
-      text-align: right;
-      white-space: nowrap;
-      font-family: var(--font-title);
-      color: #2a6b3a;
     }
 
     .conv-table td.conv-td-toggle {
@@ -1686,67 +2194,103 @@
     }
 
     /* ── Plano de Execução ── */
-    .plano-macro {
-      margin-bottom: 32px;
+    /* Plano de Execução — Gantt único */
+    .gantt-plano-wrap {
+      width: 100%;
       border: 1px solid #dee2e6;
       border-radius: 8px;
       overflow: hidden;
     }
-    .plano-macro-header {
+    .gantt-plano-row {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid #f1f3f5;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    .gantt-plano-row:last-child { border-bottom: none; }
+    .gantt-plano-row:hover { background: #f8f9fa; }
+    .gantt-plano-row.gantt-active { background: #f0f4ff; }
+    .gantt-plano-label {
+      width: 140px;
+      min-width: 140px;
+      padding: 12px 14px;
+      font-weight: 700;
+      font-size: 0.75em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #495057;
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 14px 18px;
-      background: #f8f9fa;
-      border-bottom: 1px solid #dee2e6;
+      gap: 8px;
+      border-right: 1px solid #dee2e6;
     }
-    .plano-macro-num {
-      font-size: 0.72em;
-      font-weight: 700;
-      color: #fff;
-      background: #6c757d;
+    .gantt-plano-label-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
+      flex-shrink: 0;
+    }
+    .gantt-plano-track {
+      flex: 1;
+      padding: 10px 6px;
+      position: relative;
+      min-height: 42px;
+    }
+    .gantt-plano-bar {
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      border-radius: 4px;
+      opacity: 0.82;
+      transition: opacity 0.15s;
+    }
+    .gantt-plano-row.gantt-active .gantt-plano-bar { opacity: 1; }
+    .gantt-plano-chevron {
+      width: 32px;
+      min-width: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      color: #adb5bd;
+      font-size: 0.8em;
+      transition: transform 0.2s;
     }
-    .plano-macro-titulo {
-      font-weight: 700;
-      font-size: 0.95em;
-      color: #212529;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .gantt-plano-row.gantt-active .gantt-plano-chevron { color: #4361ee; transform: rotate(180deg); }
+    /* Detalhe (accordion) */
+    .gantt-plano-detail {
+      display: none;
+      border-bottom: 2px solid #dee2e6;
+      background: #fff;
     }
-    .plano-macro-objetivo {
+    .gantt-plano-detail.gantt-detail-open { display: block; }
+    .gantt-det-objetivo {
+      padding: 10px 14px 8px 154px;
       font-size: 0.85em;
       color: #6c757d;
-      margin-left: auto;
-      text-align: right;
-      max-width: 55%;
+      border-bottom: 1px solid #f1f3f5;
     }
-    .plano-tabela {
+    .gantt-det-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.88em;
+      font-size: 0.87em;
     }
-    .plano-tabela th {
-      background: #f1f3f5;
+    .gantt-det-table th {
+      background: #f8f9fa;
       font-weight: 600;
-      padding: 8px 14px;
+      padding: 7px 14px;
       text-align: left;
       border-bottom: 1px solid #dee2e6;
       color: #495057;
     }
-    .plano-tabela td {
-      padding: 9px 14px;
-      border-bottom: 1px solid #f1f3f5;
+    .gantt-det-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #f8f9fa;
       vertical-align: middle;
     }
-    .plano-tabela tr:last-child td { border-bottom: none; }
-    .plano-tabela tr.plano-concluido td { color: #adb5bd; text-decoration: line-through; }
+    .gantt-det-table tr:last-child td { border-bottom: none; }
+    .plano-concluido td { color: #adb5bd; text-decoration: line-through; }
     .plano-check { font-size: 1.1em; }
     .plano-badge {
       display: inline-block;
@@ -1793,138 +2337,183 @@
           maximumFractionDigits: 0,
         }).format(Number(v) || 0);
 
-      const fmtInt = (v) =>
-        new Intl.NumberFormat("pt-BR").format(Number(v) || 0);
+      // ── Função que monta um bloco de categoria (verde/laranja/vermelho) ──
+      function montarBloco(categoria, nomeCss, labelNome, labelCusto, resumo, itens, colunasExtra) {
+        const bloco = document.createElement("div");
+        bloco.className = "conv-categoria-bloco";
 
-      // ── Resumo de-para + stats ──────────────────────────────────────
-      const resumo = document.createElement("div");
-      resumo.className = "conv-resumo";
-
-      const depara = document.createElement("div");
-      depara.className = "conv-resumo-depara";
-      depara.innerHTML = `
-        <span class="conv-label">Custo do projeto</span>
-        <div class="conv-depara-row">
-          <span class="conv-valor-de">${fmt(dados.custo_baseline)}</span>
-          <span class="conv-seta">→</span>
-          <span class="conv-valor-para">${fmt(dados.custo_simplificado)}</span>
-        </div>
-      `;
-
-      const stats = document.createElement("div");
-      stats.className = "conv-resumo-stats";
-      stats.innerHTML = `
-        <div class="conv-stat-item">
-          <span class="conv-label">Redução total</span>
-          <span class="conv-stat-valor">${fmt(dados.reducao_total)}</span>
-        </div>
-        <div class="conv-stat-item">
-          <span class="conv-label">Percentual de redução</span>
-          <span class="conv-stat-valor destaque">−${dados.percentual_reducao}%</span>
-        </div>
-      `;
-
-      resumo.appendChild(depara);
-      resumo.appendChild(stats);
-      container.appendChild(resumo);
-
-      // ── Tabela de simplificações ────────────────────────────────────
-      const wrap = document.createElement("div");
-      wrap.className = "conv-table-wrap";
-
-      const table = document.createElement("table");
-      table.className = "conv-table";
-
-      const thead = document.createElement("thead");
-      thead.innerHTML = `
-        <tr>
-          <th>#</th>
-          <th>Simplificação</th>
-          <th>Categoria</th>
-          <th>Perfil afetado</th>
-          <th>Horas</th>
-          <th>Redução R$</th>
-          <th></th>
-        </tr>
-      `;
-      table.appendChild(thead);
-
-      const tbody = document.createElement("tbody");
-
-      const simplificacoes = [...(dados.simplificacoes || [])].sort(
-        (a, b) => b.custo_reducao - a.custo_reducao
-      );
-
-      simplificacoes.forEach((s) => {
-        const tr = document.createElement("tr");
-        tr.className = "conv-row";
-
-        tr.innerHTML = `
-          <td class="conv-td-num">${s.id}</td>
-          <td class="conv-td-titulo">${s.titulo}</td>
-          <td class="conv-td-categoria"><span class="conv-badge">${s.categoria}</span></td>
-          <td>${s.perfil_afetado}</td>
-          <td class="conv-td-horas">${fmtInt(s.reducao_horas)} h</td>
-          <td class="conv-td-custo">${fmt(s.custo_reducao)}</td>
-          <td class="conv-td-toggle">▸</td>
+        // Cabeçalho do bloco
+        const header = document.createElement("div");
+        header.className = `conv-categoria-header ${nomeCss}`;
+        header.innerHTML = `
+          <span class="conv-categoria-nome">${labelNome}</span>
+          <span class="conv-categoria-custo">${labelCusto}</span>
+          <span class="conv-categoria-resumo">${resumo || ""}</span>
         `;
+        bloco.appendChild(header);
 
-        const trDetalhe = document.createElement("tr");
-        trDetalhe.className = "conv-detalhe-row";
-        trDetalhe.style.display = "none";
+        if (!itens || itens.length === 0) return bloco;
 
-        const tdDetalhe = document.createElement("td");
-        tdDetalhe.colSpan = 7;
-        tdDetalhe.innerHTML = `
-          <div class="conv-detalhe-bloco">
-            <div class="conv-detalhe-label">Pergunta ao negócio</div>
-            <div class="conv-detalhe-texto">${s.pergunta_ao_negocio}</div>
-          </div>
-          <div class="conv-detalhe-bloco">
-            <div class="conv-detalhe-label">Descrição</div>
-            <div class="conv-detalhe-texto">${s.descricao}</div>
-          </div>
-          <div class="conv-detalhe-bloco">
-            <div class="conv-detalhe-label">Fonte — RFP / transcrição</div>
-            <div class="conv-detalhe-texto conv-detalhe-fonte">${s.fonte_rfp}</div>
-          </div>
-        `;
-        trDetalhe.appendChild(tdDetalhe);
+        // Tabela de itens
+        const wrap = document.createElement("div");
+        wrap.className = "conv-table-wrap";
 
-        tr.addEventListener("click", () => {
-          const aberta = trDetalhe.style.display !== "none";
-          trDetalhe.style.display = aberta ? "none" : "table-row";
-          tr.classList.toggle("aberta", !aberta);
-          tr.querySelector(".conv-td-toggle").textContent = aberta ? "▸" : "▾";
+        const table = document.createElement("table");
+        table.className = "conv-table";
+
+        const thead = document.createElement("thead");
+        const thBase = `<th></th><th>Item de escopo</th><th>Categoria</th><th>Contexto</th>`;
+        thead.innerHTML = `<tr>${thBase}${colunasExtra.map(c => `<th>${c.label}</th>`).join("")}</tr>`;
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+
+        itens.forEach((item) => {
+          const tr = document.createElement("tr");
+          tr.className = "conv-row conv-clickable-row";
+
+          const extraTds = colunasExtra.map(c =>
+            `<td class="conv-td-extra">${item[c.campo] || "—"}</td>`
+          ).join("");
+
+          tr.innerHTML = `
+            <td class="conv-td-num">${item.id || ""}</td>
+            <td class="conv-td-titulo">${item.titulo || ""}</td>
+            <td class="conv-td-categoria"><span class="conv-badge">${item.categoria || ""}</span></td>
+            <td class="conv-td-contexto">${item.contexto || ""}</td>
+            ${extraTds}
+            <td class="conv-td-toggle">▸</td>
+          `;
+
+          const trDetalhe = document.createElement("tr");
+          trDetalhe.className = "conv-detalhe-row";
+          trDetalhe.style.display = "none";
+
+          const tdDetalhe = document.createElement("td");
+          tdDetalhe.colSpan = 5 + colunasExtra.length;
+
+          // Campos de detalhe comuns
+          let detalheHTML = `
+            <div class="conv-detalhe-bloco">
+              <div class="conv-detalhe-label">Motivo da classificação</div>
+              <div class="conv-detalhe-texto">${item.motivo_classificacao || "—"}</div>
+            </div>
+          `;
+
+          // Campos específicos por categoria
+          if (nomeCss === "verde" && item.premissa_operacional) {
+            detalheHTML += `
+              <div class="conv-detalhe-bloco">
+                <div class="conv-detalhe-label">Premissa operacional</div>
+                <div class="conv-detalhe-texto">${item.premissa_operacional}</div>
+              </div>
+            `;
+          }
+          if (nomeCss === "laranja") {
+            if (item.versao_simples) {
+              detalheHTML += `
+                <div class="conv-detalhe-bloco">
+                  <div class="conv-detalhe-label">Versão simples (Fase 1)</div>
+                  <div class="conv-detalhe-texto">${item.versao_simples}</div>
+                </div>
+              `;
+            }
+            if (item.versao_completa) {
+              detalheHTML += `
+                <div class="conv-detalhe-bloco">
+                  <div class="conv-detalhe-label">Versão completa (Fase 2)</div>
+                  <div class="conv-detalhe-texto">${item.versao_completa}</div>
+                </div>
+              `;
+            }
+            if (item.pergunta_ao_negocio) {
+              detalheHTML += `
+                <div class="conv-detalhe-bloco">
+                  <div class="conv-detalhe-label">Pergunta ao negócio</div>
+                  <div class="conv-detalhe-texto">${item.pergunta_ao_negocio}</div>
+                </div>
+              `;
+            }
+          }
+          if (nomeCss === "vermelho" && item.acao_recomendada) {
+            detalheHTML += `
+              <div class="conv-detalhe-bloco">
+                <div class="conv-detalhe-label">Ação recomendada</div>
+                <div class="conv-detalhe-texto">${item.acao_recomendada}</div>
+              </div>
+            `;
+          }
+          if (item.fonte) {
+            detalheHTML += `
+              <div class="conv-detalhe-bloco">
+                <div class="conv-detalhe-label">Fonte — RFP / transcrição</div>
+                <div class="conv-detalhe-texto conv-detalhe-fonte">${item.fonte}</div>
+              </div>
+            `;
+          }
+
+          tdDetalhe.innerHTML = detalheHTML;
+          trDetalhe.appendChild(tdDetalhe);
+
+          tr.addEventListener("click", () => {
+            const aberta = trDetalhe.style.display !== "none";
+            trDetalhe.style.display = aberta ? "none" : "table-row";
+            tr.classList.toggle("aberta", !aberta);
+            const tog = tr.querySelector(".conv-td-toggle");
+            if (tog) tog.textContent = aberta ? "▸" : "▾";
+          });
+
+          tbody.appendChild(tr);
+          tbody.appendChild(trDetalhe);
         });
 
-        tbody.appendChild(tr);
-        tbody.appendChild(trDetalhe);
-      });
+        table.appendChild(tbody);
+        wrap.appendChild(table);
+        bloco.appendChild(wrap);
+        return bloco;
+      }
 
-      table.appendChild(tbody);
-      wrap.appendChild(table);
-      container.appendChild(wrap);
+      // ── Verde ─────────────────────────────────────────────────────
+      const verde = dados.verde || {};
+      const custoVerde = verde.custo_estimado
+        ? fmt(verde.custo_estimado) + (verde.prazo_estimado ? " · " + verde.prazo_estimado : "")
+        : "A definir";
+      container.appendChild(montarBloco(
+        "verde", "verde", "Verde — Escopo precificável",
+        custoVerde, verde.resumo, verde.itens || [],
+        [{ label: "Premissa operacional", campo: "premissa_operacional" }]
+      ));
 
-      // ── Comentário ──────────────────────────────────────────────────
+      // ── Laranja ───────────────────────────────────────────────────
+      const laranja = dados.laranja || {};
+      const custoLaranja = laranja.custo_faixa_min && laranja.custo_faixa_max
+        ? fmt(laranja.custo_faixa_min) + " – " + fmt(laranja.custo_faixa_max)
+        : "Faixa a confirmar";
+      container.appendChild(montarBloco(
+        "laranja", "laranja", "Laranja — Amadurecimento necessário",
+        custoLaranja, laranja.resumo, laranja.itens || [],
+        [{ label: "Versão simples disponível", campo: "versao_simples" }]
+      ));
+
+      // ── Vermelho ──────────────────────────────────────────────────
+      const vermelho = dados.vermelho || {};
+      container.appendChild(montarBloco(
+        "vermelho", "vermelho", "Vermelho — Requer discovery",
+        "Indefinido — não estimar", vermelho.resumo, vermelho.itens || [],
+        [{ label: "Ação recomendada", campo: "acao_recomendada" }]
+      ));
+
+      // ── Comentário ────────────────────────────────────────────────
       if (dados.comentario) {
         const comentarioDiv = document.createElement("div");
         comentarioDiv.className = "conv-comentario";
 
         const label = document.createElement("div");
         label.className = "conv-comentario-label";
-        label.textContent = "Análise de impacto e efeito composição";
+        label.textContent = "Análise";
         comentarioDiv.appendChild(label);
 
-        const texto = dados.comentario.trim();
-        const sentencas = texto.split(/(?<=\.)\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÇ])/);
-        const tamanho = Math.ceil(sentencas.length / 2);
-        const paragrafos = [
-          sentencas.slice(0, tamanho).join(" "),
-          sentencas.slice(tamanho).join(" "),
-        ].filter(Boolean);
-
-        paragrafos.forEach((trecho) => {
+        dados.comentario.trim().split(/\n+/).filter(Boolean).forEach((trecho) => {
           const p = document.createElement("p");
           p.textContent = trecho;
           comentarioDiv.appendChild(p);
@@ -1949,78 +2538,208 @@
       catch (e) { console.error("Erro ao ler JSON do plano:", e); return; }
 
       const macros = dados.plano || [];
-      const CORES_MACRO = ["#4361ee","#3a86ff","#8338ec","#ff6b6b","#06d6a0"];
+      if (!macros.length) return;
 
-      const BADGE = {
-        "Alta":  "plano-badge-alta",
-        "Média": "plano-badge-media",
-        "Baixa": "plano-badge-baixa",
-      };
+      const CORES = ["#4361ee","#3a86ff","#8338ec","#ff6b6b","#06d6a0","#f77f00","#6c757d"];
+      const BADGE = { "Alta": "plano-badge-alta", "Média": "plano-badge-media", "Baixa": "plano-badge-baixa" };
+
+      // Duração total do projeto (maior fim entre todas as etapas)
+      const durTotal = macros.reduce((max, m) =>
+        (m.etapas || []).reduce((mx, e) => Math.max(mx, e.fim || 0), max), 0
+      ) || 1;
+
+      // Span de cada macro-etapa: menor inicio e maior fim
+      const spans = macros.map((m) => {
+        const etapas = (m.etapas || []).filter(e => e.inicio && e.fim);
+        if (!etapas.length) return { inicio: 1, fim: durTotal };
+        return {
+          inicio: Math.min(...etapas.map(e => e.inicio)),
+          fim:    Math.max(...etapas.map(e => e.fim)),
+        };
+      });
 
       container.innerHTML = "";
 
+      const wrap = document.createElement("div");
+      wrap.className = "gantt-plano-wrap";
+
       macros.forEach((macro, idx) => {
-        const wrap = document.createElement("div");
-        wrap.className = "plano-macro";
+        const cor   = CORES[idx] || "#6c757d";
+        const span  = spans[idx];
+        const pct   = (v) => ((v - 1) / durTotal * 100).toFixed(2) + "%";
+        const largura = ((span.fim - span.inicio + 1) / durTotal * 100).toFixed(2) + "%";
 
-        // Header
-        const header = document.createElement("div");
-        header.className = "plano-macro-header";
+        // ── Linha do Gantt ────────────────────────────────────────────────
+        const row = document.createElement("div");
+        row.className = "gantt-plano-row";
 
-        const num = document.createElement("div");
-        num.className = "plano-macro-num";
-        num.style.background = CORES_MACRO[idx] || "#6c757d";
-        num.textContent = idx + 1;
+        const label = document.createElement("div");
+        label.className = "gantt-plano-label";
 
-        const titulo = document.createElement("div");
-        titulo.className = "plano-macro-titulo";
-        titulo.textContent = macro.macro_etapa || "";
+        const dot = document.createElement("div");
+        dot.className = "gantt-plano-label-dot";
+        dot.style.background = cor;
+        label.appendChild(dot);
+        label.appendChild(document.createTextNode(macro.macro_etapa || ""));
 
-        const obj = document.createElement("div");
-        obj.className = "plano-macro-objetivo";
-        obj.textContent = macro.objetivo || "";
+        const track = document.createElement("div");
+        track.className = "gantt-plano-track";
 
-        header.appendChild(num);
-        header.appendChild(titulo);
-        header.appendChild(obj);
-        wrap.appendChild(header);
+        const bar = document.createElement("div");
+        bar.className = "gantt-plano-bar";
+        bar.style.background = cor;
+        bar.style.left  = pct(span.inicio);
+        bar.style.width = largura;
+        track.appendChild(bar);
 
-        // Tabela de etapas
+        const chevron = document.createElement("div");
+        chevron.className = "gantt-plano-chevron";
+        chevron.innerHTML = '<i class="bi bi-chevron-down"></i>';
+
+        row.appendChild(label);
+        row.appendChild(track);
+        row.appendChild(chevron);
+
+        // ── Painel de detalhe (accordion) ────────────────────────────────
+        const detail = document.createElement("div");
+        detail.className = "gantt-plano-detail";
+
+        if (macro.objetivo) {
+          const obj = document.createElement("div");
+          obj.className = "gantt-det-objetivo";
+          obj.textContent = macro.objetivo;
+          detail.appendChild(obj);
+        }
+
         const table = document.createElement("table");
-        table.className = "plano-tabela";
-
-        const thead = document.createElement("thead");
-        thead.innerHTML = `<tr>
+        table.className = "gantt-det-table";
+        table.innerHTML = `<thead><tr>
           <th style="width:2em"></th>
           <th>Atividade</th>
           <th>Responsável</th>
           <th>Prioridade</th>
-        </tr>`;
-        table.appendChild(thead);
+        </tr></thead>`;
 
         const tbody = document.createElement("tbody");
-        (macro.etapas || []).forEach(etapa => {
+        (macro.etapas || []).forEach((etapa) => {
           const tr = document.createElement("tr");
           if (etapa.concluido) tr.classList.add("plano-concluido");
-
           const icone = etapa.concluido
             ? '<i class="bi bi-check-circle-fill" style="color:#2d6a4f"></i>'
             : '<i class="bi bi-circle" style="color:#adb5bd"></i>';
-
           const badgeClass = BADGE[etapa.prioridade] || "plano-badge-media";
-
           tr.innerHTML = `
             <td class="plano-check">${icone}</td>
             <td>${etapa.atividade || ""}</td>
             <td><span class="plano-resp">${etapa.responsavel || ""}</span></td>
-            <td><span class="plano-badge ${badgeClass}">${etapa.prioridade || ""}</span></td>
-          `;
+            <td><span class="plano-badge ${badgeClass}">${etapa.prioridade || ""}</span></td>`;
           tbody.appendChild(tr);
         });
 
         table.appendChild(tbody);
-        wrap.appendChild(table);
-        container.appendChild(wrap);
+        detail.appendChild(table);
+
+        // ── Toggle ao clicar na linha ─────────────────────────────────────
+        row.addEventListener("click", () => {
+          const isOpen = detail.classList.contains("gantt-detail-open");
+          // Fecha todos
+          wrap.querySelectorAll(".gantt-plano-detail").forEach(d => d.classList.remove("gantt-detail-open"));
+          wrap.querySelectorAll(".gantt-plano-row").forEach(r => r.classList.remove("gantt-active"));
+          // Abre o clicado (se estava fechado)
+          if (!isOpen) {
+            detail.classList.add("gantt-detail-open");
+            row.classList.add("gantt-active");
+          }
+        });
+
+        wrap.appendChild(row);
+        wrap.appendChild(detail);
+      });
+
+      container.appendChild(wrap);
+    })();
+
+    (function renderizarAnaliseSpec() {
+      const tag       = document.getElementById("analiseSpecSPEC");
+      const container = document.getElementById("Analise-Especificação");
+      if (!tag || !container) return;
+
+      const raw = tag.textContent.trim();
+      if (!raw || raw.includes("##INSIRA_CONTEUDO")) return;
+
+      let dados;
+      try { dados = JSON.parse(raw); } catch (e) { return; }
+
+      const categorias = dados["analise-spec"];
+      if (!Array.isArray(categorias) || !categorias.length) return;
+
+      container.innerHTML = "";
+
+      const BADGE_COR = {
+        "Ambiguidades":                          "#ff8a65",
+        "Inconsistências":                       "#ef5350",
+        "Requisitos Conflitantes":               "#e53935",
+        "Edge Cases":                            "#ab47bc",
+        "Riscos Técnicos":                       "#42a5f5",
+        "Gargalos":                              "#ef5350",
+        "Decisões Faltantes":                    "#ffa726",
+        "Necessidade de Esclarecimentos":        "#26a69a",
+        "Questionamento de Premissas Implícitas":"#8d6e63",
+        "Decisões Irreversíveis de Arquitetura": "#78909c",
+        "Riscos de Cybersegurança":              "#d32f2f",
+      };
+
+      categorias.forEach(cat => {
+        const itens = cat.itens || [];
+        if (!itens.length) return;
+
+        const cor = BADGE_COR[cat.categoria] || "#78909c";
+
+        // Cabeçalho da categoria como details/summary
+        const details = document.createElement("details");
+        details.className = "aspec-categoria";
+        details.open = false;
+
+        const summary = document.createElement("summary");
+        summary.className = "aspec-categoria-header";
+
+        const badge = document.createElement("span");
+        badge.className = "aspec-badge";
+        badge.style.background = cor;
+        badge.textContent = itens.length;
+
+        const tit = document.createElement("span");
+        tit.className = "aspec-categoria-titulo";
+        tit.textContent = cat.categoria;
+
+        summary.appendChild(badge);
+        summary.appendChild(tit);
+        details.appendChild(summary);
+
+        // Itens dentro da categoria
+        const corpo = document.createElement("div");
+        corpo.className = "aspec-corpo";
+
+        itens.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "aspec-item";
+
+          const titulo = document.createElement("div");
+          titulo.className = "aspec-item-titulo";
+          titulo.style.borderLeftColor = cor;
+          titulo.textContent = item.titulo;
+
+          const desc = document.createElement("div");
+          desc.className = "aspec-item-desc";
+          desc.textContent = item.descricao;
+
+          card.appendChild(titulo);
+          card.appendChild(desc);
+          corpo.appendChild(card);
+        });
+
+        details.appendChild(corpo);
+        container.appendChild(details);
       });
     })();
 
@@ -2134,22 +2853,181 @@
 
       // ── download MD ───────────────────────────────────────────────────────
       function baixarMd() {
-        const linhas = ["# Ajustes do Relatório", ""];
-        document.querySelectorAll(".cmt-textarea").forEach(ta => {
-          if (!ta.value.trim()) return;
-          linhas.push("## " + (ta.dataset.contexto || ta.dataset.cmtId));
-          linhas.push("");
-          linhas.push(ta.value.trim());
-          linhas.push("");
-          linhas.push("---");
-          linhas.push("");
+        const L = [];
+
+        function add(txt) { L.push(txt); }
+        function br()     { L.push(""); }
+
+        // Injeta bloco IMPORTANTE: lê do DOM se textarea existe, senão do localStorage
+        function injetarCmt(el, idLS) {
+          const ta = el ? el.querySelector(".cmt-textarea") : null;
+          const valor = (ta && ta.value.trim()) ? ta.value.trim()
+                      : (idLS ? lerLS(idLS) : "");
+          if (!valor) return;
+          br();
+          add("***IMPORTANTE***");
+          br();
+          valor.split(/\r?\n/).forEach(l => add(l));
+          br();
+          add("***");
+          br();
+        }
+
+        // Texto limpo de um elemento (sem ícones — <i> não tem textContent relevante)
+        function txt(el) {
+          return (el ? el.textContent : "").replace(/\s+/g, " ").trim();
+        }
+
+        // Tabela HTML → markdown
+        function tabelaMd(table) {
+          const rows = Array.from(table.querySelectorAll("tr"));
+          if (!rows.length) return;
+          rows.forEach((row, i) => {
+            const cells = Array.from(row.querySelectorAll("th,td"))
+              .filter(c => c.style.display !== "none")
+              .map(c => txt(c).replace(/\|/g, "\\|"));
+            if (!cells.length) return;
+            add("| " + cells.join(" | ") + " |");
+            if (i === 0) add("| " + cells.map(() => "---").join(" | ") + " |");
+          });
+          br();
+        }
+
+        // ── Cabeçalho do relatório ─────────────────────────────────────────
+        const small = document.querySelector("small");
+        const h1    = document.querySelector("h1");
+        if (small && txt(small)) { add("*" + txt(small) + "*"); br(); }
+        if (h1    && txt(h1))    { add("# " + txt(h1)); br(); }
+        const resumo = document.getElementById("1.resumo-conversa");
+        if (resumo && txt(resumo)) { add(txt(resumo)); br(); }
+
+        // ── Seções ────────────────────────────────────────────────────────
+        document.querySelectorAll("section.hero").forEach(section => {
+          // Pula a hero principal (título/resumo já tratados)
+          if (section.querySelector("h1")) return;
+
+          const h2 = section.querySelector(":scope > h2");
+          if (!h2) return;
+
+          add("---"); br();
+          add("## " + txt(h2)); br();
+
+          // Parágrafos estáticos diretos da section
+          section.querySelectorAll(":scope > p").forEach(p => {
+            const t = txt(p); if (t) { add(t); br(); }
+          });
+
+          // ── Accordions JSON (details) ────────────────────────────────
+          section.querySelectorAll("details.markdown-accordion-item").forEach(det => {
+            const summary = det.querySelector("summary");
+            if (!summary) return;
+
+            // ID do localStorage — mesma lógica do setupDetails
+            const tituloLS = summary.textContent.replace(/\s+/g, " ").trim();
+            const idLS = "acc-" + normId(tituloLS);
+
+            // Título: preferir span .json-accordion-titulo, senão textContent do summary
+            const spanTit = summary.querySelector(".json-accordion-titulo");
+            const titAcc  = spanTit ? txt(spanTit) : txt(summary);
+
+            // Badge (relevância, CONTEXTO, INSIGHT)
+            const badges = Array.from(summary.querySelectorAll(".json-badge"))
+              .map(b => txt(b)).filter(Boolean);
+            const badgePart = badges.length ? " [" + badges.join(" | ") + "]" : "";
+
+            add("### " + titAcc + badgePart); br();
+
+            const body = det.querySelector(".markdown-accordion-body");
+            if (body) {
+              // Badge identificador (markdown legado)
+              const badgeLeg = body.querySelector(".markdown-accordion-badge");
+              if (badgeLeg) { add("**" + txt(badgeLeg) + "**"); br(); }
+
+              // Citações de contradição
+              body.querySelectorAll("p.json-citacao").forEach(p => {
+                const autor = txt(p.querySelector("strong"));
+                const citTxt = p.textContent.replace(autor, "").trim();
+                add("**" + autor + "** " + citTxt); br();
+              });
+
+              // Parágrafos comuns
+              body.querySelectorAll("p:not(.json-citacao)").forEach(p => {
+                const t = txt(p); if (t) { add(t); br(); }
+              });
+
+              // Listas
+              body.querySelectorAll("ul, ol").forEach(list => {
+                list.querySelectorAll("li").forEach(li => {
+                  const t = txt(li); if (t) add("- " + t);
+                });
+                br();
+              });
+
+              injetarCmt(body, idLS);
+            }
+          });
+
+          // ── Tabelas (maturidade, dimensionamento, etc.) ─────────────
+          section.querySelectorAll("table").forEach(table => {
+            if (table.closest(".tabela-detalhe-linha,.gantt-det-table,.conv-detalhe-row")) return;
+            if (table.classList.contains("gantt-det-table")) return;
+            tabelaMd(table);
+          });
+
+          // ── Gantt Plano ──────────────────────────────────────────────
+          section.querySelectorAll(".gantt-plano-row").forEach(row => {
+            const label = row.querySelector(".gantt-plano-label");
+            if (!label) return;
+            const nomeEtapa = txt(label);
+            add("### " + nomeEtapa); br();
+
+            const detail = row.nextElementSibling;
+            if (!detail || !detail.classList.contains("gantt-plano-detail")) return;
+
+            const obj = detail.querySelector(".gantt-det-objetivo");
+            if (obj && txt(obj)) { add("*" + txt(obj) + "*"); br(); }
+
+            detail.querySelectorAll("tbody tr").forEach(tr => {
+              const tds = tr.querySelectorAll("td");
+              if (tds.length < 4) return;
+              const atv  = txt(tds[1]);
+              const resp = txt(tds[2]);
+              const prio = txt(tds[3]);
+              if (atv) add("- " + atv + " *(" + resp + " · " + prio + ")*");
+            });
+            br();
+
+            injetarCmt(detail);
+          });
+
+          // ── Convergência ─────────────────────────────────────────────
+          section.querySelectorAll(".conv-clickable-row").forEach(tr => {
+            const tituloEl = tr.querySelector(".conv-td-titulo");
+            if (!tituloEl) return;
+            const tituloConv = txt(tituloEl);
+            const idConv = "conv-" + normId(tituloConv);
+            add("### " + tituloConv); br();
+
+            const det = tr.nextElementSibling;
+            if (!det || !det.classList.contains("conv-detalhe-row")) return;
+            const td = det.querySelector("td");
+            if (!td) return;
+
+            td.querySelectorAll("p").forEach(p => {
+              const t = txt(p); if (t) { add(t); br(); }
+            });
+
+            injetarCmt(td, idConv);
+          });
         });
-        const blob = new Blob([linhas.join("\n")], { type: "text/markdown;charset=utf-8" });
+
+        // ── Gerar arquivo ─────────────────────────────────────────────────
+        const blob = new Blob([L.join("\n")], { type: "text/markdown;charset=utf-8" });
         const url  = URL.createObjectURL(blob);
         const a    = document.createElement("a");
-        const now = new Date();
-        const pad = n => String(n).padStart(2, "0");
-        const ts  = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}`;
+        const now  = new Date();
+        const pad  = n => String(n).padStart(2, "0");
+        const ts   = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}`;
         a.href = url; a.download = `${ts}-ajustes-relatorio.md`;
         document.body.appendChild(a); a.click();
         document.body.removeChild(a); URL.revokeObjectURL(url);
@@ -2261,6 +3139,813 @@
       document.querySelectorAll("details.markdown-accordion-item").forEach(setupDetails);
       document.querySelectorAll(".conv-row").forEach(setupConvRow);
       atualizarBotao();
+    })();
+  </script>
+
+  <!-- ── Navbar flutuante ──────────────────────────────────────────────── -->
+  <style>
+    /* ── Maturidade: Quadrante ─────────────────────────────────────────────── */
+    .mat-quad-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 48px auto 48px;
+    }
+
+    /* linha horizontal: label Y + grid */
+    .mat-quad-main {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 8px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .mat-eixo-y {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 12px 0;
+      font-size: 11px;
+      color: var(--color-text-soft);
+      opacity: .6;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .mat-quad-grid {
+      position: relative;
+      flex: 1;
+      height: 300px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .mat-quad-cel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px;
+      border: 1px solid var(--color-border);
+      transition: background .3s;
+    }
+    .mat-quad-tl { border-top-left-radius: 7px; }
+    .mat-quad-tr { border-top-right-radius: 7px; }
+    .mat-quad-bl { border-bottom-left-radius: 7px; }
+    .mat-quad-br { border-bottom-right-radius: 7px; }
+
+    .mat-quad-cel-icon  { font-size: 22px; }
+    .mat-quad-cel-titulo {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--color-text-soft);
+      text-align: center;
+      line-height: 1.3;
+    }
+    .mat-quad-ativo .mat-quad-cel-titulo {
+      color: var(--color-text);
+    }
+
+    .mat-linha-v {
+      position: absolute;
+      left: 50%; top: 0; bottom: 0;
+      width: 1px;
+      background: var(--color-border);
+      pointer-events: none;
+    }
+    .mat-linha-h {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      background: var(--color-border);
+      pointer-events: none;
+    }
+
+    .mat-dot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #1565c0;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px #1565c0, 0 2px 8px rgba(0,0,0,.3);
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      transition: left .4s, bottom .4s;
+      pointer-events: none;
+    }
+
+    .mat-eixo-x {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 520px;
+      font-size: 11px;
+      color: var(--color-text-soft);
+      opacity: .6;
+      padding: 4px 0;
+      /* alinha abaixo do grid (pula a largura do eixo Y via padding-left no JS) */
+    }
+
+    .mat-acao-card {
+      width: 100%;
+      border: 2px solid;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0 8px;
+    }
+    .mat-acao-titulo {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .mat-acao-scores {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--color-text-soft);
+      margin-bottom: 10px;
+    }
+    .mat-acao-scores strong {
+      color: var(--color-text);
+      font-size: 13px;
+    }
+    .mat-acao-desc {
+      font-size: 13px;
+      color: var(--color-text-soft);
+      line-height: 1.5;
+    }
+
+    .mat-accordion {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .mat-accordion-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-bg);
+      user-select: none;
+    }
+    .mat-accordion-summary::-webkit-details-marker { display: none; }
+    .mat-accordion-arr {
+      font-size: 18px;
+      opacity: .4;
+      transition: transform .2s;
+    }
+    .mat-accordion[open] .mat-accordion-arr { transform: rotate(90deg); }
+    .mat-accordion-body {
+      padding: 12px 16px;
+      background: var(--color-paper);
+    }
+
+    .mat-dim-list { display: flex; flex-direction: column; gap: 10px; }
+    .mat-dim-row { display: grid; grid-template-columns: 160px 1fr 40px; gap: 8px; align-items: center; }
+    .mat-dim-label { font-size: 12px; color: var(--color-text-soft); }
+    .mat-dim-bar-wrap { height: 6px; background: var(--color-border); border-radius: 3px; overflow: hidden; }
+    .mat-dim-bar { height: 100%; border-radius: 3px; transition: width .4s; }
+    .mat-dim-nota { font-size: 12px; font-weight: 600; color: var(--color-text); text-align: right; }
+    .mat-dim-just {
+      grid-column: 1 / -1;
+      font-size: 11.5px;
+      color: var(--color-text-soft);
+      opacity: .75;
+      line-height: 1.4;
+      padding-left: 4px;
+    }
+
+    .mat-perdas-list { display: flex; flex-direction: column; gap: 8px; }
+    .mat-perda-row {
+      display: grid;
+      grid-template-columns: 72px 160px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+    .mat-perda-sev {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .mat-perda-ausente { opacity: .35; }
+    .mat-perda-nome { font-size: 12.5px; color: var(--color-text); font-weight: 500; }
+    .mat-perda-desc { font-size: 11.5px; color: var(--color-text-soft); line-height: 1.4; }
+
+    /* ── Análise da Especificação ──────────────────────────────────────────── */
+    .aspec-categoria {
+      border: 1px solid var(--color-border, #d8d5cf);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .aspec-categoria-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      background: var(--color-bg, #f8f7f4);
+    }
+    .aspec-categoria-header::-webkit-details-marker { display: none; }
+    .aspec-categoria-header::after {
+      content: "›";
+      margin-left: auto;
+      font-size: 18px;
+      color: var(--color-text-soft, #4d4d4d);
+      opacity: .5;
+      transition: transform .2s;
+    }
+    .aspec-categoria[open] > .aspec-categoria-header::after {
+      transform: rotate(90deg);
+    }
+
+    .aspec-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      border-radius: 11px;
+      padding: 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .aspec-categoria-titulo {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text, #2b2b2b);
+    }
+
+    .aspec-corpo {
+      padding: 4px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--color-paper, #fff);
+    }
+
+    .aspec-item {
+      border-left: 3px solid;
+      padding: 8px 12px;
+      background: var(--color-bg, #f8f7f4);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .aspec-item-titulo {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text, #2b2b2b);
+      margin-bottom: 4px;
+    }
+
+    .aspec-item-desc {
+      font-size: 12.5px;
+      color: var(--color-text-soft, #4d4d4d);
+      line-height: 1.5;
+    }
+
+    /* ── Mapa de Processo ────────────────────────────────────────── */
+    .mapa-scroll-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding-bottom: 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border) transparent;
+    }
+    .mapa-scroll-wrap::-webkit-scrollbar { height: 6px; }
+    .mapa-scroll-wrap::-webkit-scrollbar-track { background: transparent; }
+    .mapa-scroll-wrap::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+
+    .mapa-trilha {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-width: max-content;
+      padding: 4px 0 8px;
+    }
+
+    .mapa-card {
+      width: 210px;
+      flex-shrink: 0;
+      background: #fcfcfb;
+      border: 1px solid var(--color-border);
+      border-top: 3px solid #adb5bd;
+      padding: 16px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      transition: box-shadow var(--transition-default), border-color var(--transition-default);
+    }
+    .mapa-card:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      border-color: #adb5bd;
+    }
+    .mapa-card-gargalo {
+      border-top-color: #c0392b;
+      background: #fff8f8;
+      border-color: #e8b4b8;
+    }
+    .mapa-card-gargalo:hover { box-shadow: 0 4px 14px rgba(192,57,43,0.10); }
+
+    .mapa-card-entrega {
+      border-top-color: #2a6b3a;
+      background: #f8fdf9;
+      border-color: #a8d5b5;
+    }
+    .mapa-card-entrega:hover { box-shadow: 0 4px 14px rgba(42,107,58,0.10); }
+
+    .mapa-card-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mapa-card-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-soft);
+      background: var(--color-highlight);
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--font-body);
+    }
+    .mapa-card-entrega-ico {
+      font-size: 18px;
+      color: #2a6b3a;
+    }
+    .mapa-badge-gargalo {
+      color: #c0392b;
+      font-size: 12px;
+    }
+    .mapa-badge-perda {
+      color: #8a6d3b;
+      font-size: 12px;
+      margin-left: auto;
+    }
+
+    .mapa-card-titulo {
+      font-size: 0.92rem;
+      font-family: var(--font-title);
+      font-weight: 600;
+      color: var(--color-title);
+      line-height: 1.3;
+    }
+    .mapa-card-exp {
+      font-size: 0.78rem;
+      color: var(--color-text-soft);
+      line-height: 1.55;
+    }
+
+    .mapa-maturidade-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+    .mapa-mat-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .mapa-mat-label {
+      font-size: 0.70rem;
+      color: var(--color-text-soft);
+      margin-left: 4px;
+      font-family: var(--font-body);
+    }
+
+    .mapa-sep {
+      border-top: 1px dashed var(--color-border);
+      margin: 2px 0;
+    }
+
+    .mapa-micro {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--color-text-soft);
+      line-height: 1.4;
+      padding: 2px 0;
+      font-family: var(--font-body);
+    }
+    .mapa-micro-gargalo {
+      color: #8b2020;
+      font-weight: 600;
+    }
+    .mapa-micro-icos {
+      flex-shrink: 0;
+      display: flex;
+      gap: 3px;
+      padding-top: 1px;
+      font-size: 10px;
+      color: #6c757d;
+    }
+    .mapa-micro-gargalo-ico { color: #c0392b; }
+    .mapa-micro-label { flex: 1; }
+
+    .mapa-seta {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      color: var(--color-border);
+      font-size: 16px;
+      margin-top: 34px;
+      flex-shrink: 0;
+    }
+
+    .mapa-legenda {
+      display: flex;
+      gap: 32px;
+      margin-top: 18px;
+      padding: 14px 20px;
+      background: var(--color-bg, #f8f7f4);
+      border-radius: 8px;
+      border: 1px solid var(--color-border, #d8d5cf);
+      flex-wrap: wrap;
+    }
+
+    .mapa-legenda-grupo {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mapa-legenda-grupo-titulo {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--color-text-soft, #4d4d4d);
+      opacity: .5;
+      margin-bottom: 2px;
+    }
+
+    .mapa-legenda-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mapa-legenda-label {
+      font-size: 12.5px;
+      color: var(--color-text-soft, #4d4d4d);
+    }
+
+    .mapa-legenda-box {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid;
+      flex-shrink: 0;
+    }
+    .mapa-legenda-card-normal  { background: #f0efe9; border-color: #b0ada5; }
+    .mapa-legenda-card-gargalo { background: #fdecea; border-color: #ef5350; }
+    .mapa-legenda-card-entrega { background: #e8f5e9; border-color: #66bb6a; }
+
+    .mapa-legenda-dots {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    /* ── Navbar flutuante ──────────────────────────────────────────────────── */
+    #nav-flutuante {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      z-index: 9000;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 6px 0;
+      background: rgba(30,30,30,.82);
+      border-radius: 10px 0 0 10px;
+      backdrop-filter: blur(6px);
+      box-shadow: -2px 0 14px rgba(0,0,0,.35);
+      max-height: 90vh;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    #nav-flutuante::-webkit-scrollbar { display: none; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-item-label {
+      max-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 12px;
+      color: #e0e0e0;
+      background: rgba(30,30,30,.92);
+      padding: 0;
+      border-radius: 6px 0 0 6px;
+      transition: max-width .25s ease, padding .25s ease;
+      pointer-events: none;
+    }
+
+    .nav-item:hover .nav-item-label {
+      max-width: 220px;
+      padding: 6px 10px;
+    }
+
+    .nav-item-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 2px solid rgba(255,255,255,.2);
+      margin: 2px 6px;
+      transition: background .2s, border-color .2s, transform .2s;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover .nav-item-dot {
+      background: rgba(255,255,255,.35);
+    }
+
+    .nav-item.ativo .nav-item-dot {
+      background: #4fc3f7;
+      border-color: #81d4fa;
+      transform: scale(1.25);
+      box-shadow: 0 0 8px rgba(79,195,247,.7);
+    }
+
+    .nav-item.ativo .nav-item-label {
+      color: #4fc3f7;
+    }
+  </style>
+
+  <nav id="nav-flutuante" aria-label="Navegação de seções"></nav>
+
+  <style>
+    /* ── Modo apresentação ─────────────────────────────────────────────────── */
+    .nav-item-seq {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ff7043;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      line-height: 1;
+      box-shadow: 0 0 0 2px rgba(30,30,30,.8);
+    }
+
+    .nav-item-dot { position: relative; } /* âncora para o badge */
+
+    .nav-item.em-apresentacao .nav-item-dot {
+      background: rgba(255,112,67,.4);
+      border-color: #ff7043;
+    }
+
+    /* cursor indica que Ctrl ativa algo diferente */
+    #nav-flutuante.modo-ctrl .nav-item { cursor: crosshair; }
+
+    /* barra de estado da apresentação */
+    #apres-status {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(30,30,30,.92);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 12px rgba(0,0,0,.4);
+      display: none;
+      gap: 12px;
+      align-items: center;
+      z-index: 9100;
+      white-space: nowrap;
+    }
+    #apres-status.visivel { display: flex; }
+    #apres-status kbd {
+      background: rgba(255,255,255,.15);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: monospace;
+      font-size: 11px;
+    }
+    #apres-status .apres-pos {
+      color: #ff7043;
+      font-weight: 700;
+    }
+  </style>
+
+  <div id="apres-status">
+    <span>Apresentação:</span>
+    <span class="apres-pos" id="apres-pos-txt"></span>
+    <span><kbd>←</kbd><kbd>↑</kbd> anterior &nbsp; <kbd>→</kbd><kbd>↓</kbd> próximo</span>
+    <span style="opacity:.5">· Ctrl+clique para editar</span>
+  </div>
+
+  <script>
+    (function navFlutuante() {
+      const nav = document.getElementById("nav-flutuante");
+
+      // ── Estado da apresentação ───────────────────────────────────────────
+      let playlist   = [];   // array de índices de seção em ordem de apresentação
+      let posAtual   = -1;   // índice dentro da playlist (cursor de navegação)
+
+      // Coleta sections que possuem h2 direto
+      function coletarSecoes() {
+        return Array.from(
+          document.querySelectorAll("section.hero h2")
+        ).map(h2 => ({
+          h2,
+          section: h2.closest("section.hero"),
+          label: h2.textContent.trim()
+        })).filter(s => s.label);
+      }
+
+      function construirNav() {
+        nav.innerHTML = "";
+        coletarSecoes().forEach(({ section, label }, i) => {
+          const item = document.createElement("div");
+          item.className = "nav-item";
+          item.title = label;
+
+          const lbl = document.createElement("span");
+          lbl.className = "nav-item-label";
+          lbl.textContent = label;
+
+          const dot = document.createElement("span");
+          dot.className = "nav-item-dot";
+
+          item.appendChild(lbl);
+          item.appendChild(dot);
+
+          item.addEventListener("click", (e) => {
+            if (e.ctrlKey || e.metaKey) {
+              // ── Modo edição da playlist ──
+              e.preventDefault();
+              const posNaLista = playlist.indexOf(i);
+              if (posNaLista === -1) {
+                playlist.push(i);
+              } else {
+                playlist.splice(posNaLista, 1);
+                // ajusta cursor se necessário
+                if (posAtual >= playlist.length) posAtual = playlist.length - 1;
+              }
+              sincronizarBadges();
+              atualizarStatus();
+              return;
+            }
+            // ── Navegação normal ──
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+
+          nav.appendChild(item);
+        });
+
+        sincronizarBadges();
+      }
+
+      // Atualiza badges numéricos nos dots conforme playlist
+      function sincronizarBadges() {
+        const items = Array.from(nav.querySelectorAll(".nav-item"));
+
+        // Remove todos os badges existentes
+        items.forEach(it => {
+          it.classList.remove("em-apresentacao");
+          const b = it.querySelector(".nav-item-seq");
+          if (b) b.remove();
+        });
+
+        // Recria badges na ordem da playlist
+        playlist.forEach((secIdx, ordem) => {
+          const it = items[secIdx];
+          if (!it) return;
+          it.classList.add("em-apresentacao");
+          const badge = document.createElement("span");
+          badge.className = "nav-item-seq";
+          badge.textContent = ordem + 1;
+          it.querySelector(".nav-item-dot").appendChild(badge);
+        });
+      }
+
+      // Atualiza a barra de status da apresentação
+      function atualizarStatus() {
+        const status = document.getElementById("apres-status");
+        const posTxt = document.getElementById("apres-pos-txt");
+        if (!status) return;
+        if (playlist.length === 0) {
+          status.classList.remove("visivel");
+          posAtual = -1;
+          return;
+        }
+        status.classList.add("visivel");
+        if (posAtual < 0) posAtual = 0;
+        posTxt.textContent = `${posAtual + 1} / ${playlist.length}`;
+      }
+
+      // Navega dentro da playlist
+      function navegar(delta) {
+        if (!playlist.length) return;
+        posAtual = Math.max(0, Math.min(playlist.length - 1, posAtual + delta));
+        const secoes = coletarSecoes();
+        const secIdx = playlist[posAtual];
+        if (secoes[secIdx]) {
+          secoes[secIdx].section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        atualizarStatus();
+      }
+
+      // Marca o item ativo com base na posição de scroll
+      function atualizarAtivo() {
+        const secoes = coletarSecoes();
+        const items  = Array.from(nav.querySelectorAll(".nav-item"));
+        if (!secoes.length || secoes.length !== items.length) return;
+
+        const meio = window.innerHeight * 0.4;
+        let ativo  = 0;
+        secoes.forEach(({ section }, i) => {
+          if (section.getBoundingClientRect().top <= meio) ativo = i;
+        });
+        items.forEach((it, i) => it.classList.toggle("ativo", i === ativo));
+      }
+
+      // Feedback visual quando Ctrl está pressionado
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey || e.metaKey) nav.classList.add("modo-ctrl");
+
+        if (playlist.length === 0) return;
+
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+          e.preventDefault();
+          navegar(+1);
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          e.preventDefault();
+          navegar(-1);
+        }
+      });
+      document.addEventListener("keyup", (e) => {
+        if (!e.ctrlKey && !e.metaKey) nav.classList.remove("modo-ctrl");
+      });
+
+      // Reconstrói se seções forem inseridas dinamicamente
+      const observer = new MutationObserver(() => {
+        construirNav();
+        atualizarAtivo();
+      });
+      observer.observe(document.querySelector("main.page") || document.body, {
+        childList: true, subtree: false
+      });
+
+      construirNav();
+      atualizarAtivo();
+
+      window.addEventListener("scroll", atualizarAtivo, { passive: true });
     })();
   </script>
 

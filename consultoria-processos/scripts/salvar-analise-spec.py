@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Salva a saida produzida pelo agente em WORK_DIR\\analise-spec\\analise-spec.md.
+Salva a saida produzida pelo agente em WORK_DIR\\analise-spec\\analise-spec.json.
 
 Uso:
     python "<SKILL_DIR>\\scripts\\salvar-analise-spec.py" "<WORK_DIR>" "<arquivo-com-saida-utf8>"
 """
 
+import json
 import os
 import sys
 from pathlib import Path
@@ -35,16 +36,46 @@ def ler_conteudo():
 
 
 def main():
-    work_dir  = resolver_work_dir()
-    conteudo  = ler_conteudo()
+    work_dir = resolver_work_dir()
+    conteudo = ler_conteudo().strip()
 
-    pasta_saida  = work_dir / "analise-spec"
+    try:
+        dados = json.loads(conteudo)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Saida nao e JSON valido: {e}")
+
+    if not isinstance(dados, dict):
+        raise ValueError("JSON deve ser um objeto (dict) na raiz.")
+
+    if "analise-spec" not in dados:
+        raise ValueError("JSON deve conter a chave 'analise-spec'.")
+
+    if not isinstance(dados["analise-spec"], list):
+        raise ValueError("'analise-spec' deve ser uma lista de categorias.")
+
+    pasta_saida = work_dir / "analise-spec"
     pasta_saida.mkdir(parents=True, exist_ok=True)
 
-    arquivo_saida = pasta_saida / "analise-spec.md"
-    arquivo_saida.write_text(conteudo, encoding="utf-8")
+    arquivo_saida = pasta_saida / "analise-spec.json"
+    arquivo_saida.write_text(
+        json.dumps(dados, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
+    # Remove arquivo .md legado se existir
+    md_legado = pasta_saida / "analise-spec.md"
+    if md_legado.exists():
+        md_legado.unlink()
+
+    # Remove arquivo temporario de input
+    tmp = Path(sys.argv[2]).expanduser().resolve()
+    if tmp.exists():
+        tmp.unlink()
+
+    categorias = len(dados["analise-spec"])
+    itens = sum(len(c.get("itens", [])) for c in dados["analise-spec"])
     print(f"Analise salva em: {arquivo_saida}")
+    print(f"  {categorias} categorias, {itens} itens no total")
 
 
 if __name__ == "__main__":

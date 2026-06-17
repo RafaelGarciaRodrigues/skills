@@ -65,7 +65,7 @@ Pasta de trabalho do usuário, ou seja, o cwd atual ou a pasta indicada explicit
 
 Contém:
 
-- INPUTS: arquivos de transcrição (`.txt`, `.docx`, `.pdf`, `.md`, `.json`, `.html`, `.xlsx`, `.pptx`, `.doc`, `.ppt`, `.xls`)
+- INPUTS: arquivos de transcrição (`.txt`, `.docx`, `.pdf`, `.md`, `.csv`, `.json`, `.html`, `.xlsx`, `.pptx`, `.doc`, `.ppt`, `.xls`)
 - OUTPUTS gerados: `resumo.json`, `Assessment.html`, `json\artefatos.json` e `html\Analise.html`
 
 ## Regras Invariantes
@@ -132,13 +132,23 @@ Preparar a fila de habilidades:
 python "<SKILL_DIR>\scripts\listar-habilidades.py" "<WORK_DIR>"
 ```
 
-Para cada item da fila, o agente deve executar os comandos da habilidade e salvar a saída diretamente em `WORK_DIR\artefatos`, usando o mesmo nome do arquivo de origem.
+Para cada item da fila, o agente deve executar os comandos da habilidade e salvar a saída em `WORK_DIR\artefatos`, usando **extensão `.json`** (ex.: `4.necessidades.json`).
 
+**Formato de saída obrigatório:** cada habilidade pede que a IA responda com um JSON puro — sem blocos de código markdown, sem texto explicativo antes ou depois. O agente deve gravar exatamente o que a IA produziu em um arquivo temporário e então invocar o script:
+
+```powershell
+python "<SKILL_DIR>\scripts\salvar-artefato.py" "<WORK_DIR>" "4.necessidades.json" "<arquivo-com-saida>"
+```
+
+O script valida o JSON e salva em `WORK_DIR\artefatos\4.necessidades.json`.
+
+Regras:
 - Não salve artefatos em `SKILL_DIR` e não altere os arquivos originais em `SKILL_DIR\habilidades`.
-- Não crie arquivos temporários em `SKILL_DIR` e nem `WORK_DIR`.
+- Não crie arquivos temporários em `SKILL_DIR` e nem `WORK_DIR` além do necessário para o script.
 - Não use terminal para gravar texto gerado pelo agente: não use pipe, stdin, `echo`, `type`, redirecionamento `>`, `Out-File` ou `Set-Content`.
 - Grave os artefatos diretamente com ferramenta de escrita/edição de arquivo do agente, em UTF-8.
-- Se qualquer artefato aparecer com padrões como `reuni?o`, `Aus?ncia` ou `gest??o`, descarte e regenere esse artefato a partir do Passo 2. Não tente corrigir por encoding, pois o caractere original já foi perdido.
+- Se qualquer artefato apresentar padrões como `reuni?o`, `Aus?ncia` ou `gest??o`, descarte e regenere a partir do Passo 2. Não tente corrigir por encoding.
+- Se o script retornar erro de JSON inválido, peça à IA para regenerar a saída em formato JSON puro e tente novamente.
 
 ### 3. Consolidar em um único .json
 
@@ -165,17 +175,17 @@ Se o script bloquear por perda de acentuação, não investigue os scripts e nã
 
 ### 4. Monta Relatório Analítico
 
-Use o script abaixo:
+Use o script unificado abaixo. Ele executa em sequência todos os inserts disponíveis (especificação, análise, dimensionamento, convergência, plano), pulando automaticamente os que ainda não existirem:
 
 ```text
-scripts/montar-relatorio-analitico.py
+scripts/montar-relatorio-completo.py
 ```
-
-Gerar `html\Analise.html`:
 
 ```powershell
-python "<SKILL_DIR>\scripts\montar-relatorio-analitico.py" "<WORK_DIR>"
+python "<SKILL_DIR>\scripts\montar-relatorio-completo.py" "<WORK_DIR>"
 ```
+
+> **Regra:** sempre use `montar-relatorio-completo.py` em vez de `montar-relatorio-analitico.py` para evitar perder conteúdos já inseridos nas execuções anteriores.
 
 ### 5. Iniciar Spec Kit
 

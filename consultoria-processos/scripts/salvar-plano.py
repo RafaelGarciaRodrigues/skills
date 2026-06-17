@@ -38,6 +38,17 @@ def ler_conteudo(caminho):
     return caminho.read_text(encoding="utf-8", errors="replace")
 
 
+MACRO_ETAPAS_OBRIGATORIAS = [
+    "ENTENDER",
+    "DIAGNOSTICAR",
+    "SIMPLIFICAR",
+    "ESTRUTURAR",
+    "AUTOMATIZAR",
+    "INTERFACE",
+    "DOCUMENTAR",
+]
+
+
 def validar_json(conteudo):
     try:
         dados = json.loads(conteudo)
@@ -47,6 +58,15 @@ def validar_json(conteudo):
     if "plano" not in dados or not isinstance(dados["plano"], list):
         raise ValueError("JSON inválido: campo 'plano' ausente ou não é uma lista.")
 
+    macros_recebidas = [m.get("macro_etapa", "") for m in dados["plano"]]
+
+    if macros_recebidas != MACRO_ETAPAS_OBRIGATORIAS:
+        raise ValueError(
+            f"O plano deve conter exatamente as 7 macro-etapas na ordem correta.\n"
+            f"Esperado: {MACRO_ETAPAS_OBRIGATORIAS}\n"
+            f"Recebido: {macros_recebidas}"
+        )
+
     for i, macro in enumerate(dados["plano"]):
         for campo in ("macro_etapa", "objetivo", "etapas"):
             if campo not in macro:
@@ -54,11 +74,21 @@ def validar_json(conteudo):
                     f"macro_etapa[{i}] sem campo obrigatório '{campo}'."
                 )
         for j, etapa in enumerate(macro.get("etapas", [])):
-            for campo in ("atividade", "concluido", "responsavel", "prioridade"):
+            for campo in ("atividade", "concluido", "responsavel", "prioridade", "inicio", "fim"):
                 if campo not in etapa:
                     raise ValueError(
                         f"macro_etapa[{i}].etapas[{j}] sem campo '{campo}'."
                     )
+            inicio = etapa.get("inicio")
+            fim    = etapa.get("fim")
+            if not isinstance(inicio, int) or not isinstance(fim, int):
+                raise ValueError(
+                    f"macro_etapa[{i}].etapas[{j}]: 'inicio' e 'fim' devem ser inteiros."
+                )
+            if fim < inicio:
+                raise ValueError(
+                    f"macro_etapa[{i}].etapas[{j}]: 'fim' ({fim}) < 'inicio' ({inicio})."
+                )
 
     return json.dumps(dados, ensure_ascii=False, indent=2)
 

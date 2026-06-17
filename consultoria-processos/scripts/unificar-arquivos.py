@@ -47,6 +47,7 @@ COMPORTAMENTO
     .pdf
     .txt
     .md
+    .csv
 
 - Ignora:
     pasta UNIFICADO
@@ -78,7 +79,7 @@ os.environ["PYTHONUTF8"] = "1"
 
 from pathlib import Path
 
-ARQUIVOS_SUPORTADOS = {".doc", ".docx", ".pdf", ".txt", ".md"}
+ARQUIVOS_SUPORTADOS = {".doc", ".docx", ".pdf", ".txt", ".md", ".csv"}
 
 PASTA_SAIDA = "UNIFICADO"
 PASTA_ARTEFATOS = "artefatos"

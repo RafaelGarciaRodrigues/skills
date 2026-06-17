@@ -7,20 +7,73 @@ Faça perguntas objetivas para convergir a arquitetura.
 
 - Linguagem: humanizada, informal, simples e conversada.
 
-- salve um arquivo analise-spec.md dentro da pasta "analise-spec" no formato e contendo as análises abaixo:
+---
 
-# AMBIGUIDADES
-# INCONSISTÊNCIAS
-# REQUISITOS CONFLITANTES
-# EDGE CASES
-# RISCOS TÉCNICOS
-# GARGALOS
-# DECISÕES FALTANTES
-# NECESSIDADE DE ESCLARECIMENTOS
-# QUESTIONAMENTO DE PREMISSAS IMPLÍCITAS
-# DECISÕES IRREVERSÍVEIS DE ARQUITETURA IDENTIFICADAS
-# RISCOS DE CYBERSEGURANÇA
+# Formato de saída
 
-Faça perguntas objetivas para convergir a arquitetura.
+Responda APENAS com o JSON abaixo, sem texto antes ou depois,
+sem blocos de código markdown:
+
+{
+  "analise-spec": [
+    {
+      "categoria": "Ambiguidades",
+      "itens": [
+        {
+          "titulo": "frase curta identificando a ambiguidade",
+          "descricao": "explicação detalhada + pergunta objetiva de convergência"
+        }
+      ]
+    },
+    {
+      "categoria": "Inconsistências",
+      "itens": [...]
+    },
+    {
+      "categoria": "Requisitos Conflitantes",
+      "itens": [...]
+    },
+    {
+      "categoria": "Edge Cases",
+      "itens": [...]
+    },
+    {
+      "categoria": "Riscos Técnicos",
+      "itens": [...]
+    },
+    {
+      "categoria": "Gargalos",
+      "itens": [...]
+    },
+    {
+      "categoria": "Decisões Faltantes",
+      "itens": [...]
+    },
+    {
+      "categoria": "Necessidade de Esclarecimentos",
+      "itens": [...]
+    },
+    {
+      "categoria": "Questionamento de Premissas Implícitas",
+      "itens": [...]
+    },
+    {
+      "categoria": "Decisões Irreversíveis de Arquitetura",
+      "itens": [...]
+    },
+    {
+      "categoria": "Riscos de Cybersegurança",
+      "itens": [...]
+    }
+  ]
+}
+
+Regras do JSON:
+- Aspas internas escapadas com \"
+- Sem quebras de linha dentro de strings
+- Inclua apenas categorias que tiverem ao menos 1 item
+- Mínimo de 2 itens por categoria incluída
+- "titulo" deve ser uma frase curta (máximo 10 palavras)
+- "descricao" deve conter a explicação + ao menos uma pergunta objetiva
+
 Não implemente ainda.
-

@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
-Consolida arquivos .md de WORK_DIR\\artefatos em WORK_DIR\\json\\artefatos.json.
+Consolida arquivos .json (e .md legados) de WORK_DIR\\artefatos em WORK_DIR\\json\\artefatos.json.
+
+Regras:
+- Arquivos .json: parseados e mesclados diretamente no objeto final
+- Arquivos .md (legado): armazenados como string (chave = stem do arquivo)
+- Se existirem .json e .md com mesmo stem, o .json tem precedência
 
 Uso:
     python "<SKILL_DIR>\\scripts\\consolidar-artefatos-json.py" "<WORK_DIR>"
@@ -50,7 +55,40 @@ def main():
     artefatos = {}
     arquivos_com_possivel_perda = []
 
-    for caminho in sorted(artefatos_dir.glob("*.md"), key=lambda item: item.name.lower()):
+    # Coleta stems já processados para prioridade .json > .md
+    stems_processados = set()
+
+    # Primeira passagem: arquivos .json (ignora arquivos que começam com _)
+    for caminho in sorted(artefatos_dir.glob("*.json"), key=lambda p: p.name.lower()):
+        if caminho.name.startswith("_"):
+            continue
+        conteudo = decodificar_texto(caminho.read_bytes())
+
+        if PADRAO_PERDA_ACENTO.search(conteudo):
+            arquivos_com_possivel_perda.append(caminho.name)
+            continue
+
+        try:
+            dados = json.loads(conteudo)
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"Arquivo {caminho.name} nao e um JSON valido: {e}"
+            )
+
+        if not isinstance(dados, dict):
+            raise ValueError(
+                f"Arquivo {caminho.name}: o JSON deve ser um objeto (dict). "
+                f"Recebido: {type(dados).__name__}"
+            )
+
+        artefatos.update(dados)
+        stems_processados.add(caminho.stem)
+
+    # Segunda passagem: arquivos .md legados (ignorados se já existe .json com mesmo stem)
+    for caminho in sorted(artefatos_dir.glob("*.md"), key=lambda p: p.name.lower()):
+        if caminho.stem in stems_processados:
+            continue
+
         conteudo = decodificar_texto(caminho.read_bytes())
         artefatos[caminho.stem] = conteudo
 
@@ -74,8 +112,9 @@ def main():
         encoding="utf-8",
     )
 
+    total_json = len([k for k in artefatos if True])
     print(f"JSON consolidado salvo em: {arquivo_saida}")
-    print(f"Total de arquivos .md consolidados: {len(artefatos)}")
+    print(f"Total de artefatos consolidados: {len(artefatos)}")
 
 
 if __name__ == "__main__":

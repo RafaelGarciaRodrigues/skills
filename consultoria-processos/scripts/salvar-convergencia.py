@@ -3,6 +3,9 @@
 """
 Salva a saida produzida pelo agente em WORK_DIR\\convergir\\convergir.json.
 
+Novo formato: JSON com três seções (verde, laranja, vermelho), cada uma
+contendo uma lista de itens de escopo classificados por nível de confiança.
+
 Uso:
     python "<SKILL_DIR>\\scripts\\salvar-convergencia.py" "<WORK_DIR>" "<arquivo-com-saida-utf8>"
 """
@@ -15,6 +18,11 @@ from pathlib import Path
 os.environ["PYTHONUTF8"] = "1"
 
 ENCODINGS = ("utf-8-sig", "utf-8", "cp850", "cp437", "cp1252", "latin-1")
+
+CHAVES_OBRIGATORIAS = {"verde", "laranja", "vermelho", "comentario"}
+CHAVES_ITEM_VERDE   = {"id", "titulo", "categoria", "contexto", "motivo_classificacao", "premissa_operacional", "fonte"}
+CHAVES_ITEM_LARANJA = {"id", "titulo", "categoria", "contexto", "motivo_classificacao", "versao_simples", "versao_completa", "pergunta_ao_negocio", "fonte"}
+CHAVES_ITEM_VERMELHO = {"id", "titulo", "categoria", "contexto", "motivo_classificacao", "acao_recomendada", "fonte"}
 
 
 def resolver_work_dir():
@@ -35,58 +43,73 @@ def ler_conteudo():
     return caminho.read_text(encoding="utf-8", errors="replace")
 
 
-def validar_e_corrigir(conteudo):
+def validar_estrutura(dados):
     """
-    Valida e corrige os campos calculáveis do JSON de convergência:
-      - reducao_total      = custo_baseline - custo_simplificado
-      - percentual_reducao = round(reducao_total / custo_baseline * 100)
-
-    Retorna o JSON já corrigido como string.
+    Valida a estrutura do JSON de convergência no novo formato (verde/laranja/vermelho).
+    Retorna lista de avisos (não críticos) e lança ValueError para erros críticos.
     """
-    try:
-        dados = json.loads(conteudo)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Conteúdo não é um JSON válido: {e}")
-
-    baseline      = int(dados.get("custo_baseline", 0) or 0)
-    simplificado  = int(dados.get("custo_simplificado", 0) or 0)
-    reducao_orig  = int(dados.get("reducao_total", 0) or 0)
-    pct_orig      = int(dados.get("percentual_reducao", 0) or 0)
-
-    reducao_correto = baseline - simplificado
-    pct_correto     = round(reducao_correto / baseline * 100) if baseline else 0
-
     avisos = []
 
-    if reducao_orig != reducao_correto:
-        avisos.append(
-            f"  reducao_total: agente informou {reducao_orig:,} → corrigido para {reducao_correto:,}"
-        )
-        dados["reducao_total"] = reducao_correto
+    # Chaves de topo
+    faltando = CHAVES_OBRIGATORIAS - set(dados.keys())
+    if faltando:
+        raise ValueError(f"Chaves obrigatórias ausentes no JSON: {faltando}")
 
-    if pct_orig != pct_correto:
-        avisos.append(
-            f"  percentual_reducao: agente informou {pct_orig}% → corrigido para {pct_correto}%"
-        )
-        dados["percentual_reducao"] = pct_correto
-
-    # Soma das reduções individuais vs reducao_total — apenas aviso informativo
-    soma_itens = sum(int(s.get("custo_reducao", 0) or 0) for s in dados.get("simplificacoes", []))
-    if soma_itens != reducao_correto:
-        avisos.append(
-            f"  ATENÇÃO: soma de custo_reducao das simplificações ({soma_itens:,}) "
-            f"≠ reducao_total ({reducao_correto:,}). "
-            f"Isso pode indicar efeito composição ou erro do agente — verifique o campo 'comentario'."
-        )
-
-    if avisos:
-        print("Correções aplicadas no JSON:")
-        for a in avisos:
-            print(a)
+    # Verde
+    verde = dados.get("verde", {})
+    if not isinstance(verde.get("itens"), list) or len(verde["itens"]) == 0:
+        avisos.append("  AVISO: verde.itens está vazio ou ausente.")
     else:
-        print("Valores calculados consistentes. Nenhuma correção necessária.")
+        for i, item in enumerate(verde["itens"]):
+            falt = CHAVES_ITEM_VERDE - set(item.keys())
+            if falt:
+                avisos.append(f"  AVISO: item verde[{i}] faltando campos: {falt}")
 
-    return json.dumps(dados, ensure_ascii=False, indent=2)
+    if not verde.get("custo_estimado"):
+        avisos.append("  AVISO: verde.custo_estimado não informado.")
+
+    # Laranja
+    laranja = dados.get("laranja", {})
+    if not isinstance(laranja.get("itens"), list) or len(laranja["itens"]) == 0:
+        avisos.append("  AVISO: laranja.itens está vazio ou ausente.")
+    else:
+        for i, item in enumerate(laranja["itens"]):
+            falt = CHAVES_ITEM_LARANJA - set(item.keys())
+            if falt:
+                avisos.append(f"  AVISO: item laranja[{i}] faltando campos: {falt}")
+
+    if not laranja.get("custo_faixa_min") or not laranja.get("custo_faixa_max"):
+        avisos.append("  AVISO: laranja.custo_faixa_min ou custo_faixa_max não informados.")
+    elif laranja.get("custo_faixa_min", 0) > laranja.get("custo_faixa_max", 0):
+        avisos.append("  AVISO: laranja.custo_faixa_min > custo_faixa_max — verifique os valores.")
+
+    # Vermelho
+    vermelho = dados.get("vermelho", {})
+    if not isinstance(vermelho.get("itens"), list) or len(vermelho["itens"]) == 0:
+        avisos.append("  AVISO: vermelho.itens está vazio ou ausente.")
+    else:
+        for i, item in enumerate(vermelho["itens"]):
+            falt = CHAVES_ITEM_VERMELHO - set(item.keys())
+            if falt:
+                avisos.append(f"  AVISO: item vermelho[{i}] faltando campos: {falt}")
+
+    # IDs únicos entre todas as categorias
+    todos_ids = (
+        [i.get("id") for i in verde.get("itens", [])] +
+        [i.get("id") for i in laranja.get("itens", [])] +
+        [i.get("id") for i in vermelho.get("itens", [])]
+    )
+    ids_duplicados = {x for x in todos_ids if todos_ids.count(x) > 1}
+    if ids_duplicados:
+        avisos.append(f"  AVISO: IDs duplicados entre categorias: {ids_duplicados}")
+
+    # Resumo de contagem
+    n_verde   = len(verde.get("itens", []))
+    n_laranja = len(laranja.get("itens", []))
+    n_vermelho = len(vermelho.get("itens", []))
+    print(f"Itens classificados: {n_verde} verde | {n_laranja} laranja | {n_vermelho} vermelho")
+
+    return avisos
 
 
 def main():
@@ -94,13 +117,28 @@ def main():
     arquivo_temp = Path(sys.argv[2]).expanduser().resolve()
     conteudo = ler_conteudo()
 
-    conteudo_corrigido = validar_e_corrigir(conteudo)
+    try:
+        dados = json.loads(conteudo)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Conteúdo não é um JSON válido: {e}")
+
+    avisos = validar_estrutura(dados)
+
+    if avisos:
+        print("Avisos encontrados:")
+        for a in avisos:
+            print(a)
+    else:
+        print("Estrutura validada. Nenhum aviso.")
 
     pasta_saida = work_dir / "convergir"
     pasta_saida.mkdir(parents=True, exist_ok=True)
 
     arquivo_saida = pasta_saida / "convergir.json"
-    arquivo_saida.write_text(conteudo_corrigido, encoding="utf-8")
+    arquivo_saida.write_text(
+        json.dumps(dados, ensure_ascii=False, indent=2),
+        encoding="utf-8"
+    )
 
     print(f"Convergência salva em: {arquivo_saida}")
 
