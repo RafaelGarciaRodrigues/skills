@@ -615,6 +615,12 @@
     </section>
 	
 	<section class="hero">
+		<h2>Mapa Resumo</h2>
+		<textarea id="entrada-mapa-resumo" style="width:100%;height:160px;font-family:monospace;font-size:13px;padding:10px;box-sizing:border-box;border:1px solid var(--color-border,#d8d5cf);border-radius:6px;resize:vertical;background:var(--color-bg,#f8f7f4);color:var(--color-text,#2b2b2b);margin-bottom:12px;" placeholder="Digite markdown aqui..."></textarea>
+		<div id="mapa-resumo" style="height:1000px;width:100%;"></div>
+	</section>
+
+	<section class="hero">
 		<h2>Participantes</h2>
 		
 		<div id="12.participantes"></div>
@@ -2912,6 +2918,22 @@
           add("---"); br();
           add("## " + txt(h2)); br();
 
+          // ── Mapa Resumo: injeta conteúdo da textarea com destaque ──────────
+          if (section.querySelector("#entrada-mapa-resumo") !== null) {
+            const ta  = section.querySelector("#entrada-mapa-resumo");
+            const val = (ta && ta.value.trim())
+              ? ta.value.trim()
+              : (localStorage.getItem("mapa-resumo::markdown") || "").trim();
+            if (val) {
+              add("> [!NOTE]"); br();
+              add("> **Mapa Resumo — storytelling preparado para apresentação**"); br();
+              br();
+              val.split(/\r?\n/).forEach(l => add(l));
+              br();
+            }
+            return; // seção tratada, não processa o restante
+          }
+
           // Parágrafos estáticos diretos da section
           section.querySelectorAll(":scope > p").forEach(p => {
             const t = txt(p); if (t) { add(t); br(); }
@@ -3140,6 +3162,74 @@
       document.querySelectorAll(".conv-row").forEach(setupConvRow);
       atualizarBotao();
     })();
+  </script>
+
+  <!-- ── Mapa Resumo ──────────────────────────────────────────────────── -->
+  <script>
+  (function mapaResumo() {
+    const LS_KEY  = "mapa-resumo::markdown";
+    const entrada = document.getElementById("entrada-mapa-resumo");
+    const saida   = document.getElementById("mapa-resumo");
+    if (!entrada || !saida) return;
+
+    const salvo = localStorage.getItem(LS_KEY);
+    if (salvo) entrada.value = salvo;
+
+    let debounce  = null;
+    let mapaAtual = null;
+
+    function renderizar(md) {
+      const Markmap     = window.markmap?.Markmap     || window.markmap?.markmap?.Markmap;
+      const Transformer = window.markmap?.Transformer || window.markmap?.markmap?.Transformer;
+      if (!Markmap || !Transformer) return;
+
+      const transformer = new Transformer();
+      const { root }    = transformer.transform(md || "# (vazio)");
+
+      if (mapaAtual) {
+        mapaAtual.setData(root);
+        mapaAtual.fit();
+        return;
+      }
+
+      saida.innerHTML = "";
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.style.width  = "100%";
+      svg.style.height = "100%";
+      saida.appendChild(svg);
+      mapaAtual = Markmap.create(svg);
+      mapaAtual.setData(root);
+      mapaAtual.fit();
+    }
+
+    entrada.addEventListener("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const s = entrada.selectionStart;
+        const f = entrada.selectionEnd;
+        entrada.value = entrada.value.substring(0, s) + "\t" + entrada.value.substring(f);
+        entrada.selectionStart = entrada.selectionEnd = s + 1;
+        entrada.dispatchEvent(new Event("input"));
+      }
+    });
+
+    entrada.addEventListener("input", () => {
+      localStorage.setItem(LS_KEY, entrada.value);
+      clearTimeout(debounce);
+      debounce = setTimeout(() => renderizar(entrada.value), 400);
+    });
+
+    if (entrada.value.trim()) {
+      const tentarRenderizar = (n) => {
+        if (window.markmap?.Markmap || window.markmap?.markmap?.Markmap) {
+          renderizar(entrada.value);
+        } else if (n > 0) {
+          setTimeout(() => tentarRenderizar(n - 1), 500);
+        }
+      };
+      tentarRenderizar(10);
+    }
+  })();
   </script>
 
   <!-- ── Navbar flutuante ──────────────────────────────────────────────── -->
@@ -3794,8 +3884,17 @@
       const nav = document.getElementById("nav-flutuante");
 
       // ── Estado da apresentação ───────────────────────────────────────────
-      let playlist   = [];   // array de índices de seção em ordem de apresentação
-      let posAtual   = -1;   // índice dentro da playlist (cursor de navegação)
+      const LS_PLAYLIST = "nav-flutuante::playlist";
+
+      function carregarPlaylist() {
+        try { return JSON.parse(localStorage.getItem(LS_PLAYLIST) || "[]"); } catch { return []; }
+      }
+      function salvarPlaylist() {
+        localStorage.setItem(LS_PLAYLIST, JSON.stringify(playlist));
+      }
+
+      let playlist = carregarPlaylist();
+      let posAtual = playlist.length ? 0 : -1;
 
       // Coleta sections que possuem h2 direto
       function coletarSecoes() {
@@ -3834,9 +3933,9 @@
                 playlist.push(i);
               } else {
                 playlist.splice(posNaLista, 1);
-                // ajusta cursor se necessário
                 if (posAtual >= playlist.length) posAtual = playlist.length - 1;
               }
+              salvarPlaylist();
               sincronizarBadges();
               atualizarStatus();
               return;
@@ -3889,10 +3988,10 @@
         posTxt.textContent = `${posAtual + 1} / ${playlist.length}`;
       }
 
-      // Navega dentro da playlist
+      // Navega dentro da playlist (circular)
       function navegar(delta) {
         if (!playlist.length) return;
-        posAtual = Math.max(0, Math.min(playlist.length - 1, posAtual + delta));
+        posAtual = (posAtual + delta + playlist.length) % playlist.length;
         const secoes = coletarSecoes();
         const secIdx = playlist[posAtual];
         if (secoes[secIdx]) {
