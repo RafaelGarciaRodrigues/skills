@@ -89,6 +89,29 @@ def validar_conteudo(conteudo, eh_json):
     return conteudo
 
 
+def envolver_se_necessario(dados: dict, nome_arquivo: str) -> dict:
+    """
+    Se o JSON não tiver a chave esperada (stem do arquivo) como única chave raiz,
+    envolve automaticamente sob essa chave.
+
+    Exemplo: salvar-artefato.py recebe '14.mapa-processo.json' com conteúdo
+    {"processo": [...], "entrega": {...}}. A chave esperada é "14.mapa-processo".
+    Como ela não existe no JSON, o conteúdo é envolvido:
+    {"14.mapa-processo": {"processo": [...], "entrega": {...}}}
+
+    Não envolve se a chave esperada já for a única chave raiz (comportamento padrão
+    das outras habilidades que já envolvem corretamente).
+    """
+    chave_esperada = Path(nome_arquivo).stem  # "14.mapa-processo" a partir de "14.mapa-processo.json"
+
+    if chave_esperada in dados:
+        return dados  # já está no formato correto
+
+    # A IA gerou o conteúdo sem o wrapper — envolve automaticamente
+    print(f"[INFO] Chave '{chave_esperada}' ausente no JSON raiz. Envolvendo automaticamente.")
+    return {chave_esperada: dados}
+
+
 def main():
     work_dir = resolver_work_dir()
     nome_habilidade = resolver_nome_habilidade()
@@ -103,7 +126,7 @@ def main():
     arquivo_saida = artefatos_dir / nome_habilidade
 
     if eh_json:
-        # Salva JSON re-serializado (normaliza formatação, garante UTF-8)
+        dados = envolver_se_necessario(dados, nome_habilidade)
         arquivo_saida.write_text(
             json.dumps(dados, ensure_ascii=False, indent=2),
             encoding="utf-8",

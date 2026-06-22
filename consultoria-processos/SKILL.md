@@ -54,6 +54,8 @@ Pasta onde este `SKILL.md` reside. Contém os artefatos da skill, que não devem
 - `scripts/inserir-analise-spec.py`
 - `scripts/salvar-plano.py`
 - `scripts/inserir-plano.py`
+- `scripts/preparar-estado.py`
+- `scripts/salvar-estado.py`
 - `analise-spec/`
 - `plano/plano.md`
 - `html/relatorio-modelo.html`
@@ -92,7 +94,206 @@ PowerShell, Windows:
 python "<SKILL_DIR>\scripts\extract_docx.py" "<WORK_DIR>\entrada.docx" "<WORK_DIR>\entrada.txt"
 ```
 
+## Execução Completa
+
+Quando o usuário pedir para "rodar a skill", "processar os arquivos" ou qualquer instrução genérica, execute **cada passo abaixo em ordem**, sem pular e sem pedir confirmação. Para cada passo que envolve geração de IA: leia o prompt indicado, gere o JSON/conteúdo e salve com o script antes de avançar.
+
+---
+
+### A1 — Estado Atual
+
+```powershell
+python "<SKILL_DIR>\scripts\preparar-estado.py" "<WORK_DIR>"
+```
+
+Se o script informar "Nenhum arquivo novo", pule para A2. Caso contrário:
+- Leia `habilidades/00.estado-atual.md` (prompt de síntese)
+- Use `WORK_DIR\_tmp\estado-input.md` como contexto
+- Gere a síntese e salve o resultado em um arquivo temporário
+- Execute: `python "<SKILL_DIR>\scripts\salvar-estado.py" "<WORK_DIR>" "<arquivo-tmp>"`
+
+---
+
+### A2 — Unificar Arquivos
+
+```powershell
+python "<SKILL_DIR>\scripts\unificar-arquivos.py" "<WORK_DIR>"
+```
+
+---
+
+### A3 — Gerar Artefatos (para CADA habilidade)
+
+```powershell
+python "<SKILL_DIR>\scripts\listar-habilidades.py" "<WORK_DIR>"
+```
+
+O script lista todas as habilidades em `SKILL_DIR\habilidades\` (ignora arquivos com prefixo `00.`). Para **cada habilidade listada**, em ordem:
+1. Leia o prompt da habilidade (já impresso pelo script)
+2. Leia `WORK_DIR\UNIFICADO\UNIFICADO.md` como contexto (ou `estado-atual\estado-atual.md` se existir)
+3. Gere o JSON puro com a IA
+4. Salve o resultado em um arquivo temporário
+5. Execute: `python "<SKILL_DIR>\scripts\salvar-artefato.py" "<WORK_DIR>" "<nome>.json" "<arquivo-tmp>"`
+
+Não pule nenhuma habilidade. Não avance para A4 enquanto não processar todas.
+
+---
+
+### A4 — Consolidar
+
+```powershell
+python "<SKILL_DIR>\scripts\criar-pasta-json.py" "<WORK_DIR>"
+python "<SKILL_DIR>\scripts\consolidar-artefatos-json.py" "<WORK_DIR>"
+```
+
+---
+
+### A5 — Relatório Base
+
+```powershell
+python "<SKILL_DIR>\scripts\montar-relatorio-completo.py" "<WORK_DIR>"
+```
+
+---
+
+### B1 — Iniciar Spec Kit
+
+```powershell
+cmd /c "<SKILL_DIR>\scripts\iniciar-speckit.bat" "<WORK_DIR>"
+```
+
+O script instala `specify-cli` automaticamente se necessário e inicializa o Spec Kit. Se `.cursor\skills\speckit-specify\SKILL.md` já existir, pula sem erro.
+
+---
+
+### B2 — Gerar Especificação
+
+1. Leia `.cursor\skills\speckit-specify\SKILL.md` para entender o formato da spec
+2. Leia `WORK_DIR\json\artefatos.json` e extraia:
+   - `2.problema-central` como descrição do problema
+   - `4.necessidades` como necessidades do usuário
+   - `5.requisitos` como requisitos funcionais
+3. Use esses campos como a "feature description" do speckit (substitui o `$ARGUMENTS` que seria fornecido interativamente pelo usuário)
+4. Siga as instruções do speckit-specify para gerar a spec e criar:
+   - `WORK_DIR\specs\001-[titulo-curto]\spec.md`
+   - `WORK_DIR\.specify\feature.json` com `{"feature_directory": "specs/001-[titulo-curto]"}`
+   - `WORK_DIR\specs\001-[titulo-curto]\checklists\requirements.md`
+
+---
+
+### B3 — Inserir Especificação
+
+```powershell
+python "<SKILL_DIR>\scripts\inserir-especificacao.py" "<WORK_DIR>"
+```
+
+---
+
+### B4 — Análise da Especificação
+
+```powershell
+python "<SKILL_DIR>\scripts\criar-pasta-analise-spec.py" "<WORK_DIR>"
+python "<SKILL_DIR>\scripts\listar-analise-spec.py" "<WORK_DIR>"
+```
+
+O segundo script imprime o prompt de analise-spec. Com esse prompt:
+1. Leia `WORK_DIR\specs\001-[titulo]\spec.md` e `WORK_DIR\json\artefatos.json` como contexto
+2. Gere o JSON puro de análise crítica da spec
+3. Salve em arquivo temporário
+4. Execute: `python "<SKILL_DIR>\scripts\salvar-analise-spec.py" "<WORK_DIR>" "<arquivo-tmp>"`
+5. Execute: `python "<SKILL_DIR>\scripts\inserir-analise-spec.py" "<WORK_DIR>"`
+
+---
+
+### B5 — Dimensionamento
+
+1. Leia `<SKILL_DIR>\dimensionamento\dimensionamento.md` (prompt completo com regras de cálculo)
+2. Leia `WORK_DIR\specs\001-[titulo]\spec.md` e `WORK_DIR\analise-spec\analise-spec.json` como contexto
+3. Gere o JSON de dimensionamento seguindo as regras do prompt
+4. Salve em arquivo temporário
+5. Execute: `python "<SKILL_DIR>\scripts\salvar-dimensionamento.py" "<WORK_DIR>" "<arquivo-tmp>"`
+6. Execute: `python "<SKILL_DIR>\scripts\inserir-dimensionamento.py" "<WORK_DIR>"`
+
+---
+
+### B6 — Convergência de Escopo
+
+1. Leia `<SKILL_DIR>\convergencia\convergecia.md` (prompt com critérios verde/laranja/vermelho)
+2. Leia `WORK_DIR\artefatos\11.maturidade-qualitativa.json`, `WORK_DIR\analise-spec\analise-spec.json`, `WORK_DIR\dimensionamento\dimensionamento.json` e `WORK_DIR\specs\001-[titulo]\spec.md` como contexto
+3. Gere o JSON de convergência seguindo as regras do prompt (deriva custos do dimensionamento.json, não usa valores externos)
+4. Salve em arquivo temporário
+5. Execute: `python "<SKILL_DIR>\scripts\salvar-convergencia.py" "<WORK_DIR>" "<arquivo-tmp>"`
+6. Execute: `python "<SKILL_DIR>\scripts\inserir-convergencia.py" "<WORK_DIR>"`
+
+---
+
+### B7 — Plano de Execução
+
+1. Leia `<SKILL_DIR>\plano\plano.md` (prompt com as 7 macro-etapas obrigatórias)
+2. Leia `WORK_DIR\UNIFICADO\UNIFICADO.md`, `WORK_DIR\artefatos\10.maturidade.json`, `WORK_DIR\artefatos\11.maturidade-qualitativa.json`, `WORK_DIR\artefatos\4.necessidades.json` como contexto (arquivos opcionais: analise-spec.json, specs)
+3. Gere o JSON do plano com exatamente 7 macro-etapas na ordem definida
+4. Salve em arquivo temporário
+5. Execute: `python "<SKILL_DIR>\scripts\salvar-plano.py" "<WORK_DIR>" "<arquivo-tmp>"`
+6. Execute: `python "<SKILL_DIR>\scripts\inserir-plano.py" "<WORK_DIR>"`
+
+---
+
+### Finalização
+
+```powershell
+python "<SKILL_DIR>\scripts\montar-relatorio-completo.py" "<WORK_DIR>"
+```
+
+---
+
 ## Workflows
+
+### 0. Atualizar Estado Atual (recomendado antes de gerar artefatos)
+
+Este passo mantém um destilado evolutivo do entendimento do processo em `WORK_DIR\estado-atual\estado-atual.md`.
+Ao contrário do `UNIFICADO.md` (que empilha todas as conversas brutas), o `estado-atual.md` reconcilia
+contradições e preserva apenas o conhecimento atual — reduzindo viés de análises como `10.maturidade`.
+
+**Quando executar:** sempre que novos arquivos de entrada forem adicionados ao WORK_DIR, antes de rodar habilidades analíticas.
+
+#### Passo 0.1 — Preparar contexto
+
+```powershell
+python "<SKILL_DIR>\scripts\preparar-estado.py" "<WORK_DIR>"
+```
+
+O script:
+- Identifica arquivos novos em WORK_DIR (não ainda processados)
+- Monta `WORK_DIR\_tmp\estado-input.md` com o estado anterior + conteúdo dos arquivos novos
+- Se não houver arquivos novos, informa e encerra (nada a fazer)
+
+#### Passo 0.2 — Rodar a IA com o prompt de síntese
+
+Leia o prompt:
+
+```text
+habilidades/00.estado-atual.md
+```
+
+Use como contexto: `WORK_DIR\_tmp\estado-input.md`
+
+A IA retornará dois blocos separados por `---DUVIDAS---`. Salve a saída em um arquivo temporário.
+
+#### Passo 0.3 — Salvar o estado atualizado
+
+```powershell
+python "<SKILL_DIR>\scripts\salvar-estado.py" "<WORK_DIR>" "<arquivo-com-saida>"
+```
+
+O script:
+- Salva `WORK_DIR\estado-atual\estado-atual.md` (síntese do conhecimento atual)
+- Salva `WORK_DIR\estado-atual\lista-duvidas.md` (perguntas para próxima sessão)
+- Atualiza `WORK_DIR\estado-atual\arquivos-processados.json` (rastreio de arquivos já incorporados)
+- Remove arquivos temporários
+
+> **Nota:** `10.maturidade` lê automaticamente `estado-atual.md` se existir, com fallback para `UNIFICADO.md`.
+
+---
 
 ### 1. Unificar Arquivos
 
@@ -189,43 +390,34 @@ python "<SKILL_DIR>\scripts\montar-relatorio-completo.py" "<WORK_DIR>"
 
 ### 5. Iniciar Spec Kit
 
-Script:
-
-```text
-scripts/iniciar-speckit.bat
-```
-
-Pré-requisito: `specify-cli` instalado via `uv`. Instale uma vez:
+O script instala o `specify-cli` automaticamente se não estiver presente e inicializa o Spec Kit no `WORK_DIR`. Não requer pré-instalação manual.
 
 ```powershell
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
+cmd /c "<SKILL_DIR>\scripts\iniciar-speckit.bat" "<WORK_DIR>"
 ```
 
-Execução:
-
-```powershell
-"<SKILL_DIR>\scripts\iniciar-speckit.bat" "<WORK_DIR>"
-```
-
-O script inicializa o Spec Kit na pasta `WORK_DIR` com integração para o Cursor. Após rodar, os comandos `/speckit.*` ficam disponíveis no chat para conduzir o desenvolvimento a partir da especificação gerada nos passos anteriores.
+O script:
+- Verifica se `specify-cli` está instalado; se não, instala via `uv tool install specify-cli`
+- Verifica se já foi inicializado (`.cursor\skills\speckit-specify\SKILL.md`); se sim, pula sem erro
+- Inicializa com `specify init --here --integration cursor-agent --force`
+- Define `PYTHONUTF8=1` e `NO_COLOR=1` para evitar crash de encoding no Windows
 
 ### 6. Especificar com Spec Kit
 
 O agente executa este passo diretamente, sem interação do usuário.
 
-1. Localizar o arquivo de comando do Spec Kit dentro de `WORK_DIR`:
-   - `.claude\commands\specify.md` (integração Cursor/Claude)
-   - ou `.cursor\rules\specify.md`
-2. Ler o arquivo encontrado para entender o formato exigido pelo `/speckit.specify`
+1. Localizar o arquivo de skill do Spec Kit dentro de `WORK_DIR`:
+   - `.cursor\skills\speckit-specify\SKILL.md`
+2. Ler o arquivo encontrado para entender o formato exigido
 3. Ler `WORK_DIR\json\artefatos.json`
 4. Extrair os campos `problema-central`, `necessidades` e `requisitos`
-5. Seguir as instruções do arquivo de comando e gerar `specs\001-[titulo]\spec.md` dentro do `WORK_DIR`
+5. Seguir as instruções do arquivo de skill e gerar `specs\001-[titulo]\spec.md` dentro do `WORK_DIR`
 
 Regras:
 - Use o conteúdo real dos campos, sem truncar.
 - Não inclua campos de análise interna como `maturidade`, `contradicoes` ou `mapa-mental`.
 - Se `necessidades` ou `requisitos` estiverem em Markdown com `#` e `-`, mantenha a formatação.
-- Se o arquivo de comando não for encontrado, o Passo 5 (`iniciar-speckit.bat`) ainda não foi executado. Execute-o antes de continuar.
+- Se `.cursor\skills\speckit-specify\SKILL.md` não for encontrado, o Passo 5 ainda não foi executado. Execute-o antes de continuar.
 
 ### 7. Inserir Especificação no Relatório
 

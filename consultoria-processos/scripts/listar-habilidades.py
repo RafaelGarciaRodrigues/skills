@@ -51,6 +51,11 @@ def main():
         if not caminho.is_file():
             continue
 
+        # Arquivos prefixados com "00." são prompts de workflow (ex: 00.estado-atual.md),
+        # não habilidades geradoras de artefato — ignorar nesta fila.
+        if caminho.name.startswith("00."):
+            continue
+
         conteudo = ler_texto(caminho)
         habilidades.append(
             {

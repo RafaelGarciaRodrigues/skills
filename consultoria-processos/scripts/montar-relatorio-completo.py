@@ -26,7 +26,7 @@ os.environ["PYTHONUTF8"] = "1"
 SCRIPTS = [
     ("montar-relatorio-analitico.py",  None,                                    True),
     ("inserir-especificacao.py",        "specs",                                 False),
-    ("inserir-analise-spec.py",         "analise-spec/analise-spec.md",          False),
+    ("inserir-analise-spec.py",         "analise-spec/analise-spec.json",        False),
     ("inserir-dimensionamento.py",      "dimensionamento/dimensionamento.json",   False),
     ("inserir-convergencia.py",         "convergir/convergir.json",              False),
     ("inserir-plano.py",                "plano/plano.json",                      False),

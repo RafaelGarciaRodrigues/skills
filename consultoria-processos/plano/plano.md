@@ -5,13 +5,13 @@ Lean à automação de processos.
 
 Analise os artefatos disponíveis:
 - WORK_DIR\UNIFICADO\UNIFICADO.md
-- WORK_DIR\artefatos\10.maturidade.md
-- WORK_DIR\artefatos\11.maturidade-qualitativa.md
-- WORK_DIR\artefatos\4.necessidades.md
-- WORK_DIR\artefatos\8.temas-abertos.md
-- WORK_DIR\artefatos\9.contradicoes.md
-- WORK_DIR\analise-spec\analise-spec.md
-- arquivos dentro de WORK_DIR\specs
+- WORK_DIR\artefatos\10.maturidade.json  (ou .md se o .json não existir)
+- WORK_DIR\artefatos\11.maturidade-qualitativa.json  (ou .md se o .json não existir)
+- WORK_DIR\artefatos\4.necessidades.json  (ou .md se o .json não existir)
+- WORK_DIR\artefatos\8.temas-abertos.json  (ou .md se o .json não existir)
+- WORK_DIR\artefatos\9.contradicoes.json  (ou .md se o .json não existir)
+- WORK_DIR\analise-spec\analise-spec.json  (ou analise-spec.md se o .json não existir)
+- arquivos dentro de WORK_DIR\specs  (opcional — use se existir)
 
 ## Tarefa
 
